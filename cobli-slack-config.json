@@ -1,0 +1,26 @@
+{
+  "webhooks": [
+    {
+      "id": 1781360809560,
+      "name": "Testes Notificação",
+      "url": "https://hooks.slack.com/services/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",
+      "emoji": "📢"
+    }
+  ],
+  "people": [
+    {
+      "id": 1781360740871,
+      "name": "Luiz",
+      "handle": "Luiz Lackeski",
+      "role": ""
+    }
+  ],
+  "groups": [],
+  "channels": [
+    {
+      "id": 1781360583856,
+      "name": "testes_noticação_slack",
+      "desc": ""
+    }
+  ]
+}
