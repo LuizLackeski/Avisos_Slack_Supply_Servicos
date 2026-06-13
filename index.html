@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cobli · Notificações Slack</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+<style>
+/* ═══════════════════════════════════════════
+   COBLI DESIGN TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --cobli-navy:   #07074E;
+  --cobli-blue:   #001BB8;
+  --cobli-blue-light: #3248C6;
+  --cobli-blue-chart: #7F8DDB;
+  --cobli-red:    #FF4633;
+  --cobli-green:  #00AE97;
+  --cobli-green2: #0FFDC9;
+  --cobli-green3: #1FEF51;
+  --cobli-text:   #E6E6ED;
+  --cobli-kpi:    #1F1F5F;
+
+  /* UI semantic */
+  --bg:           #07074E;
+  --bg-card:      #0f0f6a;
+  --bg-input:     #1F1F5F;
+  --bg-hover:     #1a1a7a;
+  --border:       rgba(114,141,219,0.25);
+  --border-focus: #3248C6;
+  --text:         #E6E6ED;
+  --text-muted:   rgba(230,230,237,0.55);
+  --text-hint:    rgba(230,230,237,0.35);
+  --accent:       #001BB8;
+  --accent-hover: #3248C6;
+  --success:      #00AE97;
+  --error:        #FF4633;
+  --warn:         #F59E0B;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* ═══════════ LAYOUT ═══════════ */
+.layout { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--cobli-navy);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  transition: transform .25s;
+}
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-mark {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #001BB8, #0FFDC9);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 16px; color: #fff; letter-spacing: -1px;
+}
+.logo-text { font-size: 15px; font-weight: 700; color: #E6E6ED; }
+.logo-sub  { font-size: 11px; color: var(--text-muted); }
+
+.sidebar-nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
+.nav-label { font-size: 10px; font-weight: 700; color: var(--text-hint); letter-spacing: .08em; text-transform: uppercase; padding: 10px 10px 4px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: var(--radius-md);
+  font-size: 13px; color: var(--text-muted);
+  cursor: pointer; transition: all .15s; margin-bottom: 2px;
+  border: none; background: transparent; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--bg-hover); color: var(--text); }
+.nav-item.active { background: var(--bg-input); color: var(--cobli-green2); }
+.nav-item i { font-size: 16px; flex-shrink: 0; }
+.nav-badge { margin-left: auto; font-size: 10px; font-weight: 700; background: var(--cobli-blue-light); color: #fff; padding: 2px 7px; border-radius: 10px; }
+
+/* Main */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.topbar {
+  background: rgba(7,7,78,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-title { font-size: 16px; font-weight: 600; }
+.topbar-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+.content { padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; max-width: 820px; }
+
+/* ═══════════ PANELS ═══════════ */
+.panel { display: none; }
+.panel.active { display: flex; flex-direction: column; gap: 18px; }
+
+/* ═══════════ CARDS ═══════════ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+}
+.card-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--cobli-blue-chart);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+
+/* ═══════════ INPUTS ═══════════ */
+input[type=text], input[type=password], input[type=date], input[type=time], textarea, select {
+  font-family: inherit; font-size: 13px; color: var(--text);
+  background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 8px 12px;
+  transition: border .15s, box-shadow .15s;
+  width: 100%;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(50,72,198,.25);
+}
+input::placeholder, textarea::placeholder { color: var(--text-hint); }
+select option { background: #1F1F5F; }
+
+/* ═══════════ TOGGLE ═══════════ */
+.toggle {
+  width: 40px; height: 22px; border-radius: 11px;
+  background: var(--border); border: none; cursor: pointer;
+  position: relative; transition: background .2s; flex-shrink: 0; padding: 0;
+}
+.toggle.on { background: var(--cobli-green); }
+.toggle::after {
+  content:''; width:16px; height:16px; border-radius:50%;
+  background:#fff; position:absolute; top:3px; left:3px;
+  transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.toggle.on::after { left: 21px; }
+.toggle-row { display:flex; align-items:center; gap:10px; }
+.toggle-label { font-size:13px; font-weight:500; }
+
+/* ═══════════ BUTTONS ═══════════ */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 20px; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border: none;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.btn-primary   { background: var(--cobli-blue); color: #fff; }
+.btn-primary:hover { background: var(--cobli-blue-light); }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+.btn-success   { background: var(--cobli-green); color: #07074E; }
+.btn-success:hover { background: var(--cobli-green2); }
+.btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg-hover); color: var(--text); }
+.btn-danger-ghost { background: transparent; color: var(--error); border: 1px solid rgba(255,70,51,.3); }
+.btn-danger-ghost:hover { background: rgba(255,70,51,.1); }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+
+/* ═══════════ TAGS ═══════════ */
+.tag { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+.tag-ferias  { background: rgba(0,174,151,.2);  color: var(--cobli-green);  border: 1px solid rgba(0,174,151,.35); }
+.tag-licenca { background: rgba(50,72,198,.2);  color: #7F8DDB; border: 1px solid rgba(127,141,219,.35); }
+.tag-aviso   { background: rgba(255,70,51,.15); color: var(--cobli-red);   border: 1px solid rgba(255,70,51,.35); }
+.tag-retorno { background: rgba(15,253,201,.12); color: var(--cobli-green2); border: 1px solid rgba(15,253,201,.3); }
+
+/* ═══════════ SCENARIO TABS ═══════════ */
+.tabs { display:flex; gap:8px; flex-wrap:wrap; }
+.tab-btn {
+  font-size: 12px; padding: 7px 16px; border-radius: 20px;
+  background: var(--bg-input); color: var(--text-muted);
+  border: 1px solid var(--border); cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: all .15s; font-weight: 500;
+}
+.tab-btn:hover { color: var(--text); border-color: var(--cobli-blue-chart); }
+.tab-btn.active { background: var(--cobli-blue); color: #fff; border-color: var(--cobli-blue); }
+
+/* ═══════════ COMPOSER ═══════════ */
+.msg-wrap { position: relative; }
+textarea#msg-input {
+  min-height: 90px; resize: none; line-height: 1.65;
+  padding: 12px 14px;
+}
+.hint-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.hint-pill {
+  font-size: 11px; padding: 3px 10px; border-radius: 12px;
+  border: 1px solid var(--border); color: var(--text-hint);
+  cursor: pointer; transition: all .15s;
+}
+.hint-pill:hover { background: rgba(50,72,198,.2); color: var(--cobli-blue-chart); border-color: var(--cobli-blue-chart); }
+
+/* ═══════════ AUTOCOMPLETE ═══════════ */
+.autocomplete-dropdown {
+  position: absolute; z-index: 200;
+  background: #0d0d60; border: 1px solid var(--cobli-blue-light);
+  border-radius: var(--radius-md); overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  min-width: 220px; max-height: 220px; overflow-y: auto;
+  display: none;
+}
+.autocomplete-dropdown.open { display: block; }
+.ac-header { font-size: 10px; font-weight: 700; color: var(--text-hint); padding: 8px 12px 4px; letter-spacing: .06em; text-transform: uppercase; }
+.ac-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; cursor: pointer; transition: background .1s;
+  font-size: 13px;
+}
+.ac-item:hover, .ac-item.focused { background: var(--bg-hover); }
+.ac-avatar {
+  width: 28px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0; font-weight: 700;
+}
+.ac-avatar.person  { background: rgba(50,72,198,.35); color: #7F8DDB; }
+.ac-avatar.group   { background: rgba(0,174,151,.25); color: var(--cobli-green); }
+.ac-avatar.channel { background: rgba(15,253,201,.15); color: var(--cobli-green2); }
+.ac-name  { font-weight: 600; }
+.ac-sub   { font-size: 11px; color: var(--text-hint); }
+
+/* ═══════════ SUGGESTIONS ═══════════ */
+.sugg-grid { display:grid; gap:8px; }
+.sugg-card {
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 12px 14px; cursor: pointer; transition: all .15s;
+  background: var(--bg-card);
+}
+.sugg-card:hover { border-color: var(--cobli-blue-light); background: var(--bg-input); }
+.sugg-card.selected { border: 1.5px solid var(--cobli-green); background: var(--bg-input); }
+.sugg-card-hdr { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.sugg-name { font-size:12px; color:var(--text-muted); }
+.sel-dot {
+  width:16px; height:16px; border-radius:50%;
+  border: 2px solid var(--border); margin-left:auto; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; transition:all .15s;
+}
+.sel-dot.on { background: var(--cobli-green); border-color: var(--cobli-green); }
+.sel-dot.on::after { content:''; width:6px; height:6px; border-radius:50%; background:#07074E; }
+.sugg-preview { font-size:13px; line-height:1.75; color:var(--text); }
+.no-sugg { font-size:13px; color:var(--text-hint); text-align:center; padding:2.5rem; }
+
+/* ═══════════ WEBHOOK SELECT ═══════════ */
+.webhook-select-wrap { position: relative; }
+.webhook-select-btn {
+  width: 100%; display:flex; align-items:center; gap:10px;
+  padding: 9px 14px; border-radius: var(--radius-md);
+  background: var(--bg-input); border: 1px solid var(--border);
+  color: var(--text); cursor: pointer; transition: all .15s;
+}
+.webhook-select-btn:hover { border-color: var(--cobli-blue-chart); }
+.wh-dot { width:8px; height:8px; border-radius:50%; background: var(--error); flex-shrink:0; }
+.wh-dot.ok { background: var(--success); }
+.wh-name { font-size:13px; font-weight:500; flex:1; text-align:left; }
+.wh-channel { font-size:11px; color:var(--text-hint); }
+
+.wh-dropdown {
+  display:none; position:absolute; top:calc(100% + 6px); left:0; right:0;
+  background: #0d0d60; border: 1px solid var(--cobli-blue-light);
+  border-radius: var(--radius-md); overflow:hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5); z-index:200;
+}
+.wh-dropdown.open { display:block; }
+.wh-opt {
+  display:flex; align-items:center; gap:10px; padding:10px 14px;
+  cursor:pointer; transition:background .1s; font-size:13px;
+}
+.wh-opt:hover, .wh-opt.active { background: var(--bg-hover); }
+.wh-opt.active .wh-name { color: var(--cobli-green2); }
+.wh-check { margin-left:auto; color: var(--cobli-green); font-size:14px; display:none; }
+.wh-opt.active .wh-check { display:block; }
+
+/* ═══════════ PREVIEW ═══════════ */
+.preview-card { background: #111; border: 1px solid #2a2a2a; border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+.preview-hdr { font-size:11px; color:#555; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.preview-msg { display:none; }
+.preview-msg.visible { display:flex; gap:10px; }
+.preview-avatar-wrap { width:36px; height:36px; border-radius:8px; background: var(--cobli-blue); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.preview-name { font-size:13px; font-weight:700; color:#fff; }
+.preview-time { font-size:11px; color:#555; margin-left:6px; }
+.preview-text { font-size:14px; color:#CCC; line-height:1.75; margin-top:3px; }
+.preview-sched { font-size:11px; color: var(--cobli-green2); margin-top:6px; display:none; }
+.preview-sched.visible { display:block; }
+.preview-empty { font-size:13px; color:#444; }
+
+/* ═══════════ OPTIONS PANEL ═══════════ */
+.options-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; display:flex; flex-direction:column; gap:12px; }
+.sub-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-left:50px; }
+.sched-inputs { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.sched-inputs input[type=date], .sched-inputs input[type=time] { width:auto; }
+.sched-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; background:rgba(0,174,151,.2); color:var(--cobli-green); border:1px solid rgba(0,174,151,.35); display:none; }
+.sched-badge.visible { display:inline-block; }
+.divider-h { height:1px; background:var(--border); }
+
+/* ═══════════ STATUS BAR ═══════════ */
+.status-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.status-msg { font-size:13px; display:flex; align-items:center; gap:6px; }
+.status-msg.success { color: var(--cobli-green); }
+.status-msg.error   { color: var(--error); }
+.status-msg.warn    { color: var(--warn); }
+
+/* ═══════════ QUEUE ═══════════ */
+.queue-section { display:none; }
+.queue-section.visible { display:block; }
+.queue-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px; background:var(--bg-card); }
+.queue-time { font-size:11px; font-weight:700; color:var(--cobli-green2); white-space:nowrap; min-width:90px; padding-top:2px; }
+.queue-text { font-size:12px; color:var(--text-muted); flex:1; line-height:1.5; }
+
+/* ═══════════ SETTINGS ═══════════ */
+.settings-grid { display:grid; gap:12px; }
+.settings-section-title { font-size:12px; font-weight:700; color:var(--cobli-blue-chart); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.list-item {
+  display:flex; align-items:center; gap:12px; padding:10px 14px;
+  border:1px solid var(--border); border-radius:var(--radius-md);
+  background:var(--bg-card); margin-bottom:6px;
+}
+.list-item-avatar { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; font-weight:700; }
+.list-item-name { font-size:13px; font-weight:600; }
+.list-item-sub  { font-size:11px; color:var(--text-muted); }
+.list-item-actions { margin-left:auto; display:flex; gap:6px; }
+
+.add-form { border:1px dashed rgba(50,72,198,.4); border-radius:var(--radius-md); padding:12px; margin-top:8px; display:none; flex-direction:column; gap:10px; }
+.add-form.open { display:flex; }
+.form-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.form-row input { flex:1; min-width:140px; }
+.form-label { font-size:11px; color:var(--text-muted); margin-bottom:4px; }
+
+/* ═══════════ QUEUE PANEL (sidebar count) ═══════════ */
+#sidebar-queue-count { display:none; }
+#sidebar-queue-count.visible { display:inline-block; }
+
+/* ═══════════ SCROLLBAR ═══════════ */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 700px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .content { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">Co</div>
+    <div>
+      <div class="logo-text">Cobli</div>
+      <div class="logo-sub">Notificações Slack</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-label">Composer</div>
+    <button class="nav-item active" onclick="showPanel('compose',this)">
+      <i class="ti ti-send"></i> Enviar mensagem
+    </button>
+    <button class="nav-item" onclick="showPanel('queue',this)">
+      <i class="ti ti-clock"></i> Agendamentos
+      <span class="nav-badge" id="sidebar-queue-count" style="display:none">0</span>
+    </button>
+
+    <div class="nav-label" style="margin-top:8px;">Configurações</div>
+    <button class="nav-item" onclick="showPanel('webhooks',this)">
+      <i class="ti ti-plug"></i> Webhooks / Canais
+    </button>
+    <button class="nav-item" onclick="showPanel('people',this)">
+      <i class="ti ti-users"></i> Pessoas & Grupos (@)
+    </button>
+    <button class="nav-item" onclick="showPanel('channels',this)">
+      <i class="ti ti-hash"></i> Canais Slack (#)
+    </button>
+  </nav>
+</aside>
+
+<!-- ════════ MAIN ════════ -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">Enviar mensagem</div>
+      <div class="topbar-sub" id="topbar-sub">Compose, agende e envie para o Slack</div>
+    </div>
+    <div style="margin-left:auto; display:flex; gap:8px;">
+      <button class="btn btn-ghost btn-sm" onclick="exportConfig()"><i class="ti ti-download"></i> Exportar config</button>
+      <label class="btn btn-ghost btn-sm" style="cursor:pointer;"><i class="ti ti-upload"></i> Importar <input type="file" accept=".json" onchange="importConfig(event)" style="display:none"/></label>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ════ PANEL: COMPOSE ════ -->
+    <div class="panel active" id="panel-compose">
+
+      <!-- Webhook selector -->
+      <div class="card">
+        <div class="card-title"><i class="ti ti-plug"></i> Canal de destino</div>
+        <div class="webhook-select-wrap" id="wh-wrap">
+          <button class="webhook-select-btn" onclick="toggleWhDropdown()" id="wh-btn">
+            <span class="wh-dot" id="wh-dot"></span>
+            <span class="wh-name" id="wh-name">— Selecione um canal —</span>
+            <span class="wh-channel" id="wh-channel"></span>
+            <i class="ti ti-chevron-down" style="margin-left:auto; font-size:14px; color:var(--text-muted);"></i>
+          </button>
+          <div class="wh-dropdown" id="wh-dropdown">
+            <div id="wh-list"></div>
+            <div style="padding:8px 10px; border-top:1px solid var(--border);">
+              <button class="btn btn-ghost btn-sm" style="width:100%;" onclick="showPanel('webhooks', document.querySelector('.nav-item:nth-child(3)'))">
+                <i class="ti ti-plus"></i> Gerenciar canais
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cenários -->
+      <div class="tabs" id="scenario-tabs">
+        <button class="tab-btn active" onclick="setScenario('ferias',this)"><i class="ti ti-beach"></i> Férias</button>
+        <button class="tab-btn" onclick="setScenario('licenca',this)"><i class="ti ti-heart-plus"></i> Licença/Atestado</button>
+        <button class="tab-btn" onclick="setScenario('aviso',this)"><i class="ti ti-alert-triangle"></i> Aviso/Incidente</button>
+        <button class="tab-btn" onclick="setScenario('retorno',this)"><i class="ti ti-player-play"></i> Retorno</button>
+      </div>
+
+      <!-- Composer -->
+      <div class="card">
+        <div class="card-title"><i class="ti ti-pencil"></i> Mensagem — use @ para pessoas/grupos, # para canais</div>
+        <div class="msg-wrap">
+          <textarea id="msg-input" placeholder="Ex: O @leonardo estará de férias a partir de 12/06 retornando em 20/06. Contato: #suporte-geral" oninput="onMsgInput(this)" onkeydown="onMsgKeydown(event)"></textarea>
+          <div class="autocomplete-dropdown" id="ac-dropdown">
+            <div class="ac-header" id="ac-header">Pessoas & Grupos</div>
+            <div id="ac-list"></div>
+          </div>
+        </div>
+        <div class="hint-pills" id="hint-pills"></div>
+      </div>
+
+      <!-- Opções -->
+      <div class="options-card">
+        <div class="toggle-row">
+          <button class="toggle" id="tgl-contact" onclick="toggleContact()" aria-label="Contato de suporte"></button>
+          <span class="toggle-label">Incluir contato de suporte/emergência</span>
+        </div>
+        <div class="sub-row" id="contact-row" style="display:none;">
+          <i class="ti ti-users" style="font-size:15px; color:var(--text-muted);"></i>
+          <input type="text" id="contact-input" placeholder="@grupo-suporte, @pessoa ou #canal" oninput="refreshSuggs()" style="max-width:320px;" />
+          <span style="font-size:11px; color:var(--text-hint);">Aparece no final de todas as variações</span>
+        </div>
+
+        <div class="divider-h"></div>
+
+        <div class="toggle-row">
+          <button class="toggle" id="tgl-sched" onclick="toggleSchedule()" aria-label="Agendar envio"></button>
+          <span class="toggle-label">Agendar envio</span>
+          <span class="sched-badge" id="sched-badge">⏰ Agendado</span>
+        </div>
+        <div class="sub-row" id="sched-row" style="display:none;">
+          <i class="ti ti-calendar-time" style="font-size:15px; color:var(--text-muted);"></i>
+          <div class="sched-inputs">
+            <input type="date" id="sched-date" disabled />
+            <input type="time" id="sched-time" value="09:00" disabled />
+          </div>
+          <span style="font-size:11px; color:var(--text-hint);" id="sched-hint"></span>
+        </div>
+      </div>
+
+      <!-- Sugestões -->
+      <div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--cobli-blue-chart); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+          <i class="ti ti-sparkles" style="font-size:14px;"></i>
+          <span id="sugg-label">Variações de mensagem</span>
+        </div>
+        <div class="sugg-grid" id="sugg-grid">
+          <div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-card">
+        <div class="preview-hdr"><i class="ti ti-brand-slack" style="font-size:14px;"></i> Pré-visualização no Slack</div>
+        <div class="preview-msg" id="preview-msg">
+          <div class="preview-avatar-wrap">🤖</div>
+          <div style="flex:1;">
+            <div><span class="preview-name">Cobli Bot</span><span class="preview-time" id="preview-time"></span></div>
+            <div class="preview-text" id="preview-text"></div>
+            <div class="preview-sched" id="preview-sched"><i class="ti ti-clock"></i> <span id="preview-sched-txt"></span></div>
+          </div>
+        </div>
+        <div class="preview-empty" id="preview-empty">Selecione uma sugestão para pré-visualizar</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="status-bar">
+        <button class="btn btn-primary" id="btn-send" disabled onclick="sendMessage()">
+          <i class="ti ti-send"></i>
+          <span id="btn-send-label">Enviar para o Slack</span>
+        </button>
+        <button class="btn btn-ghost" onclick="clearCompose()"><i class="ti ti-trash" style="font-size:14px;"></i> Limpar</button>
+        <div class="status-msg" id="send-status"></div>
+      </div>
+
+    </div><!-- /panel-compose -->
+
+
+    <!-- ════ PANEL: QUEUE ════ -->
+    <div class="panel" id="panel-queue">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
+        <div id="queue-list-full">
+          <div class="no-sugg">Nenhuma mensagem agendada</div>
+        </div>
+      </div>
+      <div class="card" style="border-color: rgba(0,174,151,.3); background: rgba(0,174,151,.05);">
+        <div class="card-title" style="color: var(--cobli-green);"><i class="ti ti-info-circle"></i> Como funciona o agendamento</div>
+        <p style="font-size:13px; color:var(--text-muted); line-height:1.7;">
+          O agendamento <strong style="color:var(--text);">via navegador</strong> funciona enquanto esta aba estiver aberta. 
+          Para agendamentos confiáveis (aba fechada, servidor), use o <strong style="color:var(--cobli-green2);">GitHub Actions</strong> — 
+          baixe o arquivo <code style="background:var(--bg-input); padding:2px 6px; border-radius:4px; font-size:12px;">.github/workflows/slack-schedule.yml</code> 
+          e configure no seu repositório com as variáveis de ambiente adequadas.
+        </p>
+      </div>
+    </div>
+
+
+    <!-- ════ PANEL: WEBHOOKS ════ -->
+    <div class="panel" id="panel-webhooks">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
+        <div id="wh-settings-list"></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px;" onclick="toggleAddForm('wh-add-form')">
+          <i class="ti ti-plus"></i> Adicionar canal
+        </button>
+        <div class="add-form" id="wh-add-form">
+          <div>
+            <div class="form-label">Nome do canal / grupo</div>
+            <input type="text" id="wh-add-name" placeholder="Ex: #geral, #alertas-ti" />
+          </div>
+          <div>
+            <div class="form-label">Webhook URL</div>
+            <input type="text" id="wh-add-url" placeholder="https://hooks.slack.com/services/..." />
+          </div>
+          <div>
+            <div class="form-label">Emoji do canal (opcional)</div>
+            <input type="text" id="wh-add-emoji" placeholder="📢" style="max-width:100px;" />
+          </div>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="saveWebhook()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleAddForm('wh-add-form')">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════ PANEL: PEOPLE ════ -->
+    <div class="panel" id="panel-people">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-user"></i> Pessoas cadastradas</div>
+        <div id="people-list"></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px;" onclick="toggleAddForm('person-add-form')">
+          <i class="ti ti-plus"></i> Adicionar pessoa
+        </button>
+        <div class="add-form" id="person-add-form">
+          <div class="form-row">
+            <div style="flex:1;">
+              <div class="form-label">Nome de exibição</div>
+              <input type="text" id="p-add-name" placeholder="Leonardo Silva" />
+            </div>
+            <div style="flex:1;">
+              <div class="form-label">@ Slack (sem @)</div>
+              <input type="text" id="p-add-handle" placeholder="leonardo.silva" />
+            </div>
+          </div>
+          <div>
+            <div class="form-label">Cargo / área (opcional)</div>
+            <input type="text" id="p-add-role" placeholder="Tech Lead · Engenharia" />
+          </div>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="savePerson()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleAddForm('person-add-form')">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-users"></i> Grupos de pessoas cadastrados</div>
+        <div id="groups-list"></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px;" onclick="toggleAddForm('group-add-form')">
+          <i class="ti ti-plus"></i> Adicionar grupo
+        </button>
+        <div class="add-form" id="group-add-form">
+          <div class="form-row">
+            <div style="flex:1;">
+              <div class="form-label">Nome do grupo</div>
+              <input type="text" id="g-add-name" placeholder="Time de TI" />
+            </div>
+            <div style="flex:1;">
+              <div class="form-label">Handle Slack (sem @)</div>
+              <input type="text" id="g-add-handle" placeholder="time-ti" />
+            </div>
+          </div>
+          <div>
+            <div class="form-label">Emoji</div>
+            <input type="text" id="g-add-emoji" placeholder="👥" style="max-width:100px;" />
+          </div>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="saveGroup()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleAddForm('group-add-form')">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════ PANEL: CHANNELS ════ -->
+    <div class="panel" id="panel-channels">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-hash"></i> Canais Slack cadastrados (#)</div>
+        <div id="channels-list"></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px;" onclick="toggleAddForm('channel-add-form')">
+          <i class="ti ti-plus"></i> Adicionar canal
+        </button>
+        <div class="add-form" id="channel-add-form">
+          <div class="form-row">
+            <div style="flex:1;">
+              <div class="form-label">Nome do canal</div>
+              <input type="text" id="ch-add-name" placeholder="suporte-geral" />
+            </div>
+            <div style="flex:1;">
+              <div class="form-label">Descrição (opcional)</div>
+              <input type="text" id="ch-add-desc" placeholder="Canal de suporte ao cliente" />
+            </div>
+          </div>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="saveChannel()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleAddForm('channel-add-form')">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let config = {
+  webhooks: [],   // { id, name, url, emoji }
+  people:   [],   // { id, name, handle, role }
+  groups:   [],   // { id, name, handle, emoji }
+  channels: []    // { id, name, desc }
+};
+
+let state = {
+  scenario:    'ferias',
+  selWebhook:  null,
+  selSugg:     null,
+  contactOn:   false,
+  schedOn:     false,
+  queue:       [],
+  acMode:      null,  // '@' | '#'
+  acQuery:     '',
+  acFocused:   0
+};
+
+const STORAGE_KEY = 'cobli_slack_config';
+
+/* ═══════════════════════════════════════════════
+   PERSIST
+═══════════════════════════════════════════════ */
+function saveConfig() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); } catch(e){}
+}
+function loadConfig() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { const c = JSON.parse(raw); config = {...config, ...c}; }
+  } catch(e){}
+}
+
+function exportConfig() {
+  const blob = new Blob([JSON.stringify(config, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cobli-slack-config.json';
+  a.click();
+}
+function importConfig(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      config = JSON.parse(ev.target.result);
+      saveConfig(); renderAll();
+      showStatus('Configuração importada com sucesso!', 'success');
+    } catch { showStatus('Erro ao importar JSON.', 'error'); }
+  };
+  r.readAsText(file);
+}
+
+/* ═══════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════ */
+const PANEL_META = {
+  compose:  { title: 'Enviar mensagem',      sub: 'Compose, agende e envie para o Slack' },
+  queue:    { title: 'Agendamentos',          sub: 'Mensagens programadas para envio' },
+  webhooks: { title: 'Webhooks / Canais',     sub: 'Gerencie os canais de destino' },
+  people:   { title: 'Pessoas & Grupos (@)',  sub: 'Autocomplete de menções' },
+  channels: { title: 'Canais Slack (#)',      sub: 'Autocomplete de canais' }
+};
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const meta = PANEL_META[id] || {};
+  document.getElementById('topbar-title').textContent = meta.title || '';
+  document.getElementById('topbar-sub').textContent   = meta.sub   || '';
+  renderPanel(id);
+}
+
+function renderPanel(id) {
+  if (id==='webhooks') renderWebhooksSettings();
+  if (id==='people')   { renderPeopleList(); renderGroupsList(); }
+  if (id==='channels') renderChannelsList();
+  if (id==='queue')    renderQueueFull();
+  if (id==='compose')  renderWhDropdownList();
+}
+
+/* ═══════════════════════════════════════════════
+   WEBHOOKS
+═══════════════════════════════════════════════ */
+function saveWebhook() {
+  const name  = document.getElementById('wh-add-name').value.trim();
+  const url   = document.getElementById('wh-add-url').value.trim();
+  const emoji = document.getElementById('wh-add-emoji').value.trim() || '📢';
+  if (!name || !url) { alert('Preencha nome e URL.'); return; }
+  if (!url.startsWith('https://hooks.slack.com/')) { alert('URL inválida. Use uma Incoming Webhook do Slack.'); return; }
+  config.webhooks.push({ id: Date.now(), name, url, emoji });
+  saveConfig(); renderWebhooksSettings(); renderWhDropdownList();
+  ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(id=>{ document.getElementById(id).value=''; });
+  toggleAddForm('wh-add-form');
+}
+
+function deleteWebhook(id) {
+  config.webhooks = config.webhooks.filter(w=>w.id!==id);
+  if (state.selWebhook && state.selWebhook.id===id) { state.selWebhook=null; renderWhBtn(); }
+  saveConfig(); renderWebhooksSettings(); renderWhDropdownList();
+}
+
+function renderWebhooksSettings() {
+  const el = document.getElementById('wh-settings-list');
+  if (!config.webhooks.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem;">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML = config.webhooks.map(w=>`
+    <div class="list-item">
+      <div class="list-item-avatar" style="background:rgba(50,72,198,.2); color:var(--cobli-blue-chart); font-size:18px;">${w.emoji}</div>
+      <div>
+        <div class="list-item-name">${esc(w.name)}</div>
+        <div class="list-item-sub" style="font-family:monospace;">${esc(w.url.substring(0,48))}…</div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" onclick="deleteWebhook(${w.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function renderWhDropdownList() {
+  const el = document.getElementById('wh-list');
+  if (!config.webhooks.length) { el.innerHTML='<div style="padding:10px 14px; font-size:13px; color:var(--text-hint);">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML = config.webhooks.map(w=>`
+    <div class="wh-opt ${state.selWebhook && state.selWebhook.id===w.id ? 'active' : ''}" onclick="selectWebhook(${w.id})">
+      <span style="font-size:18px;">${w.emoji}</span>
+      <div>
+        <div class="wh-name">${esc(w.name)}</div>
+      </div>
+      <i class="ti ti-check wh-check"></i>
+    </div>`).join('');
+}
+
+function selectWebhook(id) {
+  state.selWebhook = config.webhooks.find(w=>w.id===id)||null;
+  toggleWhDropdown(true);
+  renderWhBtn();
+  updateSendBtn();
+}
+
+function renderWhBtn() {
+  const dot  = document.getElementById('wh-dot');
+  const name = document.getElementById('wh-name');
+  const ch   = document.getElementById('wh-channel');
+  if (!state.selWebhook) {
+    dot.className='wh-dot'; name.textContent='— Selecione um canal —'; ch.textContent='';
+  } else {
+    dot.className='wh-dot ok';
+    name.textContent= state.selWebhook.emoji + ' ' + state.selWebhook.name;
+    ch.textContent='';
+  }
+  renderWhDropdownList();
+}
+
+let whOpen = false;
+function toggleWhDropdown(forceClose) {
+  whOpen = forceClose ? false : !whOpen;
+  document.getElementById('wh-dropdown').classList.toggle('open', whOpen);
+}
+document.addEventListener('click', e=>{
+  if (!document.getElementById('wh-wrap').contains(e.target)) {
+    whOpen=false; document.getElementById('wh-dropdown').classList.remove('open');
+  }
+});
+
+/* ═══════════════════════════════════════════════
+   PEOPLE & GROUPS
+═══════════════════════════════════════════════ */
+function savePerson() {
+  const name   = document.getElementById('p-add-name').value.trim();
+  const handle = document.getElementById('p-add-handle').value.trim().replace('@','');
+  const role   = document.getElementById('p-add-role').value.trim();
+  if (!name||!handle) { alert('Preencha nome e handle.'); return; }
+  config.people.push({id:Date.now(), name, handle, role});
+  saveConfig(); renderPeopleList();
+  ['p-add-name','p-add-handle','p-add-role'].forEach(id=>{ document.getElementById(id).value=''; });
+  toggleAddForm('person-add-form');
+}
+
+function deletePerson(id) {
+  config.people = config.people.filter(p=>p.id!==id);
+  saveConfig(); renderPeopleList();
+}
+
+function renderPeopleList() {
+  const el = document.getElementById('people-list');
+  if (!config.people.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem;">Nenhuma pessoa cadastrada</div>'; return; }
+  el.innerHTML = config.people.map(p=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar person">${initials(p.name)}</div>
+      <div>
+        <div class="list-item-name">${esc(p.name)}</div>
+        <div class="list-item-sub">@${esc(p.handle)}${p.role ? ' · '+esc(p.role) : ''}</div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" onclick="deletePerson(${p.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function saveGroup() {
+  const name   = document.getElementById('g-add-name').value.trim();
+  const handle = document.getElementById('g-add-handle').value.trim().replace('@','');
+  const emoji  = document.getElementById('g-add-emoji').value.trim() || '👥';
+  if (!name||!handle) { alert('Preencha nome e handle.'); return; }
+  config.groups.push({id:Date.now(), name, handle, emoji});
+  saveConfig(); renderGroupsList();
+  ['g-add-name','g-add-handle','g-add-emoji'].forEach(id=>{ document.getElementById(id).value=''; });
+  toggleAddForm('group-add-form');
+}
+
+function deleteGroup(id) {
+  config.groups = config.groups.filter(g=>g.id!==id);
+  saveConfig(); renderGroupsList();
+}
+
+function renderGroupsList() {
+  const el = document.getElementById('groups-list');
+  if (!config.groups.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem;">Nenhum grupo cadastrado</div>'; return; }
+  el.innerHTML = config.groups.map(g=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar group" style="font-size:18px;">${g.emoji}</div>
+      <div>
+        <div class="list-item-name">${esc(g.name)}</div>
+        <div class="list-item-sub">@${esc(g.handle)}</div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" onclick="deleteGroup(${g.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   CHANNELS
+═══════════════════════════════════════════════ */
+function saveChannel() {
+  const name = document.getElementById('ch-add-name').value.trim().replace('#','');
+  const desc = document.getElementById('ch-add-desc').value.trim();
+  if (!name) { alert('Preencha o nome do canal.'); return; }
+  config.channels.push({id:Date.now(), name, desc});
+  saveConfig(); renderChannelsList();
+  ['ch-add-name','ch-add-desc'].forEach(id=>{ document.getElementById(id).value=''; });
+  toggleAddForm('channel-add-form');
+}
+
+function deleteChannel(id) {
+  config.channels = config.channels.filter(c=>c.id!==id);
+  saveConfig(); renderChannelsList();
+}
+
+function renderChannelsList() {
+  const el = document.getElementById('channels-list');
+  if (!config.channels.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem;">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML = config.channels.map(c=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar channel" style="font-size:16px;">#</div>
+      <div>
+        <div class="list-item-name">#${esc(c.name)}</div>
+        ${c.desc ? `<div class="list-item-sub">${esc(c.desc)}</div>` : ''}
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" onclick="deleteChannel(${c.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   AUTOCOMPLETE
+═══════════════════════════════════════════════ */
+function onMsgInput(ta) {
+  detectAutocomplete(ta);
+  processInput(ta.value);
+}
+
+function detectAutocomplete(ta) {
+  const val = ta.value;
+  const pos = ta.selectionStart;
+  const textBefore = val.substring(0, pos);
+
+  // Find last @ or # before cursor
+  const atIdx   = textBefore.lastIndexOf('@');
+  const hashIdx = textBefore.lastIndexOf('#');
+  const lastIdx = Math.max(atIdx, hashIdx);
+
+  if (lastIdx === -1) { closeAc(); return; }
+
+  const sym  = val[lastIdx];
+  const query = textBefore.substring(lastIdx+1);
+
+  // Close if there's a space in the query (word ended)
+  if (/\s/.test(query)) { closeAc(); return; }
+
+  state.acMode  = sym;
+  state.acQuery = query.toLowerCase();
+  state.acFocused = 0;
+  renderAcDropdown(ta, lastIdx);
+}
+
+function renderAcDropdown(ta, symIdx) {
+  const dd   = document.getElementById('ac-dropdown');
+  const list = document.getElementById('ac-list');
+  const hdr  = document.getElementById('ac-header');
+  let items = [];
+
+  if (state.acMode === '@') {
+    hdr.textContent = 'Pessoas & Grupos';
+    const people = config.people.filter(p =>
+      p.name.toLowerCase().includes(state.acQuery) || p.handle.toLowerCase().includes(state.acQuery)
+    );
+    const groups = config.groups.filter(g =>
+      g.name.toLowerCase().includes(state.acQuery) || g.handle.toLowerCase().includes(state.acQuery)
+    );
+    items = [
+      ...people.map(p=>({ type:'person', label:`@${p.handle}`, sub: p.name + (p.role?' · '+p.role:''), avatar: initials(p.name) })),
+      ...groups.map(g=>({ type:'group',  label:`@${g.handle}`, sub: g.name, avatar: g.emoji }))
+    ];
+  } else {
+    hdr.textContent = 'Canais Slack';
+    const channels = config.channels.filter(c =>
+      c.name.toLowerCase().includes(state.acQuery)
+    );
+    items = channels.map(c=>({ type:'channel', label:`#${c.name}`, sub: c.desc||'', avatar: '#' }));
+  }
+
+  if (!items.length) { closeAc(); return; }
+
+  list.innerHTML = items.map((item, i)=>`
+    <div class="ac-item ${i===state.acFocused?'focused':''}" onclick="insertAcItem('${esc(item.label)}')">
+      <div class="ac-avatar ${item.type}">${item.avatar}</div>
+      <div>
+        <div class="ac-name">${esc(item.label)}</div>
+        ${item.sub ? `<div class="ac-sub">${esc(item.sub)}</div>` : ''}
+      </div>
+    </div>`).join('');
+
+  window._acItems = items;
+
+  // Position dropdown
+  dd.style.top  = (ta.offsetTop + ta.offsetHeight + 4) + 'px';
+  dd.style.left = '0';
+  dd.classList.add('open');
+}
+
+function closeAc() {
+  document.getElementById('ac-dropdown').classList.remove('open');
+  state.acMode = null;
+}
+
+function insertAcItem(label) {
+  const ta  = document.getElementById('msg-input');
+  const val = ta.value;
+  const pos = ta.selectionStart;
+  const textBefore = val.substring(0, pos);
+  const sym = state.acMode;
+  const lastIdx = textBefore.lastIndexOf(sym);
+  const after = val.substring(pos);
+  ta.value = val.substring(0, lastIdx) + label + ' ' + after;
+  ta.focus();
+  const newPos = lastIdx + label.length + 1;
+  ta.setSelectionRange(newPos, newPos);
+  closeAc();
+  processInput(ta.value);
+}
+
+function onMsgKeydown(e) {
+  const dd = document.getElementById('ac-dropdown');
+  if (!dd.classList.contains('open')) return;
+  const items = window._acItems || [];
+  if (e.key === 'ArrowDown') { e.preventDefault(); state.acFocused = Math.min(state.acFocused+1, items.length-1); refreshAcFocus(); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); state.acFocused = Math.max(state.acFocused-1, 0); refreshAcFocus(); }
+  if (e.key === 'Enter' || e.key === 'Tab') {
+    if (items[state.acFocused]) { e.preventDefault(); insertAcItem(items[state.acFocused].label); }
+  }
+  if (e.key === 'Escape') closeAc();
+}
+
+function refreshAcFocus() {
+  document.querySelectorAll('.ac-item').forEach((el,i)=>el.classList.toggle('focused', i===state.acFocused));
+}
+
+/* ═══════════════════════════════════════════════
+   SCENARIOS
+═══════════════════════════════════════════════ */
+const HINTS = {
+  ferias:  ['@nome', 'férias', 'a partir de DD/MM', 'retornando em DD/MM'],
+  licenca: ['@nome', 'atestado', 'licença médica', 'retorna em DD/MM'],
+  aviso:   ['instabilidade em', 'falha no', 'indisponível', 'manutenção', 'previsão de retorno'],
+  retorno: ['@nome', 'retornou', 'disponível', 'de volta em DD/MM']
+};
+
+function setScenario(sc, btn) {
+  state.scenario = sc;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHints();
+  processInput(document.getElementById('msg-input').value);
+}
+
+function renderHints() {
+  document.getElementById('hint-pills').innerHTML = (HINTS[state.scenario]||[]).map(h=>
+    `<span class="hint-pill" onclick="insertHint('${h}')">${h}</span>`).join('');
+}
+
+function insertHint(h) {
+  const ta = document.getElementById('msg-input');
+  const v = ta.value;
+  ta.value = v + (v && !v.endsWith(' ') ? ' ' : '') + h + ' ';
+  ta.focus(); processInput(ta.value);
+}
+
+/* ═══════════════════════════════════════════════
+   OPTIONS
+═══════════════════════════════════════════════ */
+function toggleContact() {
+  state.contactOn = !state.contactOn;
+  document.getElementById('tgl-contact').classList.toggle('on', state.contactOn);
+  document.getElementById('contact-row').style.display = state.contactOn ? 'flex' : 'none';
+  if (state.contactOn) document.getElementById('contact-input').focus();
+  refreshSuggs();
+}
+
+function toggleSchedule() {
+  state.schedOn = !state.schedOn;
+  document.getElementById('tgl-sched').classList.toggle('on', state.schedOn);
+  document.getElementById('sched-row').style.display = state.schedOn ? 'flex' : 'none';
+  const di = document.getElementById('sched-date');
+  const ti = document.getElementById('sched-time');
+  di.disabled = !state.schedOn;
+  ti.disabled = !state.schedOn;
+  if (state.schedOn) {
+    di.value = new Date().toISOString().split('T')[0];
+    di.min   = di.value;
+    di.onchange = ti.onchange = updateSchedHint;
+    updateSchedHint();
+  } else {
+    document.getElementById('sched-badge').classList.remove('visible');
+    document.getElementById('sched-hint').textContent = '';
+    document.getElementById('preview-sched').classList.remove('visible');
+  }
+  updateSendBtn();
+}
+
+function updateSchedHint() {
+  const d = document.getElementById('sched-date').value;
+  const t = document.getElementById('sched-time').value;
+  const badge = document.getElementById('sched-badge');
+  const hint  = document.getElementById('sched-hint');
+  if (d && t) {
+    const dt = new Date(d+'T'+t);
+    hint.textContent = dt.toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    badge.classList.add('visible');
+  } else { hint.textContent=''; badge.classList.remove('visible'); }
+  updatePreview(state.selSugg);
+}
+
+function refreshSuggs() {
+  processInput(document.getElementById('msg-input').value);
+}
+
+/* ═══════════════════════════════════════════════
+   BUILD SUGGESTIONS
+═══════════════════════════════════════════════ */
+function contactSlack() {
+  if (!state.contactOn) return '';
+  const c = (document.getElementById('contact-input').value||'').trim();
+  return c ? `\n\n📞 _Contatos urgentes: ${c}_` : '\n\n📞 _Contatos urgentes: acione o responsável da área._';
+}
+function contactHtml() {
+  if (!state.contactOn) return '';
+  const c = (document.getElementById('contact-input').value||'').trim();
+  return c
+    ? `<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${c}</small>`
+    : `<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
+}
+
+function parseMsg(text) {
+  return {
+    users: [...text.matchAll(/@([\w.\-]+)/g)].map(m=>m[0]),
+    dates: [...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m=>m[1])
+  };
+}
+
+function buildSuggs(text, sc) {
+  const {users, dates} = parseMsg(text);
+  const u  = users[0]  || '@colaborador';
+  const d1 = dates[0]  || 'DD/MM';
+  const d2 = dates[1]  || 'DD/MM';
+  const cs = contactSlack();
+  const ch = contactHtml();
+  if (!text.trim() || text.trim().length < 5) return [];
+
+  const T = {
+    ferias: [
+      { tag:'ferias',  label:'Formal com ícones',
+        slack: `🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`,
+        html:  `🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}` },
+      { tag:'ferias',  label:'Informal e direto',
+        slack: `🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`,
+        html:  `🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>${ch}` },
+      { tag:'retorno', label:'Aviso de retorno',
+        slack: `✅ *Retorno de Férias*\n\n${u} retorna às atividades em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`,
+        html:  `✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small style="color:#888">Bem-vindo(a) de volta!</small>${ch}` },
+      { tag:'aviso',   label:'Comunicado de RH',
+        slack: `📢 Informamos que ${u} estará de férias 🏖️ no período de *${d1}* a *${d2}*.${cs}`,
+        html:  `📢 Informamos que ${u} estará de férias 🏖️ no período de <b>${d1}</b> a <b>${d2}</b>.${ch}` }
+    ],
+    licenca: [
+      { tag:'licenca', label:'Aviso discreto',
+        slack: `🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`,
+        html:  `🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>${ch}` },
+      { tag:'licenca', label:'Formal com contato',
+        slack: `⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`,
+        html:  `⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}` },
+      { tag:'licenca', label:'Simples e respeitoso',
+        slack: `${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`,
+        html:  `${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>${ch}` }
+    ],
+    aviso: [
+      { tag:'aviso', label:'Incidente crítico',
+        slack: `🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`,
+        html:  `🚨 <b>[INCIDENTE]</b> — Instabilidade identificada no sistema!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão de resolução: em análise${ch}` },
+      { tag:'aviso', label:'Manutenção programada',
+        slack: `🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas impactados: a informar\n\n_Agradecemos a compreensão!_${cs}`,
+        html:  `🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir<br>🖥️ Sistemas impactados: a informar${ch}` },
+      { tag:'aviso', label:'Incidente resolvido',
+        slack: `✅ *Incidente Resolvido*\n\nO sistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`,
+        html:  `✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}` },
+      { tag:'aviso', label:'Comunicado geral',
+        slack: `📢 *Comunicado Importante*\n\n${text.trim()||'Descreva o aviso aqui.'}\n\n_— Equipe de TI_${cs}`,
+        html:  `📢 <b>Comunicado Importante</b><br><br>${text.trim()||'Descreva o aviso aqui.'}<br><small style="color:#888">— Equipe de TI</small>${ch}` }
+    ],
+    retorno: [
+      { tag:'retorno', label:'Retorno celebrativo',
+        slack: `🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`,
+        html:  `🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}` },
+      { tag:'retorno', label:'Simples e objetivo',
+        slack: `✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`,
+        html:  `✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}` }
+    ]
+  };
+  return (T[sc]||T.ferias).slice(0,4);
+}
+
+const TAG_LABELS = {ferias:'Férias', licenca:'Licença', aviso:'Aviso', retorno:'Retorno'};
+const TAG_CLASS  = {ferias:'tag-ferias', licenca:'tag-licenca', aviso:'tag-aviso', retorno:'tag-retorno'};
+
+function processInput(val) {
+  const suggs = buildSuggs(val, state.scenario);
+  const grid  = document.getElementById('sugg-grid');
+  const lbl   = document.getElementById('sugg-label');
+  if (!suggs.length) {
+    grid.innerHTML = '<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
+    lbl.textContent = 'Variações de mensagem';
+    state.selSugg = null; updatePreview(null); updateSendBtn(); return;
+  }
+  lbl.textContent = suggs.length + ' variações — escolha uma:';
+  grid.innerHTML = suggs.map((s,i)=>`
+    <div class="sugg-card" id="sc-${i}" onclick="selectSugg(${i})">
+      <div class="sugg-card-hdr">
+        <span class="tag ${TAG_CLASS[s.tag]}">${TAG_LABELS[s.tag]}</span>
+        <span class="sugg-name">${s.label}</span>
+        <div class="sel-dot" id="dot-${i}"></div>
+      </div>
+      <div class="sugg-preview">${s.html}</div>
+    </div>`).join('');
+  window._suggs = suggs;
+  if (state.selSugg) {
+    const idx = suggs.findIndex(s=>s.label===state.selSugg.label);
+    if (idx>=0) { highlightCard(idx); state.selSugg=suggs[idx]; updatePreview(state.selSugg); }
+    else { state.selSugg=null; updatePreview(null); }
+  }
+  updateSendBtn();
+}
+
+function highlightCard(i) {
+  document.querySelectorAll('.sugg-card').forEach((c,j)=>{
+    c.classList.toggle('selected', j===i);
+    document.getElementById('dot-'+j).className = 'sel-dot'+(j===i?' on':'');
+  });
+}
+
+function selectSugg(i) {
+  highlightCard(i);
+  state.selSugg = window._suggs[i];
+  updatePreview(state.selSugg);
+  updateSendBtn();
+}
+
+/* ═══════════════════════════════════════════════
+   PREVIEW
+═══════════════════════════════════════════════ */
+function updatePreview(s) {
+  const msg   = document.getElementById('preview-msg');
+  const empty = document.getElementById('preview-empty');
+  const sched = document.getElementById('preview-sched');
+  if (!s) { msg.classList.remove('visible'); empty.style.display=''; sched.classList.remove('visible'); return; }
+  msg.classList.add('visible'); empty.style.display='none';
+  document.getElementById('preview-text').innerHTML = s.html;
+  const now = new Date();
+  document.getElementById('preview-time').textContent = ' ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  if (state.schedOn) {
+    const d = document.getElementById('sched-date').value;
+    const t = document.getElementById('sched-time').value;
+    if (d&&t) {
+      document.getElementById('preview-sched-txt').textContent = 'Agendado para ' + new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      sched.classList.add('visible');
+    } else sched.classList.remove('visible');
+  } else sched.classList.remove('visible');
+}
+
+/* ═══════════════════════════════════════════════
+   SEND
+═══════════════════════════════════════════════ */
+function updateSendBtn() {
+  const btn = document.getElementById('btn-send');
+  const lbl = document.getElementById('btn-send-label');
+  const ok  = !!state.selSugg && !!state.selWebhook;
+  btn.disabled = !ok;
+  lbl.textContent = state.schedOn ? 'Agendar mensagem' : 'Enviar para o Slack';
+  const st = document.getElementById('send-status');
+  if (state.selSugg && !state.selWebhook) { st.className='status-msg warn'; st.innerHTML='<i class="ti ti-alert-triangle"></i> Selecione um canal de destino'; }
+  else if (st.className.includes('warn')) { st.textContent=''; st.className='status-msg'; }
+}
+
+async function sendMessage() {
+  if (!state.selSugg || !state.selWebhook) return;
+  if (state.schedOn) { scheduleMsg(); return; }
+  const btn = document.getElementById('btn-send');
+  const st  = document.getElementById('send-status');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2"></i> Enviando…';
+  try {
+    const res = await fetch(state.selWebhook.url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({text: state.selSugg.slack})
+    });
+    if (res.ok || res.status===200) {
+      showStatus('Mensagem enviada com sucesso!', 'success');
+      btn.innerHTML='<i class="ti ti-check"></i> Enviado!';
+      setTimeout(()=>{ btn.innerHTML='<i class="ti ti-send"></i> <span id="btn-send-label">Enviar para o Slack</span>'; btn.disabled=false; updateSendBtn(); },2500);
+    } else throw new Error(res.status);
+  } catch(e) {
+    showStatus('Erro ao enviar. Verifique o webhook.', 'error');
+    btn.innerHTML='<i class="ti ti-send"></i> <span id="btn-send-label">Enviar para o Slack</span>';
+    btn.disabled=false;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   SCHEDULE
+═══════════════════════════════════════════════ */
+function scheduleMsg() {
+  const d = document.getElementById('sched-date').value;
+  const t = document.getElementById('sched-time').value;
+  if (!d||!t) { alert('Selecione data e hora.'); return; }
+  const dt = new Date(d+'T'+t);
+  if (dt <= new Date()) { alert('Selecione um horário futuro.'); return; }
+  const id       = Date.now();
+  const urlSnap  = state.selWebhook.url;
+  const wh       = state.selWebhook;
+  const txtSnap  = state.selSugg.slack;
+  const preview  = state.selSugg.slack.split('\n')[0].replace(/\*/g,'');
+
+  state.queue.push({id, dt, url:urlSnap, slack:txtSnap, preview, channel: wh.name, emoji: wh.emoji});
+  state.queue.sort((a,b)=>a.dt-b.dt);
+  updateQueueBadge();
+  renderQueueFull();
+  showStatus('Mensagem agendada!', 'success');
+
+  setTimeout(async ()=>{
+    try { await fetch(urlSnap,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:txtSnap})}); }
+    catch(e){ console.error('Erro no envio agendado',e); }
+    state.queue = state.queue.filter(m=>m.id!==id);
+    updateQueueBadge();
+    renderQueueFull();
+  }, dt.getTime()-Date.now());
+}
+
+function cancelScheduled(id) {
+  state.queue = state.queue.filter(m=>m.id!==id);
+  updateQueueBadge(); renderQueueFull();
+}
+
+function updateQueueBadge() {
+  const el = document.getElementById('sidebar-queue-count');
+  el.textContent = state.queue.length;
+  el.style.display = state.queue.length ? 'inline-block' : 'none';
+  document.getElementById('queue-count-display').textContent = state.queue.length;
+}
+
+function renderQueueFull() {
+  const el = document.getElementById('queue-list-full');
+  if (!el) return;
+  if (!state.queue.length) { el.innerHTML='<div class="no-sugg" style="padding:1.5rem;">Nenhuma mensagem agendada</div>'; return; }
+  el.innerHTML = state.queue.map(m=>`
+    <div class="queue-item">
+      <div style="font-size:18px; flex-shrink:0;">${m.emoji||'📢'}</div>
+      <div style="flex:1;">
+        <div style="font-size:11px; font-weight:700; color:var(--cobli-green2); margin-bottom:2px;">
+          <i class="ti ti-clock"></i> ${m.dt.toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}
+          <span style="margin-left:8px; color:var(--text-muted); font-weight:400;">→ ${m.channel}</span>
+        </div>
+        <div class="queue-text">${esc(m.preview)}</div>
+      </div>
+      <button class="btn btn-danger-ghost btn-sm" onclick="cancelScheduled(${m.id})"><i class="ti ti-x"></i> Cancelar</button>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════ */
+function showStatus(msg, type) {
+  const el = document.getElementById('send-status');
+  el.className = 'status-msg ' + (type||'');
+  const icon = type==='success' ? 'ti-circle-check' : type==='error' ? 'ti-alert-circle' : 'ti-info-circle';
+  el.innerHTML = `<i class="ti ${icon}"></i> ${msg}`;
+  if (type!=='warn') setTimeout(()=>{ el.textContent=''; el.className='status-msg'; },4000);
+}
+
+function toggleAddForm(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function initials(name) {
+  return (name||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+}
+
+function clearCompose() {
+  document.getElementById('msg-input').value='';
+  document.getElementById('sugg-grid').innerHTML='<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
+  document.getElementById('sugg-label').textContent='Variações de mensagem';
+  state.selSugg=null; updatePreview(null); updateSendBtn();
+  const st=document.getElementById('send-status'); st.textContent=''; st.className='status-msg';
+}
+
+function renderAll() {
+  renderWebhooksSettings();
+  renderWhDropdownList();
+  renderPeopleList();
+  renderGroupsList();
+  renderChannelsList();
+  renderWhBtn();
+}
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+loadConfig();
+renderAll();
+renderHints();
+</script>
+</body>
+</html>
