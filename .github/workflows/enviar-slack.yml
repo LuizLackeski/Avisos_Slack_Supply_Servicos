@@ -1,0 +1,26 @@
+name: Enviar Notificacao Slack
+
+# Permite que essa Action seja acionada remotamente via API
+on:
+  workflow_dispatch:
+    inputs:
+      webhook_url:
+        description: 'URL do Webhook'
+        required: true
+      message_text:
+        description: 'Texto da Mensagem'
+        required: true
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar para o Slack
+        env:
+          WEBHOOK_URL: ${{ github.event.inputs.webhook_url }}
+          MESSAGE: ${{ github.event.inputs.message_text }}
+        # O comando jq monta o JSON corretamente (evita erros com quebra de linha)
+        # e o curl faz o envio (sem bloqueio de CORS)
+        run: |
+          jq -n --arg text "$MESSAGE" '{text: $text}' > payload.json
+          curl -X POST -H 'Content-type: application/json' -d @payload.json "$WEBHOOK_URL"
