@@ -1308,26 +1308,65 @@ function updateSendBtn() {
 
 async function sendMessage() {
   if (!state.selSugg || !state.selWebhook) return;
-  if (state.schedOn) { scheduleMsg(); return; }
+  
   const btn = document.getElementById('btn-send');
-  const st  = document.getElementById('send-status');
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2"></i> Enviando…';
+  btn.innerHTML = '<i class="ti ti-loader-2"></i> Acionando servidor GitHub...';
+
+  // 1. Configurações do seu Repositório
+   const repoOwner = "LuizLackeski"; // Seu nome de usuário
+   const repoName = "Avisos_Slack_Supply_Servicos"; // Apenas o nome do repositório
+
+  // 2. Pede o Token do GitHub e salva no navegador para não pedir toda hora
+  let ghToken = localStorage.getItem('cobli_gh_token');
+  if (!ghToken) {
+    ghToken = prompt("Para enviar, cole seu Personal Access Token do GitHub (ele ficará salvo apenas neste navegador):");
+    if (!ghToken) {
+      showStatus('Envio cancelado. Token necessário.', 'error');
+      btn.innerHTML = '<i class="ti ti-send"></i> Enviar para o Slack';
+      btn.disabled = false;
+      return;
+    }
+    localStorage.setItem('cobli_gh_token', ghToken);
+  }
+
   try {
-    const res = await fetch(state.selWebhook.url, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({text: state.selSugg.slack})
+    // 3. Faz a requisição para a API do GitHub rodar a sua Action
+    const res = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/actions/workflows/enviar-slack.yml/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'Authorization': `token ${ghToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ref: 'main', // Se a sua branch padrão for master, mude aqui para 'master'
+        inputs: {
+          webhook_url: state.selWebhook.url,
+          message_text: state.selSugg.slack
+        }
+      })
     });
-    if (res.ok || res.status===200) {
-      showStatus('Mensagem enviada com sucesso!', 'success');
-      btn.innerHTML='<i class="ti ti-check"></i> Enviado!';
-      setTimeout(()=>{ btn.innerHTML='<i class="ti ti-send"></i> <span id="btn-send-label">Enviar para o Slack</span>'; btn.disabled=false; updateSendBtn(); },2500);
-    } else throw new Error(res.status);
-  } catch(e) {
-    showStatus('Erro ao enviar. Verifique o webhook.', 'error');
-    btn.innerHTML='<i class="ti ti-send"></i> <span id="btn-send-label">Enviar para o Slack</span>';
-    btn.disabled=false;
+
+    // A API do GitHub retorna status 204 (No Content) quando o gatilho funciona
+    if (res.ok || res.status === 204) {
+      showStatus('Mensagem enviada para a fila! Chegará em breve.', 'success');
+      btn.innerHTML = '<i class="ti ti-check"></i> Processando...';
+      setTimeout(() => { 
+        btn.innerHTML = '<i class="ti ti-send"></i> <span id="btn-send-label">Enviar para o Slack</span>'; 
+        btn.disabled = false; 
+        updateSendBtn(); 
+      }, 3000);
+    } else {
+      // Se a senha estiver errada, limpa do navegador para pedir de novo na próxima
+      if(res.status === 401 || res.status === 404) localStorage.removeItem('cobli_gh_token');
+      throw new Error(`Erro do GitHub: ${res.status}`);
+    }
+  } catch (e) {
+    console.error(e);
+    showStatus('Erro ao enviar. Verifique o repositório ou token.', 'error');
+    btn.innerHTML = '<i class="ti ti-send"></i> Enviar para o Slack';
+    btn.disabled = false;
   }
 }
 
