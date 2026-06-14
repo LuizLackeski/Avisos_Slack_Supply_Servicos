@@ -99,11 +99,11 @@ input::placeholder,textarea::placeholder { color:var(--text-hint); }
 .btn-danger-ghost { background:transparent; color:var(--error); border:1px solid rgba(255,70,51,.3); }
 .btn-danger-ghost:hover { background:rgba(255,70,51,.1); }
 .btn-sm { padding:5px 12px; font-size:12px; }
-.tag { font-size:11px; font-weight:700; padding:2px 9px; border-radius:10px; }
-.tag-ferias  { background:rgba(0,174,151,.2);  color:var(--cobli-green);  border:1px solid rgba(0,174,151,.35); }
-.tag-licenca { background:rgba(50,72,198,.2);  color:#7F8DDB; border:1px solid rgba(127,141,219,.35); }
-.tag-aviso   { background:rgba(255,70,51,.15); color:var(--cobli-red);    border:1px solid rgba(255,70,51,.35); }
-.tag-retorno { background:rgba(15,253,201,.12);color:var(--cobli-green2); border:1px solid rgba(15,253,201,.3); }
+.tag { font-size:11px; font-weight:700; padding:2px 9px; border-radius:10px; text-transform: uppercase; }
+.tag-ferias    { background:rgba(0,174,151,.2);  color:var(--cobli-green);  border:1px solid rgba(0,174,151,.35); }
+.tag-retorno   { background:rgba(15,253,201,.12);color:var(--cobli-green2); border:1px solid rgba(15,253,201,.3); }
+.tag-incidente { background:rgba(255,70,51,.15); color:var(--cobli-red);    border:1px solid rgba(255,70,51,.35); }
+.tag-geral     { background:rgba(50,72,198,.2);  color:#7F8DDB; border:1px solid rgba(127,141,219,.35); }
 .tabs { display:flex; gap:8px; flex-wrap:wrap; }
 .tab-btn { font-size:12px; padding:7px 16px; border-radius:20px; background:var(--bg-input); color:var(--text-muted); border:1px solid var(--border); cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .15s; font-weight:500; }
 .tab-btn:hover { color:var(--text); border-color:var(--cobli-blue-chart); }
@@ -199,7 +199,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 </head>
 <body>
 
-<!-- DEBUG BANNER — remove em produção -->
 <div class="debug-banner" id="debug-banner">⏳ Iniciando conexão com Supabase…</div>
 
 <div id="auth-screen" style="display:flex">
@@ -253,7 +252,7 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
   <div class="topbar">
     <div>
       <div class="topbar-title" id="topbar-title">Compositor de Mensagens</div>
-      <div class="topbar-sub" id="topbar-sub">Digite, escolha uma variação e envie para o Slack</div>
+      <div class="topbar-sub" id="topbar-sub">Escreva seu texto livremente e escolha um formato</div>
     </div>
     <div class="topbar-right">
       <span class="status-connected"><span class="status-dot"></span> Conectado</span>
@@ -281,16 +280,15 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
 
       <div class="tabs">
-        <button class="tab-btn active" id="tab-ferias"><i class="ti ti-beach"></i> Férias</button>
-        <button class="tab-btn" id="tab-licenca"><i class="ti ti-heart-plus"></i> Licença/Atestado</button>
-        <button class="tab-btn" id="tab-aviso"><i class="ti ti-alert-triangle"></i> Aviso/Incidente</button>
-        <button class="tab-btn" id="tab-retorno"><i class="ti ti-player-play"></i> Retorno</button>
+        <button class="tab-btn active" id="tab-ferias"><i class="ti ti-beach"></i> Férias & Retorno</button>
+        <button class="tab-btn" id="tab-incidentes"><i class="ti ti-alert-triangle"></i> Incidentes</button>
+        <button class="tab-btn" id="tab-geral"><i class="ti ti-speakerphone"></i> Avisos Gerais</button>
       </div>
 
       <div class="card">
-        <div class="card-title"><i class="ti ti-pencil"></i> Mensagem — use @ para pessoas/grupos · # para canais</div>
+        <div class="card-title"><i class="ti ti-pencil"></i> Corpo da Mensagem (use @ para menções e # para canais)</div>
         <div class="msg-wrap">
-          <textarea id="msg-input" placeholder="Ex: O @leonardo estará de férias a partir de 12/06 retornando em 20/06"></textarea>
+          <textarea id="msg-input" placeholder="Escreva o aviso livremente aqui. Ex: @aqui Bom dia! Informo que @Luiz Lackeski estará de férias..."></textarea>
           <div class="autocomplete-dropdown" id="ac-dropdown">
             <div class="ac-header" id="ac-header">Pessoas &amp; Grupos</div>
             <div id="ac-list"></div>
@@ -304,23 +302,25 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
           <button class="toggle" id="tgl-contact" aria-label="Contato de suporte"></button>
           <span class="toggle-label">📞 Contato para emergências</span>
         </div>
-<!-- DEPOIS -->
-<div class="sub-row" id="contact-row" style="display:none">
-  <i class="ti ti-phone" style="font-size:15px;color:var(--text-muted)"></i>
-  <div style="position:relative;max-width:340px;flex:1">
-    <input type="text" id="contact-input"
-      placeholder="Digite @ para pessoas ou # para canais de contato"
-      style="width:100%"
-      oninput="onContactInput(this)"
-      onkeydown="onContactKeydown(event)" />
-    <div class="autocomplete-dropdown" id="ac-contact" style="min-width:260px">
-      <div class="ac-header" id="ac-contact-header">Pessoas &amp; Grupos</div>
-      <div id="ac-contact-list"></div>
-    </div>
-  </div>
-  <span style="font-size:11px;color:var(--text-hint)">Contato para emergências — aparece no rodapé</span>
-</div>
+        
+        <div class="sub-row" id="contact-row" style="display:none">
+          <i class="ti ti-phone" style="font-size:15px;color:var(--text-muted)"></i>
+          <div style="position:relative;max-width:340px;flex:1">
+            <input type="text" id="contact-input"
+              placeholder="Digite @ para pessoas ou # para canais"
+              style="width:100%"
+              oninput="onContactInput(this)"
+              onkeydown="onContactKeydown(event)" />
+            <div class="autocomplete-dropdown" id="ac-contact" style="min-width:260px">
+              <div class="ac-header" id="ac-contact-header">Pessoas &amp; Grupos</div>
+              <div id="ac-contact-list"></div>
+            </div>
+          </div>
+          <span style="font-size:11px;color:var(--text-hint)">Aparecerá no rodapé da mensagem</span>
+        </div>
+
         <div class="divider-h"></div>
+        
         <div class="toggle-row">
           <button class="toggle" id="tgl-sched" aria-label="Agendar envio"></button>
           <span class="toggle-label">Agendar envio</span>
@@ -339,9 +339,9 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div>
         <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:10px;display:flex;align-items:center;gap:6px">
           <i class="ti ti-sparkles" style="font-size:14px"></i>
-          <span id="sugg-label">Variações de mensagem</span>
+          <span id="sugg-label">Formatos Disponíveis</span>
         </div>
-        <div class="sugg-grid" id="sugg-grid"><div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div></div>
+        <div class="sugg-grid" id="sugg-grid"><div class="no-sugg">Digite sua mensagem para ver as opções ✨</div></div>
       </div>
 
       <div class="preview-card">
@@ -421,7 +421,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-title"><i class="ti ti-users"></i> Grupos de pessoas (@)</div>
         <div id="groups-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
@@ -504,8 +503,7 @@ function switchAuthMode(m, btn) {
   authMode = m;
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('auth-btn').innerHTML =
-    m === 'login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+  document.getElementById('auth-btn').innerHTML = m === 'login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
   document.getElementById('auth-err').style.display = 'none';
 }
 
@@ -525,22 +523,17 @@ async function doAuth() {
     const { data, error } = authMode === 'login'
       ? await sb.auth.signInWithPassword({ email, password: pw })
       : await sb.auth.signUp({ email, password: pw });
-
     if (error) throw error;
-
     if (authMode === 'signup') {
       showAuthErr('Conta criada! Verifique seu e-mail e faça login.');
       switchAuthMode('login', document.querySelectorAll('.auth-tab')[0]);
     }
-    // onAuthStateChange vai pegar a sessão e chamar initApp()
   } catch (e) {
     dbg('Erro de auth: ' + e.message, 'error');
     showAuthErr(e.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = authMode === 'login'
-      ? '<i class="ti ti-login"></i> Entrar'
-      : '<i class="ti ti-user-plus"></i> Criar conta';
+    btn.innerHTML = authMode === 'login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
   }
 }
 
@@ -551,8 +544,7 @@ function showAuthErr(m) {
 }
 
 /* ══════════════════════════════
-   INIT — FIX: verifica sessão existente NO CARREGAMENTO
-   sem depender só do evento onAuthStateChange
+   INIT
 ══════════════════════════════ */
 async function bootstrap() {
   dbg('Verificando sessão salva…');
@@ -570,7 +562,6 @@ async function bootstrap() {
     showAuth();
   }
 
-  // Continua ouvindo mudanças (login/logout futuros)
   sb.auth.onAuthStateChange(async (_ev, session) => {
     const newUser = session?.user ?? null;
     if (newUser && (!user || user.id !== newUser.id)) {
@@ -604,17 +595,15 @@ function showAuth() {
 async function loadAll() {
   try {
     dbg('Buscando dados do Supabase…');
-
-    // FIX: faz cada query individualmente para isolar erros
     const pRes = await sb.from('people').select('*').order('name');
     const gRes = await sb.from('groups').select('*').order('name');
     const cRes = await sb.from('channels').select('*').order('name');
     const wRes = await sb.from('webhooks').select('*').order('name');
 
-    if (pRes.error)  throw new Error('Tabela people: '   + pRes.error.message  + ' | Código: ' + pRes.error.code);
-    if (gRes.error)  throw new Error('Tabela groups: '   + gRes.error.message  + ' | Código: ' + gRes.error.code);
-    if (cRes.error)  throw new Error('Tabela channels: ' + cRes.error.message  + ' | Código: ' + cRes.error.code);
-    if (wRes.error)  throw new Error('Tabela webhooks: ' + wRes.error.message  + ' | Código: ' + wRes.error.code);
+    if (pRes.error)  throw new Error('Tabela people: '   + pRes.error.message);
+    if (gRes.error)  throw new Error('Tabela groups: '   + gRes.error.message);
+    if (cRes.error)  throw new Error('Tabela channels: ' + cRes.error.message);
+    if (wRes.error)  throw new Error('Tabela webhooks: ' + wRes.error.message);
 
     DB.people   = pRes.data || [];
     DB.groups   = gRes.data || [];
@@ -625,8 +614,7 @@ async function loadAll() {
     renderAll();
   } catch (e) {
     dbg('ERRO BD: ' + e.message, 'error');
-    alert('Erro ao carregar dados do Supabase:\n\n' + e.message +
-      '\n\n⚠️ Verifique:\n1. As tabelas existem no Supabase\n2. RLS está desativado ou com policies corretas\n3. Abra o console (F12) para mais detalhes.');
+    alert('Erro ao carregar dados do Supabase:\n\n' + e.message);
     console.error('[COBLI] loadAll error:', e);
   }
 }
@@ -635,7 +623,7 @@ async function loadAll() {
    NAV
 ══════════════════════════════ */
 const PMETA = {
-  compose:  { t:'Compositor de Mensagens',  s:'Digite, escolha uma variação e envie para o Slack' },
+  compose:  { t:'Compositor de Mensagens',  s:'Escreva seu texto livremente e escolha um formato' },
   queue:    { t:'Agendamentos',             s:'Mensagens programadas no Supabase' },
   webhooks: { t:'Webhooks / Canais',        s:'Gerencie os canais de destino' },
   people:   { t:'Pessoas & Grupos (@)',     s:'Autocomplete de menções' },
@@ -665,25 +653,17 @@ async function saveWebhook() {
   const url   = v('wh-add-url');
   const emoji = v('wh-add-emoji') || '📢';
   if (!name || !url) { alert('Preencha nome e URL.'); return; }
-  if (!url.startsWith('https://hooks.slack.com/')) {
-    alert('URL inválida. Use uma Incoming Webhook do Slack (começa com https://hooks.slack.com/).'); return;
-  }
+  if (!url.startsWith('https://hooks.slack.com/')) { alert('URL inválida. Use Incoming Webhook.'); return; }
   try {
-    dbg('Salvando webhook…');
-    const { data, error } = await sb.from('webhooks')
-      .insert({ user_id: user.id, name, url, emoji, channel: '' })
-      .select().single();
+    const { data, error } = await sb.from('webhooks').insert({ user_id: user.id, name, url, emoji, channel: '' }).select().single();
     if (error) throw error;
     DB.webhooks.push(data);
     ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i => { document.getElementById(i).value = ''; });
     document.getElementById('wh-form').classList.remove('open');
     renderWhSettings(); renderWhDrop();
     showStatus('Canal salvo! ✓', 'success');
-    dbg('Webhook salvo: ' + name, 'success');
   } catch (e) {
-    dbg('Erro webhook: ' + e.message, 'error');
     alert('Erro ao salvar Webhook:\n' + e.message);
-    console.error(e);
   }
 }
 
@@ -695,10 +675,7 @@ async function deleteWebhook(id) {
     DB.webhooks = DB.webhooks.filter(w => w.id !== id);
     if (ST.selWh && ST.selWh.id === id) { ST.selWh = null; renderWhBtn(); }
     renderWhSettings(); renderWhDrop(); updateSendBtn();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
+  } catch (e) { alert('Erro ao deletar:\n' + e.message); }
 }
 
 function renderWhSettings() {
@@ -708,18 +685,13 @@ function renderWhSettings() {
     <div class="list-item">
       <div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji || '📢'}</div>
       <div><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,50))}…</div></div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button>
-      </div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
 }
 
 function renderWhDrop() {
   const el = document.getElementById('wh-list');
-  if (!DB.webhooks.length) {
-    el.innerHTML = '<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>';
-    return;
-  }
+  if (!DB.webhooks.length) { el.innerHTML = '<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>'; return; }
   el.innerHTML = DB.webhooks.map(w => `
     <div class="wh-opt ${ST.selWh && ST.selWh.id === w.id ? 'active' : ''}" data-sel-wh="${w.id}">
       <span style="font-size:18px">${w.emoji || '📢'}</span>
@@ -747,173 +719,83 @@ function toggleWhDrop(forceClose) {
 }
 
 /* ══════════════════════════════
-   PEOPLE
+   PEOPLE, GROUPS, CHANNELS
 ══════════════════════════════ */
 async function savePerson() {
-  const name     = v('p-name');
-  const slack_id = v('p-slack-id').replace(/[<@>]/g, '');
-  const handle   = v('p-handle').replace('@', '');
-  const role     = v('p-role');
+  const name = v('p-name'), slack_id = v('p-slack-id').replace(/[<@>]/g, ''), handle = v('p-handle').replace('@', ''), role = v('p-role');
   if (!name) { alert('Preencha o nome.'); return; }
   try {
-    dbg('Salvando pessoa…');
-    const { data, error } = await sb.from('people')
-      .insert({ user_id: user.id, name, slack_id, handle, role })
-      .select().single();
+    const { data, error } = await sb.from('people').insert({ user_id: user.id, name, slack_id, handle, role }).select().single();
     if (error) throw error;
     DB.people.push(data);
     ['p-name','p-slack-id','p-handle','p-role'].forEach(i => { document.getElementById(i).value = ''; });
-    document.getElementById('person-form').classList.remove('open');
-    renderPeopleList();
-    showStatus(name + ' salvo! ✓', 'success');
-    dbg('Pessoa salva: ' + name, 'success');
-  } catch (e) {
-    dbg('Erro pessoa: ' + e.message, 'error');
-    alert('Erro ao salvar pessoa:\n' + e.message);
-    console.error(e);
-  }
+    document.getElementById('person-form').classList.remove('open'); renderPeopleList(); showStatus(name + ' salvo! ✓', 'success');
+  } catch (e) { alert('Erro:\n' + e.message); }
 }
-
 async function deletePerson(id) {
   if (!confirm('Remover esta pessoa?')) return;
-  try {
-    const { error } = await sb.from('people').delete().eq('id', id);
-    if (error) throw error;
-    DB.people = DB.people.filter(p => p.id !== id);
-    renderPeopleList();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
+  try { await sb.from('people').delete().eq('id', id); DB.people = DB.people.filter(p => p.id !== id); renderPeopleList(); } catch (e) { alert('Erro:\n' + e.message); }
 }
-
 function renderPeopleList() {
   const el = document.getElementById('people-list');
   if (!DB.people.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>'; return; }
   el.innerHTML = DB.people.map(p => `
     <div class="list-item">
       <div class="list-item-avatar ac-avatar person">${initials(p.name)}</div>
-      <div>
-        <div class="list-item-name">${esc(p.name)}</div>
-        <div class="list-item-sub">${p.slack_id ? 'ID: ' + esc(p.slack_id) : ''}${p.handle ? ' · @' + esc(p.handle) : ''}${p.role ? ' · ' + esc(p.role) : ''}</div>
-      </div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button>
-      </div>
+      <div><div class="list-item-name">${esc(p.name)}</div><div class="list-item-sub">${p.slack_id ? 'ID: ' + esc(p.slack_id) : ''}${p.handle ? ' · @' + esc(p.handle) : ''}</div></div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
 }
 
-/* ══════════════════════════════
-   GROUPS
-══════════════════════════════ */
 async function saveGroup() {
-  const name     = v('g-name');
-  const handle   = v('g-handle').replace('@', '');
-  const slack_id = v('g-slack-id');
-  const emoji    = v('g-emoji') || '👥';
+  const name = v('g-name'), handle = v('g-handle').replace('@', ''), slack_id = v('g-slack-id'), emoji = v('g-emoji') || '👥';
   if (!name || !handle) { alert('Preencha nome e handle.'); return; }
   try {
-    dbg('Salvando grupo…');
-    const { data, error } = await sb.from('groups')
-      .insert({ user_id: user.id, name, handle, slack_id, emoji })
-      .select().single();
+    const { data, error } = await sb.from('groups').insert({ user_id: user.id, name, handle, slack_id, emoji }).select().single();
     if (error) throw error;
     DB.groups.push(data);
     ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i => { document.getElementById(i).value = ''; });
-    document.getElementById('group-form').classList.remove('open');
-    renderGroupsList();
-    showStatus('Grupo ' + name + ' salvo! ✓', 'success');
-    dbg('Grupo salvo: ' + name, 'success');
-  } catch (e) {
-    dbg('Erro grupo: ' + e.message, 'error');
-    alert('Erro ao salvar grupo:\n' + e.message);
-    console.error(e);
-  }
+    document.getElementById('group-form').classList.remove('open'); renderGroupsList(); showStatus('Grupo ' + name + ' salvo! ✓', 'success');
+  } catch (e) { alert('Erro:\n' + e.message); }
 }
-
 async function deleteGroup(id) {
   if (!confirm('Remover este grupo?')) return;
-  try {
-    const { error } = await sb.from('groups').delete().eq('id', id);
-    if (error) throw error;
-    DB.groups = DB.groups.filter(g => g.id !== id);
-    renderGroupsList();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
+  try { await sb.from('groups').delete().eq('id', id); DB.groups = DB.groups.filter(g => g.id !== id); renderGroupsList(); } catch (e) { alert('Erro:\n' + e.message); }
 }
-
 function renderGroupsList() {
   const el = document.getElementById('groups-list');
   if (!DB.groups.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>'; return; }
   el.innerHTML = DB.groups.map(g => `
     <div class="list-item">
       <div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji || '👥'}</div>
-      <div>
-        <div class="list-item-name">${esc(g.name)}</div>
-        <div class="list-item-sub">@${esc(g.handle)}${g.slack_id ? ' · ID: ' + esc(g.slack_id) : ''}</div>
-      </div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button>
-      </div>
+      <div><div class="list-item-name">${esc(g.name)}</div><div class="list-item-sub">@${esc(g.handle)}${g.slack_id ? ' · ID: ' + esc(g.slack_id) : ''}</div></div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
 }
 
-/* ══════════════════════════════
-   CHANNELS
-══════════════════════════════ */
 async function saveChannel() {
-  const name     = v('ch-name').replace('#', '');
-  const desc     = v('ch-desc');
-  const slack_id = v('ch-slack-id');
+  const name = v('ch-name').replace('#', ''), desc = v('ch-desc'), slack_id = v('ch-slack-id');
   if (!name) { alert('Preencha o nome do canal.'); return; }
   try {
-    dbg('Salvando canal…');
-    const { data, error } = await sb.from('channels')
-      .insert({ user_id: user.id, name, desc, slack_id })
-      .select().single();
+    const { data, error } = await sb.from('channels').insert({ user_id: user.id, name, desc, slack_id }).select().single();
     if (error) throw error;
     DB.channels.push(data);
     ['ch-name','ch-desc','ch-slack-id'].forEach(i => { document.getElementById(i).value = ''; });
-    document.getElementById('channel-form').classList.remove('open');
-    renderChannelsList();
-    showStatus('#' + name + ' salvo! ✓', 'success');
-    dbg('Canal salvo: #' + name, 'success');
-  } catch (e) {
-    dbg('Erro canal: ' + e.message, 'error');
-    alert('Erro ao salvar canal:\n' + e.message);
-    console.error(e);
-  }
+    document.getElementById('channel-form').classList.remove('open'); renderChannelsList(); showStatus('#' + name + ' salvo! ✓', 'success');
+  } catch (e) { alert('Erro:\n' + e.message); }
 }
-
 async function deleteChannel(id) {
   if (!confirm('Remover este canal?')) return;
-  try {
-    const { error } = await sb.from('channels').delete().eq('id', id);
-    if (error) throw error;
-    DB.channels = DB.channels.filter(c => c.id !== id);
-    renderChannelsList();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
+  try { await sb.from('channels').delete().eq('id', id); DB.channels = DB.channels.filter(c => c.id !== id); renderChannelsList(); } catch (e) { alert('Erro:\n' + e.message); }
 }
-
 function renderChannelsList() {
   const el = document.getElementById('channels-list');
   if (!DB.channels.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
   el.innerHTML = DB.channels.map(c => `
     <div class="list-item">
       <div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div>
-      <div>
-        <div class="list-item-name">#${esc(c.name)}</div>
-        ${c.desc ? `<div class="list-item-sub">${esc(c.desc)}</div>` : ''}
-        ${c.slack_id ? `<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>` : ''}
-      </div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button>
-      </div>
+      <div><div class="list-item-name">#${esc(c.name)}</div>${c.desc ? `<div class="list-item-sub">${esc(c.desc)}</div>` : ''}</div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
 }
 
@@ -922,14 +804,12 @@ function renderChannelsList() {
 ══════════════════════════════ */
 async function loadQueue() {
   try {
-    const { data, error } = await sb.from('scheduled_messages')
-      .select('*').eq('sent', false).order('scheduled_at');
+    const { data, error } = await sb.from('scheduled_messages').select('*').eq('sent', false).order('scheduled_at');
     if (error) throw error;
     const msgs = data || [];
     document.getElementById('queue-count-display').textContent = msgs.length;
     const nb = document.getElementById('nb');
-    nb.textContent = msgs.length;
-    nb.style.display = msgs.length ? 'inline-block' : 'none';
+    nb.textContent = msgs.length; nb.style.display = msgs.length ? 'inline-block' : 'none';
     const el = document.getElementById('queue-list-full');
     if (!msgs.length) { el.innerHTML = '<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
     el.innerHTML = msgs.map(m => `
@@ -942,18 +822,12 @@ async function loadQueue() {
         <button class="btn btn-danger-ghost btn-sm" data-cancel-sched="${m.id}"><i class="ti ti-x"></i> Cancelar</button>
       </div>`).join('');
   } catch (e) {
-    document.getElementById('queue-list-full').innerHTML =
-      `<div class="no-sugg" style="color:var(--error);padding:1.5rem">Erro ao carregar fila:<br>${esc(e.message)}</div>`;
+    document.getElementById('queue-list-full').innerHTML = `<div class="no-sugg" style="color:var(--error);padding:1.5rem">Erro ao carregar fila:<br>${esc(e.message)}</div>`;
   }
 }
 
 async function cancelScheduled(id) {
-  try {
-    await sb.from('scheduled_messages').delete().eq('id', id);
-    loadQueue();
-  } catch (e) {
-    alert('Erro ao cancelar: ' + e.message);
-  }
+  try { await sb.from('scheduled_messages').delete().eq('id', id); loadQueue(); } catch (e) { alert('Erro ao cancelar: ' + e.message); }
 }
 
 /* ══════════════════════════════
@@ -967,60 +841,28 @@ function detectAC(ta) {
   const lastIdx = Math.max(atIdx, hashIdx);
   if (lastIdx === -1) { closeAC(); return; }
   const sym = val[lastIdx];
-
-  // FIX: permite query com espaços (nomes compostos) — só fecha se tiver 2+ espaços
-  // ou se o caractere antes do @ for letra/número (evita falso positivo)
   const query = before.substring(lastIdx + 1);
-  const spaceCount = (query.match(/ /g) || []).length;
-  if (spaceCount >= 2) { closeAC(); return; }
-
-  // ── NOVO: ignora palavras reservadas do Slack ──
+  if (/\s\s/.test(query)) { closeAC(); return; }
+  
+  // Ignora palavras reservadas nativas do Slack (não queremos autocompletar nomes de pessoas aqui)
   const SLACK_RESERVED = new Set(['here','channel','everyone','aqui','canal','todos']);
-  if (sym === '@' && SLACK_RESERVED.has(query.toLowerCase().trim())) {
-    closeAC(); return;
-  }
+  if (sym === '@' && SLACK_RESERVED.has(query.toLowerCase().trim())) { closeAC(); return; }
+  
   ST.acMode = sym;
   const q = query.toLowerCase().trim();
   let items = [];
 
   if (sym === '@') {
     document.getElementById('ac-header').textContent = 'Pessoas & Grupos';
-    const ppl = DB.people.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      (p.handle || '').toLowerCase().includes(q)
-    );
-    const grp = DB.groups.filter(g =>
-      g.name.toLowerCase().includes(q) ||
-      (g.handle || '').toLowerCase().includes(q)
-    );
+    const ppl = DB.people.filter(p => p.name.toLowerCase().includes(q) || (p.handle || '').toLowerCase().includes(q));
+    const grp = DB.groups.filter(g => g.name.toLowerCase().includes(q) || (g.handle || '').toLowerCase().includes(q));
     items = [
-      // FIX: insert usa __pid:ID__ como marcador interno — resolvido no formatSlackTags
-      // Se não tem handle, usa o nome como rótulo mas o ID como chave real
-      ...ppl.map(p => ({
-        type:   'person',
-        label:  p.name,
-        insert: p.slack_id ? `__pid:${p.slack_id}:${p.name}__` : `@${p.handle || p.name}`,
-        sub:    p.slack_id ? 'ID: ' + p.slack_id : (p.handle ? '@' + p.handle : 'sem ID'),
-        avatar: initials(p.name)
-      })),
-      ...grp.map(g => ({
-        type:   'group',
-        label:  g.name,
-        insert: g.slack_id ? `__gid:${g.slack_id}:${g.name}__` : `@${g.handle}`,
-        sub:    g.slack_id ? 'ID: ' + g.slack_id + ' · @' + g.handle : '@' + g.handle,
-        avatar: g.emoji || '👥'
-      }))
+      ...ppl.map(p => ({ type:'person', label:p.name, insert: p.slack_id ? `__pid:${p.slack_id}:${p.name}__` : `@${p.handle || p.name}`, sub: p.slack_id ? 'ID: ' + p.slack_id : (p.handle ? '@' + p.handle : 'sem ID'), avatar: initials(p.name) })),
+      ...grp.map(g => ({ type:'group',  label:g.name, insert: g.slack_id ? `__gid:${g.slack_id}:${g.name}__` : `@${g.handle}`, sub: g.slack_id ? 'ID: ' + g.slack_id + ' · @' + g.handle : '@' + g.handle, avatar: g.emoji || '👥' }))
     ];
   } else {
     document.getElementById('ac-header').textContent = 'Canais Slack';
-    items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
-      .map(c => ({
-        type:   'channel',
-        label:  '#' + c.name,
-        insert: c.slack_id ? `__cid:${c.slack_id}:${c.name}__` : '#' + c.name,
-        sub:    c.desc || (c.slack_id ? 'ID: ' + c.slack_id : ''),
-        avatar: '#'
-      }));
+    items = DB.channels.filter(c => c.name.toLowerCase().includes(q)).map(c => ({ type:'channel', label:'#' + c.name, insert: c.slack_id ? `__cid:${c.slack_id}:${c.name}__` : '#' + c.name, sub: c.desc || (c.slack_id ? 'ID: ' + c.slack_id : ''), avatar: '#' }));
   }
 
   if (!items.length) { closeAC(); return; }
@@ -1035,72 +877,12 @@ function detectAC(ta) {
 
 function closeAC() { document.getElementById('ac-dropdown').classList.remove('open'); ST.acMode = null; }
 
-  let contactAcItems = [], contactAcFocus = 0;
-
-function onContactInput(ta) {
-  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
-  const atIdx = before.lastIndexOf('@'), hashIdx = before.lastIndexOf('#');
-  const lastIdx = Math.max(atIdx, hashIdx);
-  if (lastIdx === -1) { closeContactAC(); refreshSuggs(); return; }
-  const sym = val[lastIdx], query = before.substring(lastIdx + 1);
-  if (/\s\s/.test(query)) { closeContactAC(); refreshSuggs(); return; }
-  const q = query.toLowerCase().trim();
-  let items = [];
-  if (sym === '@') {
-    document.getElementById('ac-contact-header').textContent = 'Pessoas & Grupos';
-    items = [
-      ...DB.people.filter(p => p.name.toLowerCase().includes(q) || (p.handle||'').toLowerCase().includes(q))
-        .map(p => ({ label: p.name, insert: p.slack_id ? `<@${p.slack_id}>` : `@${p.handle||p.name}`, sub: p.handle ? '@'+p.handle : '', avatar: initials(p.name), type:'person' })),
-      ...DB.groups.filter(g => g.name.toLowerCase().includes(q) || (g.handle||'').toLowerCase().includes(q))
-        .map(g => ({ label: g.name, insert: g.slack_id ? `<!subteam^${g.slack_id}|@${g.handle}>` : `@${g.handle}`, sub: '@'+g.handle, avatar: g.emoji||'👥', type:'group' }))
-    ];
-  } else {
-    document.getElementById('ac-contact-header').textContent = 'Canais Slack';
-    items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
-      .map(c => ({ label: '#'+c.name, insert: c.slack_id ? `<#${c.slack_id}>` : '#'+c.name, sub: c.desc||'', avatar:'#', type:'channel' }));
-  }
-  contactAcItems = items; contactAcFocus = 0;
-  const dd = document.getElementById('ac-contact');
-  if (!items.length) { dd.classList.remove('open'); refreshSuggs(); return; }
-  document.getElementById('ac-contact-list').innerHTML = items.map((it, i) => `
-    <div class="ac-item ${i===0?'focused':''}" data-cac-idx="${i}">
-      <div class="ac-avatar ${it.type}">${it.avatar}</div>
-      <div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div>
-    </div>`).join('');
-  dd.classList.add('open');
-  refreshSuggs();
-}
-
-function closeContactAC() {
-  document.getElementById('ac-contact').classList.remove('open');
-}
-
-function insertContactAC(idx) {
-  const it = contactAcItems[idx]; if (!it) return;
-  const ta = document.getElementById('contact-input');
-  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
-  const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
-  ta.value = val.substring(0, lastIdx) + it.insert + ' ' + val.substring(pos);
-  ta.focus(); closeContactAC(); refreshSuggs();
-}
-
-function onContactKeydown(e) {
-  const dd = document.getElementById('ac-contact');
-  if (!dd.classList.contains('open')) return;
-  if (e.key==='ArrowDown') { e.preventDefault(); contactAcFocus=Math.min(contactAcFocus+1,contactAcItems.length-1); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
-  if (e.key==='ArrowUp')   { e.preventDefault(); contactAcFocus=Math.max(contactAcFocus-1,0); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
-  if (e.key==='Enter'||e.key==='Tab') { e.preventDefault(); insertContactAC(contactAcFocus); }
-  if (e.key==='Escape') closeContactAC();
-}
-
 function insertAC(insert) {
   const ta  = document.getElementById('msg-input');
   const val = ta.value, pos = ta.selectionStart;
   const before = val.substring(0, pos);
   const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
 
-  // Extrai o nome de exibição do marcador interno se for __pid/gid/cid:ID:Nome__
-  // Na tela mostramos o nome bonito; na hora do envio formatSlackTags resolve o ID
   let display = insert;
   const pidMatch = insert.match(/^__pid:([^:]+):(.+)__$/);
   const gidMatch = insert.match(/^__gid:([^:]+):(.+)__$/);
@@ -1122,47 +904,90 @@ function onMsgKeydown(e) {
   const items = window._acItems || [];
   if (e.key === 'ArrowDown') { e.preventDefault(); ST.acFocus = Math.min(ST.acFocus + 1, items.length - 1); refreshACFocus(); }
   if (e.key === 'ArrowUp')   { e.preventDefault(); ST.acFocus = Math.max(ST.acFocus - 1, 0); refreshACFocus(); }
-  if (e.key === 'Enter' || e.key === 'Tab') {
-    const it = items[ST.acFocus];
-    if (it) { e.preventDefault(); insertAC(it.insert); }
-  }
+  if (e.key === 'Enter' || e.key === 'Tab') { const it = items[ST.acFocus]; if (it) { e.preventDefault(); insertAC(it.insert); } }
   if (e.key === 'Escape') closeAC();
 }
-function refreshACFocus() {
-  document.querySelectorAll('.ac-item').forEach((el, i) => el.classList.toggle('focused', i === ST.acFocus));
+
+function refreshACFocus() { document.querySelectorAll('.ac-item').forEach((el, i) => el.classList.toggle('focused', i === ST.acFocus)); }
+
+/* ── CONTACT AUTOCOMPLETE FIX ── */
+let contactAcItems = [], contactAcFocus = 0;
+
+function onContactInput(ta) {
+  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
+  const atIdx = before.lastIndexOf('@'), hashIdx = before.lastIndexOf('#');
+  const lastIdx = Math.max(atIdx, hashIdx);
+  if (lastIdx === -1) { closeContactAC(); refreshSuggs(); return; }
+  const sym = val[lastIdx], query = before.substring(lastIdx + 1);
+  if (/\s\s/.test(query)) { closeContactAC(); refreshSuggs(); return; }
+  
+  const q = query.toLowerCase().trim();
+  let items = [];
+  if (sym === '@') {
+    document.getElementById('ac-contact-header').textContent = 'Pessoas & Grupos';
+    items = [
+      ...DB.people.filter(p => p.name.toLowerCase().includes(q) || (p.handle||'').toLowerCase().includes(q))
+        .map(p => ({ label: p.name, insert: p.slack_id ? `__pid:${p.slack_id}:${p.name}__` : `@${p.handle||p.name}`, sub: p.handle ? '@'+p.handle : '', avatar: initials(p.name), type:'person' })),
+      ...DB.groups.filter(g => g.name.toLowerCase().includes(q) || (g.handle||'').toLowerCase().includes(q))
+        .map(g => ({ label: g.name, insert: g.slack_id ? `__gid:${g.slack_id}:${g.name}__` : `@${g.handle}`, sub: '@'+g.handle, avatar: g.emoji||'👥', type:'group' }))
+    ];
+  } else {
+    document.getElementById('ac-contact-header').textContent = 'Canais Slack';
+    items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
+      .map(c => ({ label: '#'+c.name, insert: c.slack_id ? `__cid:${c.slack_id}:${c.name}__` : '#'+c.name, sub: c.desc||'', avatar:'#', type:'channel' }));
+  }
+  contactAcItems = items; contactAcFocus = 0;
+  const dd = document.getElementById('ac-contact');
+  if (!items.length) { dd.classList.remove('open'); refreshSuggs(); return; }
+  document.getElementById('ac-contact-list').innerHTML = items.map((it, i) => `
+    <div class="ac-item ${i===0?'focused':''}" data-cac-idx="${i}">
+      <div class="ac-avatar ${it.type}">${it.avatar}</div>
+      <div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div>
+    </div>`).join('');
+  dd.classList.add('open');
+  refreshSuggs();
+}
+
+function closeContactAC() { document.getElementById('ac-contact').classList.remove('open'); }
+
+function insertContactAC(idx) {
+  const it = contactAcItems[idx]; if (!it) return;
+  const ta = document.getElementById('contact-input');
+  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
+  const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
+  
+  // FIX: Insere apenas o nome de exibição no input, deixando a conversão pro formatSlackTags!
+  let display = it.insert;
+  const pidMatch = display.match(/^__pid:([^:]+):(.+)__$/);
+  const gidMatch = display.match(/^__gid:([^:]+):(.+)__$/);
+  const cidMatch = display.match(/^__cid:([^:]+):(.+)__$/);
+  if (pidMatch) display = '@' + pidMatch[2];
+  if (gidMatch) display = '@' + gidMatch[2];
+  if (cidMatch) display = '#' + cidMatch[2];
+
+  ta.value = val.substring(0, lastIdx) + display + ' ' + val.substring(pos);
+  ta.focus(); closeContactAC(); refreshSuggs();
+}
+
+function onContactKeydown(e) {
+  const dd = document.getElementById('ac-contact');
+  if (!dd.classList.contains('open')) return;
+  if (e.key==='ArrowDown') { e.preventDefault(); contactAcFocus=Math.min(contactAcFocus+1,contactAcItems.length-1); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
+  if (e.key==='ArrowUp')   { e.preventDefault(); contactAcFocus=Math.max(contactAcFocus-1,0); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
+  if (e.key==='Enter'||e.key==='Tab') { e.preventDefault(); insertContactAC(contactAcFocus); }
+  if (e.key==='Escape') closeContactAC();
 }
 
 /* ══════════════════════════════
-   SCENARIOS
+   SCENARIOS & TEMPLATES
 ══════════════════════════════ */
-const HINTS = {
-  ferias:  ['@nome','férias','a partir de DD/MM','retornando em DD/MM'],
-  licenca: ['@nome','atestado','licença médica','retorna em DD/MM'],
-  aviso:   ['instabilidade em','falha no','indisponível','manutenção'],
-  retorno: ['@nome','retornou','disponível','de volta em DD/MM']
-};
-
 function setScenario(sc) {
   ST.scenario = sc;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + sc).classList.add('active');
-  renderHints(); processInput(document.getElementById('msg-input').value);
+  processInput(document.getElementById('msg-input').value);
 }
 
-function renderHints() {
-  document.getElementById('hint-pills').innerHTML = (HINTS[ST.scenario] || [])
-    .map(h => `<span class="hint-pill" data-hint="${esc(h)}">${esc(h)}</span>`).join('');
-}
-
-function insertHint(h) {
-  const ta = document.getElementById('msg-input'), vl = ta.value;
-  ta.value = vl + (vl && !vl.endsWith(' ') ? ' ' : '') + h + ' ';
-  ta.focus(); processInput(ta.value);
-}
-
-/* ══════════════════════════════
-   OPTIONS
-══════════════════════════════ */
 function toggleContact() {
   ST.contactOn = !ST.contactOn;
   document.getElementById('tgl-contact').classList.toggle('on', ST.contactOn);
@@ -1190,11 +1015,9 @@ function toggleSchedule() {
 }
 
 function updateSchedHint() {
-  const d = document.getElementById('sched-date').value;
-  const t = document.getElementById('sched-time').value;
+  const d = document.getElementById('sched-date').value, t = document.getElementById('sched-time').value;
   if (d && t) {
-    document.getElementById('sched-hint').textContent =
-      new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+    document.getElementById('sched-hint').textContent = new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
     document.getElementById('sched-badge').classList.add('visible');
   }
   updatePreview(ST.selSugg);
@@ -1202,79 +1025,51 @@ function updateSchedHint() {
 
 function refreshSuggs() { processInput(document.getElementById('msg-input').value); }
 
-/* ══════════════════════════════
-   FORMATTER
-══════════════════════════════ */
+/* ── FORMATTER ── */
 function formatSlackTags(text) {
   let txt = text;
   
-    // ── MENÇÕES ESPECIAIS 
-  txt = txt.replace(/@here\b/gi,     '<!here>');
-  txt = txt.replace(/@channel\b/gi,  '<!channel>');
+  // 1. Pega marcações do sistema (AQUI o robô não mexe mais nos nomes!)
+  txt = txt.replace(/@aqui\b/gi,  '<!here>');
+  txt = txt.replace(/@canal\b/gi, '<!channel>');
+  txt = txt.replace(/@todos\b/gi, '<!everyone>');
+  txt = txt.replace(/@here\b/gi,  '<!here>');
+  txt = txt.replace(/@channel\b/gi, '<!channel>');
   txt = txt.replace(/@everyone\b/gi, '<!everyone>');
-
-  // ── VERSÕES EM PORTUGUÊS ──
-  txt = txt.replace(/@aqui\b/gi,     '<!here>');
-  txt = txt.replace(/@canal\b/gi,    '<!channel>');
-  txt = txt.replace(/@todos\b/gi,    '<!everyone>');
   
-  // ── PESSOAS ──
-  // Estratégia: tenta pelo nome de exibição (com ou sem espaço), depois pelo handle
-  // Ordena do nome mais longo para o mais curto para evitar substituição parcial
+  // 2. Transforma as pessoas do banco de dados em tags
   const peopleSorted = [...DB.people].sort((a, b) => b.name.length - a.name.length);
-
   peopleSorted.forEach(p => {
-    if (!p.slack_id) return; // sem ID não há como marcar
-
-    // 1. Tenta pelo handle (sem espaço) — ex: @luiz.lackeski
+    if (!p.slack_id) return;
     if (p.handle) {
       const reHandle = new RegExp('@' + escapeRegex(p.handle) + '(?=[\\s,;.!?]|$)', 'gi');
       txt = txt.replace(reHandle, `<@${p.slack_id}>`);
     }
-
-    // 2. Tenta pelo nome completo — ex: @Luiz Lackeski
     const reNome = new RegExp('@' + escapeRegex(p.name) + '(?=[\\s,;.!?]|$)', 'gi');
     txt = txt.replace(reNome, `<@${p.slack_id}>`);
-
-    // 3. Tenta pelo primeiro nome — ex: @Luiz  (só se nome tiver mais de uma palavra)
     const firstName = p.name.split(' ')[0];
     if (firstName && p.name.includes(' ')) {
       const reFirst = new RegExp('@' + escapeRegex(firstName) + '(?=[\\s,;.!?]|$)', 'gi');
-      // Só substitui se ainda não foi substituído (não tem <@ já no lugar)
       txt = txt.replace(reFirst, (match, offset) => {
-        // Verifica que não é parte de uma tag já substituída
         const before = txt.substring(Math.max(0, offset - 2), offset);
         return before.includes('<') ? match : `<@${p.slack_id}>`;
       });
     }
   });
 
-  // ── GRUPOS ──
+  // 3. Grupos
   const groupsSorted = [...DB.groups].sort((a, b) => b.name.length - a.name.length);
-
   groupsSorted.forEach(g => {
     if (!g.handle) return;
-
     const reHandle = new RegExp('@' + escapeRegex(g.handle) + '(?=[\\s,;.!?]|$)', 'gi');
-
-    if (g.slack_id) {
-      // Com ID: marca o subteam corretamente
-      txt = txt.replace(reHandle, `<!subteam^${g.slack_id}|@${g.handle}>`);
-    } else {
-      // Sem ID: usa @handle — o Slack reconhece grupos por handle também
-      txt = txt.replace(reHandle, `@${g.handle}`);
-    }
-
-    // Tenta pelo nome do grupo também — ex: @Time de TI
+    if (g.slack_id) { txt = txt.replace(reHandle, `<!subteam^${g.slack_id}|@${g.handle}>`); } 
+    else { txt = txt.replace(reHandle, `@${g.handle}`); }
     const reNome = new RegExp('@' + escapeRegex(g.name) + '(?=[\\s,;.!?]|$)', 'gi');
-    if (g.slack_id) {
-      txt = txt.replace(reNome, `<!subteam^${g.slack_id}|@${g.handle}>`);
-    }
+    if (g.slack_id) { txt = txt.replace(reNome, `<!subteam^${g.slack_id}|@${g.handle}>`); }
   });
 
-  // ── CANAIS ──
+  // 4. Canais
   const channelsSorted = [...DB.channels].sort((a, b) => b.name.length - a.name.length);
-
   channelsSorted.forEach(c => {
     if (!c.slack_id) return;
     const re = new RegExp('#' + escapeRegex(c.name) + '(?=[\\s,;.!?]|$)', 'gi');
@@ -1284,166 +1079,95 @@ function formatSlackTags(text) {
   return txt;
 }
 
-// Escapa caracteres especiais de regex no nome/handle
-function escapeRegex(s) {
-  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+function escapeRegex(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
-/* ══════════════════════════════
-   SUGGESTIONS
-══════════════════════════════ */
 function cSlack() {
   if (!ST.contactOn) return '';
-  const c = (document.getElementById('contact-input').value || '').trim();
-  return c ? `\n\n📞 _Contatos urgentes: ${c}_` : '\n\n📞 _Contatos urgentes: acione o responsável da área._';
+  let c = document.getElementById('contact-input').value || '';
+  if (!c.trim()) return '\n\n📞 _Contatos urgentes: acione o responsável da área._';
+  c = formatSlackTags(c.trim());
+  return `\n\n📞 _Contatos urgentes: ${c}_`;
 }
+
 function cHtml() {
   if (!ST.contactOn) return '';
-  const raw = (document.getElementById('contact-input').value || '').trim();
-  if (!raw) return `<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
-  // Converte as tags reais do Slack (<@U...>, <!subteam^...>, <#C...>)
-  // para versão legível no preview HTML
-  const display = raw
-    .replace(/<@(U[A-Z0-9]+)>/g, (_, id) => {
-      const p = DB.people.find(p => p.slack_id === id);
-      return `<span style="color:var(--cobli-green2)">@${p ? p.name : id}</span>`;
-    })
-    .replace(/<!subteam\^([^|>]+)\|?([^>]*)>/g, (_, id, label) => {
-      const g = DB.groups.find(g => g.slack_id === id);
-      return `<span style="color:var(--cobli-green)">@${g ? g.name : (label || id)}</span>`;
-    })
-    .replace(/<#(C[A-Z0-9]+)>/g, (_, id) => {
-      const c = DB.channels.find(c => c.slack_id === id);
-      return `<span style="color:var(--cobli-blue-chart)">#${c ? c.name : id}</span>`;
-    });
+  let c = document.getElementById('contact-input').value || '';
+  if (!c.trim()) return `<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
+  const display = esc(c.trim()).replace(/@([\w.]+(?:\s+[\w.]+)*)/g, '<span style="color:var(--cobli-green2)">@$1</span>').replace(/#([\w-]+)/g, '<span style="color:var(--cobli-blue-chart)">#$1</span>');
   return `<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${display}</small>`;
 }
 
-function parseMsg(text) {
-  const userMatches = [];
-  // Captura @Palavra ou @Palavra Palavra — máximo 2 palavras, nenhuma pode ser número ou palavra comum
-  const STOP_WORDS = new Set(['de','da','do','em','até','a','as','o','os','na','no','para','por','com','hoje','amanhã','volta','férias','retorno','retornando','licença','atestado','disponível']);
-  const re = /@([\w.]+(?:\s+[\w.]+)?)/g;
-  let m;
-  while ((m = re.exec(text)) !== null) {
-    const parts = m[1].split(/\s+/).filter(p => !STOP_WORDS.has(p.toLowerCase()) && !/^\d+$/.test(p));
-    if (parts.length) userMatches.push('@' + parts.slice(0, 2).join(' '));
-  }
-  return {
-    users: userMatches,
-    dates: [...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m => m[1])
-  };
-}
-
+// Remodelagem Limpa dos Templates (Aceita o texto livre da textarea)
 function buildSuggs(text, sc) {
-  const { users, dates } = parseMsg(text);
-  const u  = users[0] || '@colaborador';
-  const d1 = dates[0] || 'DD/MM';
-  const d2 = dates[1] || 'DD/MM';
+  if (!text.trim() || text.trim().length < 3) return [];
+
+  // Texto processado para o Slack
+  const fullSlack = formatSlackTags(text.trim());
+  // Texto processado para a Tela (Substituindo Quebras de linha por <br>)
+  const fullHtml = esc(text.trim()).replace(/\n/g, '<br>').replace(/@([\w.]+(?:\s+[\w.]+)*)/g, '<span style="color:var(--cobli-green2)">@$1</span>').replace(/#([\w-]+)/g, '<span style="color:var(--cobli-blue-chart)">#$1</span>');
+
   const cs = cSlack();
   const ch = cHtml();
-  if (!text.trim() || text.trim().length < 5) return [];
 
-  // Texto completo formatado para Slack (com todas as menções resolvidas)
-  const fullSlack = formatSlackTags(text.trim());
-  // Texto completo para preview HTML (mantém @ e # visíveis)
-  const fullHtml  = esc(text.trim()).replace(/@([\w.]+(?:\s+[\w.]+)*)/g, '<span style="color:var(--cobli-green2)">@$1</span>').replace(/#([\w-]+)/g, '<span style="color:var(--cobli-blue-chart)">#$1</span>');
-  // ADICIONA esta linha nova logo abaixo das duas
-const uFormatted = users[0] ? formatSlackTags(users[0]) : '@colaborador';
-
-  // Helper: gera bloco Slack com barra colorida lateral (attachment)
-  // Slack suporta "attachments" com color — usamos JSON no payload
-  // Mas como o payload é texto simples aqui, simulamos com bloco de citação > 
-  // Para barra real, a Edge Function precisaria usar attachments — 
-  // então guardamos o texto normal e a Edge Function adiciona a barra.
-  // No preview HTML simulamos a barra com CSS.
-
-  function slackBlock(emoji, title, body) {
-    return `${emoji} *${title}*\n\n${body}${cs}`;
-  }
+  function slackBlock(emoji, title, body) { return `${emoji} *${title}*\n\n${body}${cs}`; }
   function htmlBlock(emoji, title, body, color) {
-    // Converte \n em <br> para renderizar no preview
-    const bodyHtml = body.replace(/\n/g, '<br>');
     return `<div style="display:flex;gap:10px;align-items:stretch">
       <div style="width:4px;border-radius:2px;background:${color || 'var(--cobli-green)'};flex-shrink:0"></div>
-      <div>${emoji}${title ? ` <b>${title}</b><br><br>` : ''}${bodyHtml}${ch}</div>
+      <div>${emoji}${title ? ` <b>${title}</b><br><br>` : ''}${body}${ch}</div>
     </div>`;
   }
 
   const T = {
     ferias: [
-      { tag:'ferias', label:'Formal — texto completo',
-        slack: slackBlock('🏖️','Aviso de Férias 🌴', `${fullSlack}\n\n📅 Férias de *${d1}* até *${d2}* 🔙`),
-        html:  htmlBlock('🏖️','Aviso de Férias 🌴', `${fullHtml}<br><br>📅 Férias de <b>${d1}</b> até <b>${d2}</b> 🔙`, 'var(--cobli-green)') },
-
-      { tag:'ferias', label:'Informal — texto completo',
-        slack: `🌴 ${fullSlack}\n\n📅 *${d1}* → *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`,
-        html:  htmlBlock('🌴','', `${fullHtml}<br>📅 <b>${d1}</b> → <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>`, '#3248C6') },
-
-      { tag:'retorno', label:'Aviso de retorno',
-        slack: slackBlock('✅','Retorno de Férias 🎉', `${u} retorna às atividades em *${d2}*.\n_Bem-vindo(a) de volta!_ 🙌`),
-        html:  htmlBlock('✅','Retorno de Férias 🎉', `${u} retorna em <b>${d2}</b>.<br><small style="color:#888">Bem-vindo(a) de volta!</small>`, 'var(--cobli-green2)') },
-
-      { tag:'aviso', label:'Comunicado de RH',
-        slack: `📢 Informamos que ${fullSlack}.\n\n📅 Período: *${d1}* a *${d2}*${cs}`,
-        html:  htmlBlock('📢','Comunicado', `${fullHtml}<br>📅 Período: <b>${d1}</b> a <b>${d2}</b>`, '#7F8DDB') },
+      { tag:'ferias', label:'Aviso de Férias (Formal)',
+        slack: slackBlock('🏖️','Aviso de Férias 🌴', `${fullSlack}`),
+        html:  htmlBlock('🏖️','Aviso de Férias 🌴', `${fullHtml}`, 'var(--cobli-green)') },
+      { tag:'ferias', label:'Aviso de Férias (Informal)',
+        slack: `🌴 ${fullSlack}\n\n_Qualquer dúvida, falar com o time!_${cs}`,
+        html:  htmlBlock('🌴','', `${fullHtml}<br><br><small style="color:#888">Qualquer dúvida, falar com o time!</small>`, 'var(--cobli-green)') },
+      { tag:'retorno', label:'Aviso de Retorno (Formal)',
+        slack: slackBlock('✅','Retorno de Férias 🎉', `${fullSlack}\n\n_Bem-vindo(a) de volta!_ 🙌`),
+        html:  htmlBlock('✅','Retorno de Férias 🎉', `${fullHtml}<br><br><small style="color:#888">Bem-vindo(a) de volta!</small>`, 'var(--cobli-green2)') },
+      { tag:'retorno', label:'Retorno Simples',
+        slack: `✅ ${fullSlack} 🟢${cs}`,
+        html:  htmlBlock('✅', '', `${fullHtml} 🟢`, 'var(--cobli-green2)') },
     ],
-  licenca: [
-      { tag:'licenca', label:'Aviso discreto',
-        slack: slackBlock('🩺','Aviso de Ausência 🏥', `${uFormatted} está de licença médica e retorna em *${d1}*.\n_Desejamos uma pronta recuperação! 💙_`),
-        html:  htmlBlock('🩺','Aviso de Ausência 🏥', `${uFormatted} está de licença médica e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>`, '#3248C6') },
-
-      { tag:'licenca', label:'Formal',
-        slack: `⚕️ ${uFormatted} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`,
-        html:  htmlBlock('⚕️','', `${uFormatted} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>`, '#7F8DDB') },
-
-      { tag:'licenca', label:'Simples',
-        slack: `${uFormatted} ficará ausente até *${d1}*. 🩺\n_Contamos com a compreensão de todos! 🤝_${cs}`,
-        html:  htmlBlock('🩺','', `${uFormatted} ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>`, 'var(--cobli-green)') },
+    incidentes: [
+      { tag:'incidente', label:'🚨 Instabilidade / Problema',
+        slack: slackBlock('🚨','[INCIDENTE]', `${fullSlack}\n\n📌 Equipe técnica *já está atuando*.\n⏱️ Previsão: em análise\n_Atualizações serão postadas aqui._`),
+        html:  htmlBlock('🚨','[INCIDENTE]', `${fullHtml}<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise<br><small>Atualizações serão postadas aqui.</small>`, 'var(--cobli-red)') },
+      { tag:'incidente_att', label:'⚠️ Atualização de Status',
+        slack: slackBlock('⚠️','[ATUALIZAÇÃO]', `${fullSlack}\n\n_Continuamos trabalhando na solução._`),
+        html:  htmlBlock('⚠️','[ATUALIZAÇÃO]', `${fullHtml}<br><br><small style="color:#888">Continuamos trabalhando na solução.</small>`, 'var(--warn)') },
+      { tag:'incidente_ok', label:'✅ Incidente Resolvido',
+        slack: slackBlock('✅','[RESOLVIDO] 🟢', `O sistema voltou a operar normalmente.\n\n${fullSlack}\n\n_Pedimos desculpas pelo transtorno._`),
+        html:  htmlBlock('✅','[RESOLVIDO] 🟢', `O sistema voltou a operar normalmente.<br><br>${fullHtml}`, 'var(--cobli-green)') },
     ],
-    aviso: [
-      { tag:'aviso', label:'Incidente crítico',
-        slack: slackBlock('🚨','[INCIDENTE]', `${fullSlack}\n\n📌 Equipe técnica *já está atuando*.\n⏱️ Previsão: em análise\n\n_Atualizações serão postadas aqui._`),
-        html:  htmlBlock('🚨','[INCIDENTE]', `${fullHtml}<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise`, 'var(--cobli-red)') },
-
-      { tag:'aviso', label:'Manutenção programada',
-        slack: slackBlock('🔧','Manutenção Programada', `${fullSlack}\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n\n_Agradecemos a compreensão!_`),
-        html:  htmlBlock('🔧','Manutenção Programada', `${fullHtml}<br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir`, 'var(--warn)') },
-
-      { tag:'aviso', label:'Incidente resolvido',
-        slack: slackBlock('✅','Incidente Resolvido 🟢', `Sistema voltou a operar normalmente.\n📅 Resolvido em: *${d1}*\n\n${fullSlack}\n\n_Pedimos desculpas pelo transtorno._`),
-        html:  htmlBlock('✅','Incidente Resolvido 🟢', `Sistema operando normalmente.<br>📅 Resolvido em: <b>${d1}</b>`, 'var(--cobli-green)') },
-
-      { tag:'aviso', label:'Comunicado geral',
-        slack: slackBlock('📢','Comunicado Importante', `${fullSlack}\n\n_— Equipe de TI_`),
-        html:  htmlBlock('📢','Comunicado Importante', `${fullHtml}<br><small style="color:#888">— Equipe de TI</small>`, '#7F8DDB') },
-    ],
-retorno: [
-      { tag:'retorno', label:'Retorno celebrativo',
-        slack: slackBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨`),
-        html:  htmlBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌\n📅 Retornou em: <b>${d1}</b>`, 'var(--cobli-green2)') },
-
-      { tag:'retorno', label:'Simples e objetivo',
-        slack: `✅ ${uFormatted} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`,
-        html:  htmlBlock('✅', '', `${uFormatted} retornou e já está disponível a partir de <b>${d1}</b>. 🟢`, 'var(--cobli-green)') },
-    ],
+    geral: [
+      { tag:'geral', label:'📢 Comunicado Oficial',
+        slack: slackBlock('📢','Comunicado Importante', `${fullSlack}`),
+        html:  htmlBlock('📢','Comunicado Importante', `${fullHtml}`, '#7F8DDB') },
+      { tag:'geral', label:'💬 Aviso Simples',
+        slack: `${fullSlack}${cs}`,
+        html:  htmlBlock('💬','', `${fullHtml}`, '#3248C6') },
+    ]
   };
-  return (T[sc] || T.ferias).slice(0, 4);
+  return (T[sc] || T.ferias);
 }
 
-const TL = { ferias:'Férias', licenca:'Licença', aviso:'Aviso', retorno:'Retorno' };
-const TC = { ferias:'tag-ferias', licenca:'tag-licenca', aviso:'tag-aviso', retorno:'tag-retorno' };
+const TL = { ferias:'Férias', retorno:'Retorno', incidente:'Problema', incidente_att:'Update', incidente_ok:'Resolvido', geral:'Geral' };
+const TC = { ferias:'tag-ferias', retorno:'tag-retorno', incidente:'tag-incidente', incidente_att:'tag-incidente', incidente_ok:'tag-retorno', geral:'tag-geral' };
 
 function processInput(val) {
   const suggs = buildSuggs(val, ST.scenario);
   const grid  = document.getElementById('sugg-grid');
   const lbl   = document.getElementById('sugg-label');
   if (!suggs.length) {
-    grid.innerHTML = '<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
-    lbl.textContent = 'Variações de mensagem';
+    grid.innerHTML = '<div class="no-sugg">Digite o corpo da mensagem na caixa acima ✨</div>';
+    lbl.textContent = 'Formatos Disponíveis';
     ST.selSugg = null; updatePreview(null); updateSendBtn(); return;
   }
-  lbl.textContent = suggs.length + ' variações — escolha uma:';
+  lbl.textContent = suggs.length + ' formatos disponíveis — escolha um:';
   grid.innerHTML = suggs.map((s, i) => `
     <div class="sugg-card" id="sc-${i}" data-sugg-idx="${i}">
       <div class="sugg-card-hdr"><span class="tag ${TC[s.tag]}">${TL[s.tag]}</span><span class="sugg-name">${s.label}</span><div class="sel-dot" id="dot-${i}"></div></div>
@@ -1480,14 +1204,11 @@ function updatePreview(s) {
   msg.classList.add('visible'); emp.style.display = 'none';
   document.getElementById('preview-text').innerHTML = s.html;
   const now = new Date();
-  document.getElementById('preview-time').textContent = ' ' +
-    now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+  document.getElementById('preview-time').textContent = ' ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
   if (ST.schedOn) {
-    const d = document.getElementById('sched-date').value;
-    const t = document.getElementById('sched-time').value;
+    const d = document.getElementById('sched-date').value, t = document.getElementById('sched-time').value;
     if (d && t) {
-      document.getElementById('preview-sched-txt').textContent =
-        'Agendado para ' + new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      document.getElementById('preview-sched-txt').textContent = 'Agendado para ' + new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
       sc.classList.add('visible');
     } else sc.classList.remove('visible');
   } else sc.classList.remove('visible');
@@ -1497,24 +1218,22 @@ function updatePreview(s) {
    SEND E SCHEDULE (Atualizados com Cores)
 ══════════════════════════════ */
 function updateSendBtn() {
-  const btn = document.getElementById('btn-send');
-  const lbl = document.getElementById('btn-send-label');
+  const btn = document.getElementById('btn-send'), lbl = document.getElementById('btn-send-label');
   btn.disabled = !(ST.selSugg && ST.selWh);
   lbl.textContent = ST.schedOn ? 'Agendar mensagem' : 'Enviar para o Slack';
   const st = document.getElementById('send-status');
   if (ST.selSugg && !ST.selWh) {
-    st.className = 'status-msg warn';
-    st.innerHTML = '<i class="ti ti-alert-triangle"></i> Selecione um canal de destino';
+    st.className = 'status-msg warn'; st.innerHTML = '<i class="ti ti-alert-triangle"></i> Selecione um canal de destino';
   } else if (st.className.includes('warn')) { st.textContent = ''; st.className = 'status-msg'; }
 }
 
-// Mapa de cores para bater com a Edge Function
 const SCENARIO_COLORS = {
-  ferias:  "#00AE97",
-  licenca: "#3248C6",
-  aviso:   "#FF4633",
-  retorno: "#0FFDC9",
-  default: "#001BB8"
+  ferias:        "#00AE97", // Verde
+  retorno:       "#0FFDC9", // Verde Ciano
+  incidente:     "#FF4633", // Vermelho
+  incidente_att: "#F59E0B", // Laranja (Warn)
+  incidente_ok:  "#00AE97", // Verde (Success)
+  geral:         "#001BB8"  // Azul Cobli
 };
 
 async function sendMessage() {
@@ -1522,10 +1241,8 @@ async function sendMessage() {
   if (ST.schedOn) { await scheduleMsg(); return; }
   
   const btn = document.getElementById('btn-send');
-  btn.disabled = true;
-  document.getElementById('btn-send-label').textContent = 'Enviando…';
+  btn.disabled = true; document.getElementById('btn-send-label').textContent = 'Enviando…';
   
-  // Pega a cor correspondente à aba escolhida
   const msgColor = SCENARIO_COLORS[ST.selSugg.tag] || SCENARIO_COLORS.default;
 
   try {
@@ -1533,37 +1250,30 @@ async function sendMessage() {
     const res = await fetch(EDGE_SEND_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-      // Envia a cor para o envio imediato
       body: JSON.stringify({ webhook_url: ST.selWh.url, message_text: ST.selSugg.slack, color: msgColor })
     });
     const textResult = await res.text();
-    let result = {};
-    try { result = JSON.parse(textResult); } catch (e) { throw new Error(textResult); }
+    let result = {}; try { result = JSON.parse(textResult); } catch (e) { throw new Error(textResult); }
     if (res.ok && result.ok) {
       showStatus('Mensagem enviada com sucesso! ✓', 'success');
       document.getElementById('btn-send-label').textContent = 'Enviado!';
       setTimeout(() => { document.getElementById('btn-send-label').textContent = 'Enviar para o Slack'; btn.disabled = false; updateSendBtn(); }, 2500);
     } else { throw new Error(result.error || 'Erro na resposta da Edge Function'); }
   } catch (e) {
-    showStatus('Erro ao enviar: ' + e.message, 'error');
-    console.error(e);
-    document.getElementById('btn-send-label').textContent = 'Enviar para o Slack';
-    btn.disabled = false;
+    showStatus('Erro ao enviar: ' + e.message, 'error'); console.error(e);
+    document.getElementById('btn-send-label').textContent = 'Enviar para o Slack'; btn.disabled = false;
   }
 }
 
 async function scheduleMsg() {
-  const d = document.getElementById('sched-date').value;
-  const t = document.getElementById('sched-time').value;
+  const d = document.getElementById('sched-date').value, t = document.getElementById('sched-time').value;
   if (!d || !t) { alert('Selecione data e hora.'); return; }
   const dt = new Date(d + 'T' + t);
   if (dt <= new Date()) { alert('Selecione um horário futuro.'); return; }
   
   const btn = document.getElementById('btn-send');
-  btn.disabled = true;
-  document.getElementById('btn-send-label').textContent = 'Agendando…';
+  btn.disabled = true; document.getElementById('btn-send-label').textContent = 'Agendando…';
   
-  // Pega a cor correspondente à aba escolhida
   const msgColor = SCENARIO_COLORS[ST.selSugg.tag] || SCENARIO_COLORS.default;
 
   try {
@@ -1572,8 +1282,8 @@ async function scheduleMsg() {
       webhook_id:   ST.selWh.id,
       webhook_name: ST.selWh.name,
       slack_text:   ST.selSugg.slack,
-      color:        msgColor, // Salva a cor no banco de dados
-      preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g, ''),
+      color:        msgColor,
+      preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g, '').substring(0,60) + '...',
       scheduled_at: dt.toISOString(),
     });
     if (error) throw error;
@@ -1583,199 +1293,93 @@ async function scheduleMsg() {
     loadQueue();
   } catch (e) {
     alert('Erro ao agendar:\n' + e.message);
-    document.getElementById('btn-send-label').textContent = 'Agendar mensagem';
-    document.getElementById('btn-send').disabled = false;
+    document.getElementById('btn-send-label').textContent = 'Agendar mensagem'; btn.disabled = false;
   }
 }
 
 /* ══════════════════════════════
-   UTILS
+   UTILS & EVENT DELEGATION
 ══════════════════════════════ */
 function showStatus(msg, type) {
-  const el = document.getElementById('send-status');
-  el.className = 'status-msg ' + (type || '');
+  const el = document.getElementById('send-status'); el.className = 'status-msg ' + (type || '');
   const icon = type === 'success' ? 'ti-circle-check' : type === 'error' ? 'ti-alert-circle' : 'ti-info-circle';
   el.innerHTML = `<i class="ti ${icon}"></i> ${msg}`;
   if (type !== 'warn') setTimeout(() => { el.textContent = ''; el.className = 'status-msg'; }, 4000);
 }
-
 function clearCompose() {
   document.getElementById('msg-input').value = '';
-  document.getElementById('sugg-grid').innerHTML = '<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
-  document.getElementById('sugg-label').textContent = 'Variações de mensagem';
+  document.getElementById('sugg-grid').innerHTML = '<div class="no-sugg">Digite o corpo da mensagem na caixa acima ✨</div>';
+  document.getElementById('sugg-label').textContent = 'Formatos Disponíveis';
   ST.selSugg = null; updatePreview(null); updateSendBtn();
   const st = document.getElementById('send-status'); st.textContent = ''; st.className = 'status-msg';
 }
-
 function renderAll() { renderWhDrop(); renderWhBtn(); renderPeopleList(); renderGroupsList(); renderChannelsList(); renderWhSettings(); }
 function v(id)  { return document.getElementById(id).value.trim(); }
 function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function initials(n) { return (n || '').split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase(); }
 
-/* ══════════════════════════════
-   EVENT DELEGATION
-   FIX PRINCIPAL: todos os eventos via delegation
-   em vez de inline onclick no HTML — evita
-   erros de "cannot read properties of null"
-   quando o DOM ainda não está pronto
-══════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Bootstrap: verifica sessão ativa antes de qualquer coisa
   bootstrap();
 
-  /* ── Auth ── */
   document.getElementById('auth-btn').addEventListener('click', doAuth);
   document.getElementById('auth-pw').addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); });
-  document.querySelectorAll('.auth-tab').forEach(btn => {
-    btn.addEventListener('click', () => switchAuthMode(btn.textContent === 'Entrar' ? 'login' : 'signup', btn));
-  });
+  document.querySelectorAll('.auth-tab').forEach(btn => { btn.addEventListener('click', () => switchAuthMode(btn.textContent === 'Entrar' ? 'login' : 'signup', btn)); });
+  document.getElementById('btn-logout').addEventListener('click', async () => { try { await sb.auth.signOut(); window.location.reload(); } catch (e) { alert('Erro ao sair: ' + e.message); } });
+  document.querySelectorAll('.nav-item').forEach(btn => { btn.addEventListener('click', () => { const panel = btn.getAttribute('onclick')?.match(/'(\w+)'/)?.[1]; if (panel) showPanel(panel, btn); }); });
 
-  /* ── Logout ── */
-  document.getElementById('btn-logout').addEventListener('click', async () => {
-    try { await sb.auth.signOut(); window.location.reload(); }
-    catch (e) { alert('Erro ao sair: ' + e.message); }
-  });
+  const navMap = [['Enviar mensagem', 'compose'], ['Agendamentos', 'queue'], ['Webhooks', 'webhooks'], ['Pessoas', 'people'], ['Canais Slack', 'channels']];
+  document.querySelectorAll('.nav-item').forEach((btn, i) => { const id = ['compose','queue','webhooks','people','channels'][i]; if (id) btn.onclick = () => showPanel(id, btn); });
 
-  /* ── Nav ── */
-  document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const panel = btn.getAttribute('onclick')?.match(/'(\w+)'/)?.[1];
-      if (panel) showPanel(panel, btn);
-    });
-  });
-
-  // Reescreve nav sem onclick inline
-  const navMap = [
-    ['Enviar mensagem', 'compose'],
-    ['Agendamentos',    'queue'],
-    ['Webhooks',        'webhooks'],
-    ['Pessoas',         'people'],
-    ['Canais Slack',    'channels'],
-  ];
-  document.querySelectorAll('.nav-item').forEach((btn, i) => {
-    const id = ['compose','queue','webhooks','people','channels'][i];
-    if (id) btn.onclick = () => showPanel(id, btn);
-  });
-
-  /* ── Webhook dropdown ── */
   document.getElementById('wh-btn').addEventListener('click', () => toggleWhDrop());
-  document.getElementById('btn-manage-wh').addEventListener('click', () => {
-    showPanel('webhooks', document.querySelectorAll('.nav-item')[2]);
-  });
+  document.getElementById('btn-manage-wh').addEventListener('click', () => { showPanel('webhooks', document.querySelectorAll('.nav-item')[2]); });
   document.addEventListener('click', e => {
-    if (!document.getElementById('wh-wrap').contains(e.target)) {
-      whOpen = false; document.getElementById('wh-dropdown').classList.remove('open');
-
-      // Contact autocomplete — fecha ao clicar fora
-  document.addEventListener('click', e => {
+    if (!document.getElementById('wh-wrap').contains(e.target)) { whOpen = false; document.getElementById('wh-dropdown').classList.remove('open'); }
     if (!document.getElementById('contact-row').contains(e.target)) closeContactAC();
   });
+  document.getElementById('contact-row').addEventListener('click', e => { const item = e.target.closest('[data-cac-idx]'); if (item) insertContactAC(parseInt(item.dataset.cacIdx)); });
 
-  // Contact autocomplete — delegation para cliques nos itens
-  document.getElementById('contact-row').addEventListener('click', e => {
-    const item = e.target.closest('[data-cac-idx]');
-    if (item) insertContactAC(parseInt(item.dataset.cacIdx));
-  });
-    }
-  });
-
-  /* ── Webhook settings ── */
-  document.getElementById('btn-add-wh').addEventListener('click', () => {
-    document.getElementById('wh-form').classList.toggle('open');
-  });
+  document.getElementById('btn-add-wh').addEventListener('click', () => { document.getElementById('wh-form').classList.toggle('open'); });
   document.getElementById('btn-save-wh').addEventListener('click', saveWebhook);
-  document.getElementById('btn-cancel-wh').addEventListener('click', () => {
-    document.getElementById('wh-form').classList.remove('open');
-  });
+  document.getElementById('btn-cancel-wh').addEventListener('click', () => { document.getElementById('wh-form').classList.remove('open'); });
 
-  /* ── People ── */
-  document.getElementById('btn-add-person').addEventListener('click', () => {
-    document.getElementById('person-form').classList.toggle('open');
-  });
+  document.getElementById('btn-add-person').addEventListener('click', () => { document.getElementById('person-form').classList.toggle('open'); });
   document.getElementById('btn-save-person').addEventListener('click', savePerson);
-  document.getElementById('btn-cancel-person').addEventListener('click', () => {
-    document.getElementById('person-form').classList.remove('open');
-  });
+  document.getElementById('btn-cancel-person').addEventListener('click', () => { document.getElementById('person-form').classList.remove('open'); });
 
-  /* ── Groups ── */
-  document.getElementById('btn-add-group').addEventListener('click', () => {
-    document.getElementById('group-form').classList.toggle('open');
-  });
+  document.getElementById('btn-add-group').addEventListener('click', () => { document.getElementById('group-form').classList.toggle('open'); });
   document.getElementById('btn-save-group').addEventListener('click', saveGroup);
-  document.getElementById('btn-cancel-group').addEventListener('click', () => {
-    document.getElementById('group-form').classList.remove('open');
-  });
+  document.getElementById('btn-cancel-group').addEventListener('click', () => { document.getElementById('group-form').classList.remove('open'); });
 
-  /* ── Channels ── */
-  document.getElementById('btn-add-channel').addEventListener('click', () => {
-    document.getElementById('channel-form').classList.toggle('open');
-  });
+  document.getElementById('btn-add-channel').addEventListener('click', () => { document.getElementById('channel-form').classList.toggle('open'); });
   document.getElementById('btn-save-channel').addEventListener('click', saveChannel);
-  document.getElementById('btn-cancel-channel').addEventListener('click', () => {
-    document.getElementById('channel-form').classList.remove('open');
-  });
+  document.getElementById('btn-cancel-channel').addEventListener('click', () => { document.getElementById('channel-form').classList.remove('open'); });
 
-  /* ── Scenario tabs ── */
-  ['ferias','licenca','aviso','retorno'].forEach(sc => {
+  // ABAS (AQUI ESTÃO AS NOVAS)
+  ['ferias','incidentes','geral'].forEach(sc => {
     document.getElementById('tab-' + sc).addEventListener('click', () => setScenario(sc));
   });
 
-  /* ── Composer ── */
   const msgInput = document.getElementById('msg-input');
   msgInput.addEventListener('input',   () => onMsgInput(msgInput));
   msgInput.addEventListener('keydown', e  => onMsgKeydown(e));
-
-  document.getElementById('contact-input').addEventListener('input', refreshSuggs);
   document.getElementById('tgl-contact').addEventListener('click', toggleContact);
   document.getElementById('tgl-sched').addEventListener('click', toggleSchedule);
   document.getElementById('sched-date').addEventListener('change', updateSchedHint);
   document.getElementById('sched-time').addEventListener('change', updateSchedHint);
-
   document.getElementById('btn-send').addEventListener('click', sendMessage);
   document.getElementById('btn-clear').addEventListener('click', clearCompose);
 
-  /* ── Event delegation para itens dinâmicos ── */
   document.addEventListener('click', e => {
-    // Webhook dropdown items
-    const selWh = e.target.closest('[data-sel-wh]');
-    if (selWh) { selectWh(selWh.dataset.selWh); return; }
-
-    // Delete buttons
-    const delWh = e.target.closest('[data-del-wh]');
-    if (delWh) { deleteWebhook(delWh.dataset.delWh); return; }
-
-    const delPerson = e.target.closest('[data-del-person]');
-    if (delPerson) { deletePerson(delPerson.dataset.delPerson); return; }
-
-    const delGroup = e.target.closest('[data-del-group]');
-    if (delGroup) { deleteGroup(delGroup.dataset.delGroup); return; }
-
-    const delChannel = e.target.closest('[data-del-channel]');
-    if (delChannel) { deleteChannel(delChannel.dataset.delChannel); return; }
-
-    // Queue cancel
-    const cancelSched = e.target.closest('[data-cancel-sched]');
-    if (cancelSched) { cancelScheduled(cancelSched.dataset.cancelSched); return; }
-
-    // Hint pills
-    const hint = e.target.closest('[data-hint]');
-    if (hint) { insertHint(hint.dataset.hint); return; }
-
-    // Suggestion cards
-    const suggCard = e.target.closest('[data-sugg-idx]');
-    if (suggCard) { selectSugg(parseInt(suggCard.dataset.suggIdx)); return; }
-
-    // Autocomplete items
-    const acItem = e.target.closest('[data-ac-idx]');
-    if (acItem) {
-      const it = (window._acItems || [])[parseInt(acItem.dataset.acIdx)];
-      if (it) insertAC(it.insert);
-      return;
-    }
+    const selWh = e.target.closest('[data-sel-wh]'); if (selWh) { selectWh(selWh.dataset.selWh); return; }
+    const delWh = e.target.closest('[data-del-wh]'); if (delWh) { deleteWebhook(delWh.dataset.delWh); return; }
+    const delPerson = e.target.closest('[data-del-person]'); if (delPerson) { deletePerson(delPerson.dataset.delPerson); return; }
+    const delGroup = e.target.closest('[data-del-group]'); if (delGroup) { deleteGroup(delGroup.dataset.delGroup); return; }
+    const delChannel = e.target.closest('[data-del-channel]'); if (delChannel) { deleteChannel(delChannel.dataset.delChannel); return; }
+    const cancelSched = e.target.closest('[data-cancel-sched]'); if (cancelSched) { cancelScheduled(cancelSched.dataset.cancelSched); return; }
+    const suggCard = e.target.closest('[data-sugg-idx]'); if (suggCard) { selectSugg(parseInt(suggCard.dataset.suggIdx)); return; }
+    const acItem = e.target.closest('[data-ac-idx]'); if (acItem) { const it = (window._acItems || [])[parseInt(acItem.dataset.acIdx)]; if (it) insertAC(it.insert); return; }
   });
 
-  renderHints();
   dbg('Interface pronta — aguardando sessão…');
 });
 </script>
