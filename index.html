@@ -7,9 +7,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-/* ═══════════════════════════════════════════
-   COBLI DESIGN TOKENS
-═══════════════════════════════════════════ */
 :root {
   --cobli-navy:        #07074E;
   --cobli-blue:        #001BB8;
@@ -21,7 +18,6 @@
   --cobli-green3:      #1FEF51;
   --cobli-text:        #E6E6ED;
   --cobli-kpi:         #1F1F5F;
-
   --bg:           #07074E;
   --bg-card:      #0f0f6a;
   --bg-input:     #1F1F5F;
@@ -36,19 +32,13 @@
   --success:      #00AE97;
   --error:        #FF4633;
   --warn:         #F59E0B;
-
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
 }
-
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; }
-
-/* ═══ LAYOUT ═══ */
 .layout { display:flex; min-height:100vh; }
-
-/* ═══ SIDEBAR ═══ */
 .sidebar { width:260px; flex-shrink:0; background:var(--cobli-navy); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:100; }
 .sidebar-logo { padding:20px 20px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
 .logo-mark { width:36px; height:36px; background:linear-gradient(135deg,#001BB8,#0FFDC9); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; color:#fff; }
@@ -65,8 +55,6 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-seri
 .sb-user i { font-size:15px; }
 .btn-logout { margin-left:auto; font-size:11px; background:rgba(255,70,51,.15); color:var(--cobli-red); border:none; padding:3px 9px; border-radius:4px; cursor:pointer; }
 .btn-logout:hover { background:rgba(255,70,51,.28); }
-
-/* ═══ MAIN ═══ */
 .main { margin-left:260px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
 .topbar { background:rgba(7,7,78,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:50; }
 .topbar-title { font-size:16px; font-weight:600; }
@@ -74,10 +62,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-seri
 .topbar-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
 .status-connected { font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; background:rgba(0,174,151,.15); color:var(--cobli-green); border:1px solid rgba(0,174,151,.3); display:flex; align-items:center; gap:5px; }
 .status-dot { width:6px; height:6px; border-radius:50%; background:var(--cobli-green); }
-
 .content { padding:24px 28px; display:flex; flex-direction:column; gap:18px; max-width:820px; }
-
-/* ═══ AUTH ═══ */
 #auth-screen { display:none; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
 .auth-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:36px; width:100%; max-width:380px; display:flex; flex-direction:column; gap:18px; }
 .auth-tabs { display:flex; border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
@@ -85,16 +70,10 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-seri
 .auth-tab.active { background:var(--cobli-blue); color:#fff; }
 .auth-err { font-size:12px; color:var(--cobli-red); background:rgba(255,70,51,.1); padding:8px 12px; border-radius:var(--radius-sm); display:none; }
 .form-label { font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px; display:block; letter-spacing:.04em; }
-
-/* ═══ PANELS ═══ */
 .panel { display:none; }
 .panel.active { display:flex; flex-direction:column; gap:18px; }
-
-/* ═══ CARDS ═══ */
 .card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; }
 .card-title { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--cobli-blue-chart); margin-bottom:12px; display:flex; align-items:center; gap:6px; }
-
-/* ═══ INPUTS ═══ */
 input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],textarea,select {
   font-family:inherit; font-size:13px; color:var(--text);
   background:var(--bg-input); border:1px solid var(--border);
@@ -103,16 +82,12 @@ input[type=text],input[type=email],input[type=password],input[type=date],input[t
 }
 input:focus,textarea:focus,select:focus { outline:none; border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(50,72,198,.25); }
 input::placeholder,textarea::placeholder { color:var(--text-hint); }
-
-/* ═══ TOGGLE ═══ */
 .toggle { width:40px; height:22px; border-radius:11px; background:var(--border); border:none; cursor:pointer; position:relative; transition:background .2s; flex-shrink:0; padding:0; }
 .toggle.on { background:var(--cobli-green); }
 .toggle::after { content:''; width:16px; height:16px; border-radius:50%; background:#fff; position:absolute; top:3px; left:3px; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.3); }
 .toggle.on::after { left:21px; }
 .toggle-row { display:flex; align-items:center; gap:10px; }
 .toggle-label { font-size:13px; font-weight:500; }
-
-/* ═══ BUTTONS ═══ */
 .btn { display:inline-flex; align-items:center; gap:7px; padding:9px 20px; border-radius:var(--radius-md); font-size:13px; font-weight:600; border:none; cursor:pointer; transition:all .15s; white-space:nowrap; }
 .btn-primary { background:var(--cobli-blue); color:#fff; }
 .btn-primary:hover { background:var(--cobli-blue-light); }
@@ -124,28 +99,20 @@ input::placeholder,textarea::placeholder { color:var(--text-hint); }
 .btn-danger-ghost { background:transparent; color:var(--error); border:1px solid rgba(255,70,51,.3); }
 .btn-danger-ghost:hover { background:rgba(255,70,51,.1); }
 .btn-sm { padding:5px 12px; font-size:12px; }
-
-/* ═══ TAGS ═══ */
 .tag { font-size:11px; font-weight:700; padding:2px 9px; border-radius:10px; }
 .tag-ferias  { background:rgba(0,174,151,.2);  color:var(--cobli-green);  border:1px solid rgba(0,174,151,.35); }
 .tag-licenca { background:rgba(50,72,198,.2);  color:#7F8DDB; border:1px solid rgba(127,141,219,.35); }
 .tag-aviso   { background:rgba(255,70,51,.15); color:var(--cobli-red);    border:1px solid rgba(255,70,51,.35); }
 .tag-retorno { background:rgba(15,253,201,.12);color:var(--cobli-green2); border:1px solid rgba(15,253,201,.3); }
-
-/* ═══ SCENARIO TABS ═══ */
 .tabs { display:flex; gap:8px; flex-wrap:wrap; }
 .tab-btn { font-size:12px; padding:7px 16px; border-radius:20px; background:var(--bg-input); color:var(--text-muted); border:1px solid var(--border); cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .15s; font-weight:500; }
 .tab-btn:hover { color:var(--text); border-color:var(--cobli-blue-chart); }
 .tab-btn.active { background:var(--cobli-blue); color:#fff; border-color:var(--cobli-blue); }
-
-/* ═══ COMPOSER ═══ */
 .msg-wrap { position:relative; }
 textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12px 14px; }
 .hint-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
 .hint-pill { font-size:11px; padding:3px 10px; border-radius:12px; border:1px solid var(--border); color:var(--text-hint); cursor:pointer; transition:all .15s; }
 .hint-pill:hover { background:rgba(50,72,198,.2); color:var(--cobli-blue-chart); border-color:var(--cobli-blue-chart); }
-
-/* ═══ AUTOCOMPLETE ═══ */
 .autocomplete-dropdown { position:absolute; z-index:200; background:#0d0d60; border:1px solid var(--cobli-blue-light); border-radius:var(--radius-md); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.5); min-width:240px; max-height:220px; overflow-y:auto; display:none; top:calc(100% + 4px); left:0; }
 .autocomplete-dropdown.open { display:block; }
 .ac-header { font-size:10px; font-weight:700; color:var(--text-hint); padding:8px 12px 4px; letter-spacing:.06em; text-transform:uppercase; }
@@ -157,8 +124,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 .ac-avatar.channel { background:rgba(15,253,201,.15); color:var(--cobli-green2); }
 .ac-name { font-weight:600; }
 .ac-sub  { font-size:11px; color:var(--text-hint); }
-
-/* ═══ SUGGESTIONS ═══ */
 .sugg-grid { display:grid; gap:8px; }
 .sugg-card { border:1px solid var(--border); border-radius:var(--radius-lg); padding:12px 14px; cursor:pointer; transition:all .15s; background:var(--bg-card); }
 .sugg-card:hover { border-color:var(--cobli-blue-light); background:var(--bg-input); }
@@ -170,8 +135,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 .sel-dot.on::after { content:''; width:6px; height:6px; border-radius:50%; background:#07074E; }
 .sugg-preview { font-size:13px; line-height:1.75; color:var(--text); }
 .no-sugg { font-size:13px; color:var(--text-hint); text-align:center; padding:2.5rem; }
-
-/* ═══ WEBHOOK SELECT ═══ */
 .webhook-select-wrap { position:relative; }
 .webhook-select-btn { width:100%; display:flex; align-items:center; gap:10px; padding:9px 14px; border-radius:var(--radius-md); background:var(--bg-input); border:1px solid var(--border); color:var(--text); cursor:pointer; transition:all .15s; }
 .webhook-select-btn:hover { border-color:var(--cobli-blue-chart); }
@@ -185,8 +148,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 .wh-opt.active .wh-name { color:var(--cobli-green2); }
 .wh-check { margin-left:auto; color:var(--cobli-green); font-size:14px; display:none; }
 .wh-opt.active .wh-check { display:block; }
-
-/* ═══ PREVIEW ═══ */
 .preview-card { background:#111; border:1px solid #2a2a2a; border-radius:var(--radius-lg); padding:1rem 1.25rem; }
 .preview-hdr { font-size:11px; color:#555; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
 .preview-msg { display:none; }
@@ -198,8 +159,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 .preview-sched { font-size:11px; color:var(--cobli-green2); margin-top:6px; display:none; }
 .preview-sched.visible { display:block; }
 .preview-empty { font-size:13px; color:#444; }
-
-/* ═══ OPTIONS PANEL ═══ */
 .options-card { background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; display:flex; flex-direction:column; gap:12px; }
 .sub-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-left:50px; }
 .sched-inputs { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
@@ -207,20 +166,14 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 .sched-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; background:rgba(0,174,151,.2); color:var(--cobli-green); border:1px solid rgba(0,174,151,.35); display:none; }
 .sched-badge.visible { display:inline-block; }
 .divider-h { height:1px; background:var(--border); }
-
-/* ═══ STATUS BAR ═══ */
 .status-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .status-msg { font-size:13px; display:flex; align-items:center; gap:6px; }
 .status-msg.success { color:var(--cobli-green); }
 .status-msg.error   { color:var(--error); }
 .status-msg.warn    { color:var(--warn); }
-
-/* ═══ QUEUE ═══ */
 .queue-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px; background:var(--bg-card); }
 .queue-time { font-size:11px; font-weight:700; color:var(--cobli-green2); white-space:nowrap; min-width:90px; padding-top:2px; }
 .queue-text { font-size:12px; color:var(--text-muted); flex:1; line-height:1.5; }
-
-/* ═══ SETTINGS ═══ */
 .list-item { display:flex; align-items:center; gap:12px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--bg-card); margin-bottom:6px; }
 .list-item-avatar { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; font-weight:700; }
 .list-item-name { font-size:13px; font-weight:600; }
@@ -231,19 +184,23 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 .form-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
 .form-row > div { flex:1; min-width:120px; }
 .slack-id-tip { font-size:11px; color:var(--cobli-blue-chart); background:rgba(50,72,198,.12); padding:8px 12px; border-radius:var(--radius-sm); border-left:2px solid var(--cobli-blue-light); line-height:1.6; }
-
-/* ═══ LOADING ═══ */
 .loading { display:flex; align-items:center; justify-content:center; padding:24px; color:var(--text-hint); font-size:13px; gap:8px; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .spin { animation:spin .8s linear infinite; display:inline-block; }
-
-/* ═══ SCROLLBAR ═══ */
 ::-webkit-scrollbar { width:5px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+/* ── DEBUG BANNER ── */
+.debug-banner { position:fixed; bottom:0; left:0; right:0; background:#1a0020; border-top:1px solid #6b21a8; padding:6px 16px; font-size:11px; font-family:monospace; color:#d8b4fe; z-index:9999; display:flex; gap:12px; align-items:center; max-height:42px; overflow:hidden; }
+.debug-banner.error { background:#1a0000; border-color:#991b1b; color:#fca5a5; }
+.debug-banner.success { background:#001a0e; border-color:#166534; color:#86efac; }
 </style>
 </head>
 <body>
+
+<!-- DEBUG BANNER — remove em produção -->
+<div class="debug-banner" id="debug-banner">⏳ Iniciando conexão com Supabase…</div>
 
 <div id="auth-screen" style="display:flex">
   <div class="auth-card">
@@ -271,7 +228,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 </div>
 
 <div class="layout" id="app" style="display:none">
-
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-mark">Co</div>
@@ -289,7 +245,7 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
   <div class="sb-user">
     <i class="ti ti-user-circle"></i>
     <span id="sb-email" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px"></span>
-    <button class="btn-logout" onclick="doLogout()">Sair</button>
+    <button class="btn-logout" id="btn-logout">Sair</button>
   </div>
 </aside>
 
@@ -307,11 +263,10 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
   <div class="content">
 
     <div class="panel active" id="panel-compose">
-
       <div class="card">
         <div class="card-title"><i class="ti ti-plug"></i> Canal de destino</div>
         <div class="webhook-select-wrap" id="wh-wrap">
-          <button class="webhook-select-btn" onclick="toggleWhDrop()" id="wh-btn">
+          <button class="webhook-select-btn" id="wh-btn">
             <span class="wh-dot" id="wh-dot"></span>
             <span class="wh-name" id="wh-name">— Selecione um canal —</span>
             <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-muted)"></i>
@@ -319,23 +274,23 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
           <div class="wh-dropdown" id="wh-dropdown">
             <div id="wh-list"></div>
             <div style="padding:8px 10px;border-top:1px solid var(--border)">
-              <button class="btn btn-ghost btn-sm" style="width:100%" onclick="showPanel('webhooks',document.querySelectorAll('.nav-item')[2])"><i class="ti ti-plus"></i> Gerenciar canais</button>
+              <button class="btn btn-ghost btn-sm" style="width:100%" id="btn-manage-wh"><i class="ti ti-plus"></i> Gerenciar canais</button>
             </div>
           </div>
         </div>
       </div>
 
       <div class="tabs">
-        <button class="tab-btn active" onclick="setScenario('ferias',this)"><i class="ti ti-beach"></i> Férias</button>
-        <button class="tab-btn" onclick="setScenario('licenca',this)"><i class="ti ti-heart-plus"></i> Licença/Atestado</button>
-        <button class="tab-btn" onclick="setScenario('aviso',this)"><i class="ti ti-alert-triangle"></i> Aviso/Incidente</button>
-        <button class="tab-btn" onclick="setScenario('retorno',this)"><i class="ti ti-player-play"></i> Retorno</button>
+        <button class="tab-btn active" id="tab-ferias"><i class="ti ti-beach"></i> Férias</button>
+        <button class="tab-btn" id="tab-licenca"><i class="ti ti-heart-plus"></i> Licença/Atestado</button>
+        <button class="tab-btn" id="tab-aviso"><i class="ti ti-alert-triangle"></i> Aviso/Incidente</button>
+        <button class="tab-btn" id="tab-retorno"><i class="ti ti-player-play"></i> Retorno</button>
       </div>
 
       <div class="card">
         <div class="card-title"><i class="ti ti-pencil"></i> Mensagem — use @ para pessoas/grupos · # para canais</div>
         <div class="msg-wrap">
-          <textarea id="msg-input" placeholder="Ex: O @leonardo estará de férias a partir de 12/06 retornando em 20/06" oninput="onMsgInput(this)" onkeydown="onMsgKeydown(event)"></textarea>
+          <textarea id="msg-input" placeholder="Ex: O @leonardo estará de férias a partir de 12/06 retornando em 20/06"></textarea>
           <div class="autocomplete-dropdown" id="ac-dropdown">
             <div class="ac-header" id="ac-header">Pessoas &amp; Grupos</div>
             <div id="ac-list"></div>
@@ -346,17 +301,17 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 
       <div class="options-card">
         <div class="toggle-row">
-          <button class="toggle" id="tgl-contact" onclick="toggleContact()" aria-label="Contato de suporte"></button>
+          <button class="toggle" id="tgl-contact" aria-label="Contato de suporte"></button>
           <span class="toggle-label">Incluir contato de suporte/emergência</span>
         </div>
         <div class="sub-row" id="contact-row" style="display:none">
           <i class="ti ti-users" style="font-size:15px;color:var(--text-muted)"></i>
-          <input type="text" id="contact-input" placeholder="@grupo-suporte, @pessoa ou #canal" oninput="refreshSuggs()" style="max-width:320px" />
+          <input type="text" id="contact-input" placeholder="@grupo-suporte, @pessoa ou #canal" style="max-width:320px" />
           <span style="font-size:11px;color:var(--text-hint)">Aparece no final de todas as variações</span>
         </div>
         <div class="divider-h"></div>
         <div class="toggle-row">
-          <button class="toggle" id="tgl-sched" onclick="toggleSchedule()" aria-label="Agendar envio"></button>
+          <button class="toggle" id="tgl-sched" aria-label="Agendar envio"></button>
           <span class="toggle-label">Agendar envio</span>
           <span class="sched-badge" id="sched-badge">⏰ Agendado</span>
         </div>
@@ -392,10 +347,10 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
 
       <div class="status-bar">
-        <button class="btn btn-primary" id="btn-send" disabled onclick="sendMessage()">
+        <button class="btn btn-primary" id="btn-send" disabled>
           <i class="ti ti-send"></i><span id="btn-send-label">Enviar para o Slack</span>
         </button>
-        <button class="btn btn-ghost" onclick="clearCompose()"><i class="ti ti-trash" style="font-size:14px"></i> Limpar</button>
+        <button class="btn btn-ghost" id="btn-clear"><i class="ti ti-trash" style="font-size:14px"></i> Limpar</button>
         <div class="status-msg" id="send-status"></div>
       </div>
     </div>
@@ -408,7 +363,7 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div class="card" style="border-color:rgba(0,174,151,.3);background:rgba(0,174,151,.05)">
         <div class="card-title" style="color:var(--cobli-green)"><i class="ti ti-brand-supabase"></i> Agendamento via Supabase</div>
         <p style="font-size:13px;color:var(--text-muted);line-height:1.7">
-          As mensagens agendadas ficam salvas no <strong style="color:var(--text)">Supabase</strong> e são enviadas automaticamente pela <strong style="color:var(--cobli-green2)">Edge Function</strong> via <strong style="color:var(--cobli-green2)">pg_cron</strong> — mesmo com o navegador fechado.
+          As mensagens agendadas ficam salvas no <strong style="color:var(--text)">Supabase</strong> e são enviadas automaticamente pela <strong style="color:var(--cobli-green2)">Edge Function</strong> via <strong style="color:var(--cobli-green2)">pg_cron</strong>.
         </p>
       </div>
     </div>
@@ -417,14 +372,14 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div class="card">
         <div class="card-title"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
         <div id="wh-settings-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('wh-form')"><i class="ti ti-plus"></i> Adicionar canal</button>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-wh"><i class="ti ti-plus"></i> Adicionar canal</button>
         <div class="add-form" id="wh-form">
           <div><label class="form-label">Nome do canal</label><input type="text" id="wh-add-name" placeholder="Ex: #alertas-ti" /></div>
           <div><label class="form-label">Webhook URL</label><input type="text" id="wh-add-url" placeholder="https://hooks.slack.com/services/..." /></div>
           <div><label class="form-label">Emoji (opcional)</label><input type="text" id="wh-add-emoji" placeholder="📢" style="max-width:100px" /></div>
           <div class="form-row">
-            <button class="btn btn-success btn-sm" onclick="saveWebhook()"><i class="ti ti-check"></i> Salvar</button>
-            <button class="btn btn-ghost btn-sm" onclick="toggleForm('wh-form')">Cancelar</button>
+            <button class="btn btn-success btn-sm" id="btn-save-wh"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" id="btn-cancel-wh">Cancelar</button>
           </div>
         </div>
       </div>
@@ -434,12 +389,12 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div class="card">
         <div class="card-title"><i class="ti ti-user"></i> Pessoas cadastradas</div>
         <div id="people-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('person-form')"><i class="ti ti-plus"></i> Adicionar pessoa</button>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-person"><i class="ti ti-plus"></i> Adicionar pessoa</button>
         <div class="add-form" id="person-form">
           <div class="slack-id-tip">
             <strong>💡 Como pegar o Slack User ID:</strong><br>
             No Slack, clique no perfil da pessoa → <em>Ver perfil</em> → menu <strong>⋯</strong> → <em>Copiar ID do membro</em>.<br>
-            O ID tem o formato <code>U07EADY4SGN</code>. Com ele a marcação <strong>@pessoa</strong> funciona de verdade na mensagem.
+            O ID tem o formato <code>U07EADY4SGN</code>.
           </div>
           <div class="form-row">
             <div><label class="form-label">Nome de exibição</label><input type="text" id="p-name" placeholder="Leonardo Silva" /></div>
@@ -450,8 +405,8 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
             <div><label class="form-label">Cargo / área</label><input type="text" id="p-role" placeholder="Tech Lead · Engenharia" /></div>
           </div>
           <div class="form-row">
-            <button class="btn btn-success btn-sm" onclick="savePerson()"><i class="ti ti-check"></i> Salvar</button>
-            <button class="btn btn-ghost btn-sm" onclick="toggleForm('person-form')">Cancelar</button>
+            <button class="btn btn-success btn-sm" id="btn-save-person"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" id="btn-cancel-person">Cancelar</button>
           </div>
         </div>
       </div>
@@ -459,12 +414,11 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div class="card">
         <div class="card-title"><i class="ti ti-users"></i> Grupos de pessoas (@)</div>
         <div id="groups-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('group-form')"><i class="ti ti-plus"></i> Adicionar grupo</button>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-group"><i class="ti ti-plus"></i> Adicionar grupo</button>
         <div class="add-form" id="group-form">
           <div class="slack-id-tip">
             <strong>💡 Como pegar o Slack Group ID:</strong><br>
-            No Slack, vá em <em>Configurações do espaço de trabalho → Grupos de usuários</em>. O ID do grupo tem formato <code>S0614TZR7</code>.<br>
-            Ou use o handle do grupo (ex: <code>@time-ti</code>) — funciona para grupos de usuários existentes.
+            No Slack, vá em <em>Configurações do espaço de trabalho → Grupos de usuários</em>. ID formato: <code>S0614TZR7</code>.
           </div>
           <div class="form-row">
             <div><label class="form-label">Nome do grupo</label><input type="text" id="g-name" placeholder="Time de TI" /></div>
@@ -475,8 +429,8 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
             <div><label class="form-label">Emoji</label><input type="text" id="g-emoji" placeholder="👥" style="max-width:100px" /></div>
           </div>
           <div class="form-row">
-            <button class="btn btn-success btn-sm" onclick="saveGroup()"><i class="ti ti-check"></i> Salvar</button>
-            <button class="btn btn-ghost btn-sm" onclick="toggleForm('group-form')">Cancelar</button>
+            <button class="btn btn-success btn-sm" id="btn-save-group"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" id="btn-cancel-group">Cancelar</button>
           </div>
         </div>
       </div>
@@ -486,7 +440,7 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div class="card">
         <div class="card-title"><i class="ti ti-hash"></i> Canais Slack (#)</div>
         <div id="channels-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('channel-form')"><i class="ti ti-plus"></i> Adicionar canal</button>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-channel"><i class="ti ti-plus"></i> Adicionar canal</button>
         <div class="add-form" id="channel-form">
           <div class="form-row">
             <div><label class="form-label">Nome do canal (sem #)</label><input type="text" id="ch-name" placeholder="suporte-geral" /></div>
@@ -496,8 +450,8 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
             <label class="form-label">Descrição (opcional)</label><input type="text" id="ch-desc" placeholder="Canal de suporte ao cliente" />
           </div>
           <div class="form-row">
-            <button class="btn btn-success btn-sm" onclick="saveChannel()"><i class="ti ti-check"></i> Salvar</button>
-            <button class="btn btn-ghost btn-sm" onclick="toggleForm('channel-form')">Cancelar</button>
+            <button class="btn btn-success btn-sm" id="btn-save-channel"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" id="btn-cancel-channel">Cancelar</button>
           </div>
         </div>
       </div>
@@ -508,723 +462,1019 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 </div>
 
 <script>
-/* ════════════════════════════════════════════════
-   CHAVES DO SUPABASE (Já preenchidas para você!)
-════════════════════════════════════════════════ */
+/* ═══ CONFIG ═══ */
 const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';                        
-const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled'; 
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';
+const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
 let user = null;
 let DB   = { webhooks:[], people:[], groups:[], channels:[] };
 let ST   = { scenario:'ferias', selWh:null, selSugg:null, contactOn:false, schedOn:false, acMode:null, acFocus:0 };
 let authMode = 'login';
 let whOpen = false;
 
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════
+   DEBUG HELPER
+══════════════════════════════ */
+function dbg(msg, type) {
+  const el = document.getElementById('debug-banner');
+  if (!el) return;
+  el.className = 'debug-banner' + (type ? ' ' + type : '');
+  el.textContent = msg;
+  console.log('[COBLI DEBUG]', msg);
+}
+
+/* ══════════════════════════════
    AUTH
-════════════════════════════════════════════════ */
+══════════════════════════════ */
 function switchAuthMode(m, btn) {
   authMode = m;
-  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('auth-btn').innerHTML = m==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
-  document.getElementById('auth-err').style.display='none';
+  document.getElementById('auth-btn').innerHTML =
+    m === 'login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+  document.getElementById('auth-err').style.display = 'none';
 }
 
 async function doAuth() {
   const email = document.getElementById('auth-email').value.trim();
   const pw    = document.getElementById('auth-pw').value;
   const errEl = document.getElementById('auth-err');
-  errEl.style.display='none';
-  if (!email||!pw) { showAuthErr('Preencha e-mail e senha.'); return; }
-  
+  errEl.style.display = 'none';
+  if (!email || !pw) { showAuthErr('Preencha e-mail e senha.'); return; }
+
   const btn = document.getElementById('auth-btn');
-  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2 spin"></i> Aguarde...';
-  
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2 spin"></i> Aguarde...';
+
   try {
-    const { data, error } = authMode==='login'
-      ? await sb.auth.signInWithPassword({email,password:pw})
-      : await sb.auth.signUp({email,password:pw});
-      
+    dbg('Autenticando…');
+    const { data, error } = authMode === 'login'
+      ? await sb.auth.signInWithPassword({ email, password: pw })
+      : await sb.auth.signUp({ email, password: pw });
+
     if (error) throw error;
-    
-    if (authMode==='signup') {
-      showAuthErr('Conta criada! Faça login para entrar.');
+
+    if (authMode === 'signup') {
+      showAuthErr('Conta criada! Verifique seu e-mail e faça login.');
       switchAuthMode('login', document.querySelectorAll('.auth-tab')[0]);
     }
+    // onAuthStateChange vai pegar a sessão e chamar initApp()
   } catch (e) {
+    dbg('Erro de auth: ' + e.message, 'error');
     showAuthErr(e.message);
   } finally {
-    btn.disabled=false;
-    btn.innerHTML = authMode==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+    btn.disabled = false;
+    btn.innerHTML = authMode === 'login'
+      ? '<i class="ti ti-login"></i> Entrar'
+      : '<i class="ti ti-user-plus"></i> Criar conta';
   }
 }
 
-function showAuthErr(m) { const e=document.getElementById('auth-err'); e.textContent=m; e.style.display='block'; }
+function showAuthErr(m) {
+  const e = document.getElementById('auth-err');
+  e.textContent = m;
+  e.style.display = 'block';
+}
 
-async function doLogout() { 
+/* ══════════════════════════════
+   INIT — FIX: verifica sessão existente NO CARREGAMENTO
+   sem depender só do evento onAuthStateChange
+══════════════════════════════ */
+async function bootstrap() {
+  dbg('Verificando sessão salva…');
   try {
-    await sb.auth.signOut(); 
-    window.location.reload(); 
-  } catch(e) {
-    alert("Erro ao sair: " + e.message);
+    const { data: { session } } = await sb.auth.getSession();
+    if (session && session.user) {
+      dbg('Sessão encontrada: ' + session.user.email, 'success');
+      await initApp(session.user);
+    } else {
+      dbg('Nenhuma sessão — aguardando login.', '');
+      showAuth();
+    }
+  } catch (e) {
+    dbg('Erro ao verificar sessão: ' + e.message, 'error');
+    showAuth();
   }
+
+  // Continua ouvindo mudanças (login/logout futuros)
+  sb.auth.onAuthStateChange(async (_ev, session) => {
+    const newUser = session?.user ?? null;
+    if (newUser && (!user || user.id !== newUser.id)) {
+      await initApp(newUser);
+    } else if (!newUser && user) {
+      user = null;
+      showAuth();
+    }
+  });
 }
 
-sb.auth.onAuthStateChange(async (_ev, session) => {
-  user = session?.user ?? null;
-  if (user) {
-    document.getElementById('auth-screen').style.display='none';
-    document.getElementById('app').style.display='flex';
-    document.getElementById('sb-email').textContent=user.email;
-    await loadAll();
-  } else {
-    document.getElementById('auth-screen').style.display='flex';
-    document.getElementById('app').style.display='none';
-  }
-});
+async function initApp(u) {
+  user = u;
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('sb-email').textContent = user.email;
+  dbg('Logado como ' + user.email + ' — carregando dados…');
+  await loadAll();
+  renderHints();
+  dbg('Pronto ✓', 'success');
+}
 
-/* ════════════════════════════════════════════════
-   LOAD (Com Alertas à Prova de Falha)
-════════════════════════════════════════════════ */
+function showAuth() {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+/* ══════════════════════════════
+   LOAD
+══════════════════════════════ */
 async function loadAll() {
   try {
-    const [p, g, c, w] = await Promise.all([
-      sb.from('people').select('*').order('name'),
-      sb.from('groups').select('*').order('name'),
-      sb.from('channels').select('*').order('name'),
-      sb.from('webhooks').select('*').order('name')
-    ]);
+    dbg('Buscando dados do Supabase…');
 
-    if (p.error) throw new Error("Tabela People: " + p.error.message);
-    if (g.error) throw new Error("Tabela Groups: " + g.error.message);
-    if (c.error) throw new Error("Tabela Channels: " + c.error.message);
-    if (w.error) throw new Error("Tabela Webhooks: " + w.error.message);
+    // FIX: faz cada query individualmente para isolar erros
+    const pRes = await sb.from('people').select('*').order('name');
+    const gRes = await sb.from('groups').select('*').order('name');
+    const cRes = await sb.from('channels').select('*').order('name');
+    const wRes = await sb.from('webhooks').select('*').order('name');
 
-    DB.people   = p.data || [];
-    DB.groups   = g.data || [];
-    DB.channels = c.data || [];
-    DB.webhooks = w.data || [];
-    
+    if (pRes.error)  throw new Error('Tabela people: '   + pRes.error.message  + ' | Código: ' + pRes.error.code);
+    if (gRes.error)  throw new Error('Tabela groups: '   + gRes.error.message  + ' | Código: ' + gRes.error.code);
+    if (cRes.error)  throw new Error('Tabela channels: ' + cRes.error.message  + ' | Código: ' + cRes.error.code);
+    if (wRes.error)  throw new Error('Tabela webhooks: ' + wRes.error.message  + ' | Código: ' + wRes.error.code);
+
+    DB.people   = pRes.data || [];
+    DB.groups   = gRes.data || [];
+    DB.channels = cRes.data || [];
+    DB.webhooks = wRes.data || [];
+
+    dbg(`Dados carregados — ${DB.people.length} pessoas, ${DB.groups.length} grupos, ${DB.channels.length} canais, ${DB.webhooks.length} webhooks`, 'success');
     renderAll();
-  } catch(e) {
-    alert("Erro Crítico no Banco de Dados!\n" + e.message + "\n\nVerifique se todas as tabelas foram criadas no Supabase.");
+  } catch (e) {
+    dbg('ERRO BD: ' + e.message, 'error');
+    alert('Erro ao carregar dados do Supabase:\n\n' + e.message +
+      '\n\n⚠️ Verifique:\n1. As tabelas existem no Supabase\n2. RLS está desativado ou com policies corretas\n3. Abra o console (F12) para mais detalhes.');
+    console.error('[COBLI] loadAll error:', e);
+  }
+}
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+const PMETA = {
+  compose:  { t:'Compositor de Mensagens',  s:'Digite, escolha uma variação e envie para o Slack' },
+  queue:    { t:'Agendamentos',             s:'Mensagens programadas no Supabase' },
+  webhooks: { t:'Webhooks / Canais',        s:'Gerencie os canais de destino' },
+  people:   { t:'Pessoas & Grupos (@)',     s:'Autocomplete de menções' },
+  channels: { t:'Canais Slack (#)',         s:'Autocomplete de canais' },
+};
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const m = PMETA[id] || {};
+  document.getElementById('topbar-title').textContent = m.t || '';
+  document.getElementById('topbar-sub').textContent   = m.s || '';
+  if (id === 'webhooks') renderWhSettings();
+  if (id === 'people')   { renderPeopleList(); renderGroupsList(); }
+  if (id === 'channels') renderChannelsList();
+  if (id === 'queue')    loadQueue();
+  if (id === 'compose')  renderWhDrop();
+}
+
+/* ══════════════════════════════
+   WEBHOOKS
+══════════════════════════════ */
+async function saveWebhook() {
+  const name  = v('wh-add-name');
+  const url   = v('wh-add-url');
+  const emoji = v('wh-add-emoji') || '📢';
+  if (!name || !url) { alert('Preencha nome e URL.'); return; }
+  if (!url.startsWith('https://hooks.slack.com/')) {
+    alert('URL inválida. Use uma Incoming Webhook do Slack (começa com https://hooks.slack.com/).'); return;
+  }
+  try {
+    dbg('Salvando webhook…');
+    const { data, error } = await sb.from('webhooks')
+      .insert({ user_id: user.id, name, url, emoji, channel: '' })
+      .select().single();
+    if (error) throw error;
+    DB.webhooks.push(data);
+    ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i => { document.getElementById(i).value = ''; });
+    document.getElementById('wh-form').classList.remove('open');
+    renderWhSettings(); renderWhDrop();
+    showStatus('Canal salvo! ✓', 'success');
+    dbg('Webhook salvo: ' + name, 'success');
+  } catch (e) {
+    dbg('Erro webhook: ' + e.message, 'error');
+    alert('Erro ao salvar Webhook:\n' + e.message);
     console.error(e);
   }
 }
 
-/* ════════════════════════════════════════════════
-   NAV
-════════════════════════════════════════════════ */
-const PMETA = {
-  compose:  {t:'Compositor de Mensagens',    s:'Digite, escolha uma variação e envie para o Slack'},
-  queue:    {t:'Agendamentos',               s:'Mensagens programadas no Supabase'},
-  webhooks: {t:'Webhooks / Canais',          s:'Gerencie os canais de destino'},
-  people:   {t:'Pessoas & Grupos (@)',       s:'Autocomplete de menções'},
-  channels: {t:'Canais Slack (#)',           s:'Autocomplete de canais'},
-};
-function showPanel(id, btn) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  const m=PMETA[id]||{};
-  document.getElementById('topbar-title').textContent=m.t||'';
-  document.getElementById('topbar-sub').textContent=m.s||'';
-  if (id==='webhooks') renderWhSettings();
-  if (id==='people')   { renderPeopleList(); renderGroupsList(); }
-  if (id==='channels') renderChannelsList();
-  if (id==='queue')    loadQueue();
-  if (id==='compose')  renderWhDrop();
-}
-
-/* ════════════════════════════════════════════════
-   WEBHOOKS (Supabase)
-════════════════════════════════════════════════ */
-async function saveWebhook() {
-  try {
-    const name  = v('wh-add-name');
-    const url   = v('wh-add-url');
-    const emoji = v('wh-add-emoji')||'📢';
-    
-    if (!name||!url) { alert('Preencha nome e URL.'); return; }
-    if (!url.startsWith('https://hooks.slack.com/')) { alert('URL inválida. Use uma Incoming Webhook do Slack.'); return; }
-    
-    const {data,error} = await sb.from('webhooks').insert({user_id:user.id, name, url, emoji, channel: ''}).select().single();
-    if (error) throw error;
-
-    DB.webhooks.push(data);
-    ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
-    toggleForm('wh-form'); renderWhSettings(); renderWhDrop();
-    showStatus('Canal salvo!','success');
-  } catch(e) {
-    alert('Erro ao salvar Webhook:\n' + e.message);
-  }
-}
-
 async function deleteWebhook(id) {
+  if (!confirm('Remover este webhook?')) return;
   try {
-    const {error} = await sb.from('webhooks').delete().eq('id',id);
+    const { error } = await sb.from('webhooks').delete().eq('id', id);
     if (error) throw error;
-    DB.webhooks = DB.webhooks.filter(w=>w.id!==id);
-    if (ST.selWh&&ST.selWh.id===id) { ST.selWh=null; renderWhBtn(); }
+    DB.webhooks = DB.webhooks.filter(w => w.id !== id);
+    if (ST.selWh && ST.selWh.id === id) { ST.selWh = null; renderWhBtn(); }
     renderWhSettings(); renderWhDrop(); updateSendBtn();
-  } catch(e) {
+  } catch (e) {
     alert('Erro ao deletar:\n' + e.message);
+    console.error(e);
   }
 }
 
 function renderWhSettings() {
-  const el=document.getElementById('wh-settings-list');
-  if (!DB.webhooks.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
-  el.innerHTML = DB.webhooks.map(w=>`
+  const el = document.getElementById('wh-settings-list');
+  if (!DB.webhooks.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML = DB.webhooks.map(w => `
     <div class="list-item">
-      <div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji||'📢'}</div>
+      <div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji || '📢'}</div>
       <div><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,50))}…</div></div>
-      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deleteWebhook('${w.id}')"><i class="ti ti-trash"></i></button></div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button>
+      </div>
     </div>`).join('');
 }
+
 function renderWhDrop() {
-  const el=document.getElementById('wh-list');
-  if (!DB.webhooks.length) { el.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>'; return; }
-  el.innerHTML = DB.webhooks.map(w=>`
-    <div class="wh-opt ${ST.selWh&&ST.selWh.id===w.id?'active':''}" onclick="selectWh('${w.id}')">
-      <span style="font-size:18px">${w.emoji||'📢'}</span>
+  const el = document.getElementById('wh-list');
+  if (!DB.webhooks.length) {
+    el.innerHTML = '<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>';
+    return;
+  }
+  el.innerHTML = DB.webhooks.map(w => `
+    <div class="wh-opt ${ST.selWh && ST.selWh.id === w.id ? 'active' : ''}" data-sel-wh="${w.id}">
+      <span style="font-size:18px">${w.emoji || '📢'}</span>
       <div><div class="wh-name">${esc(w.name)}</div></div>
       <i class="ti ti-check wh-check"></i>
     </div>`).join('');
 }
+
 function selectWh(id) {
-  ST.selWh=DB.webhooks.find(w=>w.id===id)||null;
+  ST.selWh = DB.webhooks.find(w => w.id === id) || null;
   toggleWhDrop(true); renderWhBtn(); updateSendBtn();
 }
+
 function renderWhBtn() {
-  const dot=document.getElementById('wh-dot'), nm=document.getElementById('wh-name');
-  if (!ST.selWh) { dot.className='wh-dot'; nm.textContent='— Selecione um canal —'; }
-  else { dot.className='wh-dot ok'; nm.textContent=(ST.selWh.emoji||'📢')+' '+ST.selWh.name; }
+  const dot = document.getElementById('wh-dot');
+  const nm  = document.getElementById('wh-name');
+  if (!ST.selWh) { dot.className = 'wh-dot'; nm.textContent = '— Selecione um canal —'; }
+  else { dot.className = 'wh-dot ok'; nm.textContent = (ST.selWh.emoji || '📢') + ' ' + ST.selWh.name; }
   renderWhDrop();
 }
+
 function toggleWhDrop(forceClose) {
   whOpen = forceClose ? false : !whOpen;
-  document.getElementById('wh-dropdown').classList.toggle('open',whOpen);
+  document.getElementById('wh-dropdown').classList.toggle('open', whOpen);
 }
-document.addEventListener('click',e=>{ if (!document.getElementById('wh-wrap').contains(e.target)) { whOpen=false; document.getElementById('wh-dropdown').classList.remove('open'); } });
 
-/* ════════════════════════════════════════════════
-   PEOPLE (Supabase)
-════════════════════════════════════════════════ */
+/* ══════════════════════════════
+   PEOPLE
+══════════════════════════════ */
 async function savePerson() {
+  const name     = v('p-name');
+  const slack_id = v('p-slack-id').replace(/[<@>]/g, '');
+  const handle   = v('p-handle').replace('@', '');
+  const role     = v('p-role');
+  if (!name) { alert('Preencha o nome.'); return; }
   try {
-    const name     = v('p-name');
-    const slack_id = v('p-slack-id').trim().replace(/[<@>]/g,'');
-    const handle   = v('p-handle').replace('@','');
-    const role     = v('p-role');
-    
-    if (!name) { alert('Preencha o nome.'); return; }
-    
-    const {data,error} = await sb.from('people').insert({user_id:user.id, name, slack_id, handle, role}).select().single();
+    dbg('Salvando pessoa…');
+    const { data, error } = await sb.from('people')
+      .insert({ user_id: user.id, name, slack_id, handle, role })
+      .select().single();
     if (error) throw error;
-    
     DB.people.push(data);
-    ['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{ document.getElementById(i).value=''; });
-    toggleForm('person-form'); renderPeopleList();
-    showStatus(`${name} salvo!`, 'success');
-  } catch(e) {
+    ['p-name','p-slack-id','p-handle','p-role'].forEach(i => { document.getElementById(i).value = ''; });
+    document.getElementById('person-form').classList.remove('open');
+    renderPeopleList();
+    showStatus(name + ' salvo! ✓', 'success');
+    dbg('Pessoa salva: ' + name, 'success');
+  } catch (e) {
+    dbg('Erro pessoa: ' + e.message, 'error');
     alert('Erro ao salvar pessoa:\n' + e.message);
+    console.error(e);
   }
 }
 
 async function deletePerson(id) {
+  if (!confirm('Remover esta pessoa?')) return;
   try {
-    const {error} = await sb.from('people').delete().eq('id',id);
+    const { error } = await sb.from('people').delete().eq('id', id);
     if (error) throw error;
-    DB.people=DB.people.filter(p=>p.id!==id); renderPeopleList();
-  } catch(e) {
+    DB.people = DB.people.filter(p => p.id !== id);
+    renderPeopleList();
+  } catch (e) {
     alert('Erro ao deletar:\n' + e.message);
+    console.error(e);
   }
 }
 
 function renderPeopleList() {
-  const el=document.getElementById('people-list');
-  if (!DB.people.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>'; return; }
-  el.innerHTML=DB.people.map(p=>`
+  const el = document.getElementById('people-list');
+  if (!DB.people.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>'; return; }
+  el.innerHTML = DB.people.map(p => `
     <div class="list-item">
       <div class="list-item-avatar ac-avatar person">${initials(p.name)}</div>
       <div>
         <div class="list-item-name">${esc(p.name)}</div>
-        <div class="list-item-sub">${p.slack_id?'ID: '+esc(p.slack_id):''}${p.handle?' · @'+esc(p.handle):''}${p.role?' · '+esc(p.role):''}</div>
+        <div class="list-item-sub">${p.slack_id ? 'ID: ' + esc(p.slack_id) : ''}${p.handle ? ' · @' + esc(p.handle) : ''}${p.role ? ' · ' + esc(p.role) : ''}</div>
       </div>
-      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deletePerson('${p.id}')"><i class="ti ti-trash"></i></button></div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button>
+      </div>
     </div>`).join('');
 }
 
-/* ════════════════════════════════════════════════
-   GROUPS (Supabase)
-════════════════════════════════════════════════ */
+/* ══════════════════════════════
+   GROUPS
+══════════════════════════════ */
 async function saveGroup() {
+  const name     = v('g-name');
+  const handle   = v('g-handle').replace('@', '');
+  const slack_id = v('g-slack-id');
+  const emoji    = v('g-emoji') || '👥';
+  if (!name || !handle) { alert('Preencha nome e handle.'); return; }
   try {
-    const name     = v('g-name');
-    const handle   = v('g-handle').replace('@','');
-    const slack_id = v('g-slack-id').trim();
-    const emoji    = v('g-emoji')||'👥';
-    
-    if (!name||!handle) { alert('Preencha nome e handle.'); return; }
-    
-    const {data,error} = await sb.from('groups').insert({user_id:user.id, name, handle, slack_id, emoji}).select().single();
+    dbg('Salvando grupo…');
+    const { data, error } = await sb.from('groups')
+      .insert({ user_id: user.id, name, handle, slack_id, emoji })
+      .select().single();
     if (error) throw error;
-    
     DB.groups.push(data);
-    ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
-    toggleForm('group-form'); renderGroupsList();
-    showStatus(`Grupo ${name} salvo!`, 'success');
+    ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i => { document.getElementById(i).value = ''; });
+    document.getElementById('group-form').classList.remove('open');
+    renderGroupsList();
+    showStatus('Grupo ' + name + ' salvo! ✓', 'success');
+    dbg('Grupo salvo: ' + name, 'success');
   } catch (e) {
+    dbg('Erro grupo: ' + e.message, 'error');
     alert('Erro ao salvar grupo:\n' + e.message);
+    console.error(e);
   }
 }
 
 async function deleteGroup(id) {
+  if (!confirm('Remover este grupo?')) return;
   try {
-    const {error} = await sb.from('groups').delete().eq('id',id);
-    if(error) throw error;
-    DB.groups=DB.groups.filter(g=>g.id!==id); renderGroupsList();
-  } catch(e) {
+    const { error } = await sb.from('groups').delete().eq('id', id);
+    if (error) throw error;
+    DB.groups = DB.groups.filter(g => g.id !== id);
+    renderGroupsList();
+  } catch (e) {
     alert('Erro ao deletar:\n' + e.message);
+    console.error(e);
   }
 }
 
 function renderGroupsList() {
-  const el=document.getElementById('groups-list');
-  if (!DB.groups.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>'; return; }
-  el.innerHTML=DB.groups.map(g=>`
+  const el = document.getElementById('groups-list');
+  if (!DB.groups.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>'; return; }
+  el.innerHTML = DB.groups.map(g => `
     <div class="list-item">
-      <div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji||'👥'}</div>
+      <div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji || '👥'}</div>
       <div>
         <div class="list-item-name">${esc(g.name)}</div>
-        <div class="list-item-sub">@${esc(g.handle)}${g.slack_id?' · ID: '+esc(g.slack_id):''}</div>
+        <div class="list-item-sub">@${esc(g.handle)}${g.slack_id ? ' · ID: ' + esc(g.slack_id) : ''}</div>
       </div>
-      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deleteGroup('${g.id}')"><i class="ti ti-trash"></i></button></div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button>
+      </div>
     </div>`).join('');
 }
 
-/* ════════════════════════════════════════════════
-   CHANNELS (Supabase)
-════════════════════════════════════════════════ */
+/* ══════════════════════════════
+   CHANNELS
+══════════════════════════════ */
 async function saveChannel() {
+  const name     = v('ch-name').replace('#', '');
+  const desc     = v('ch-desc');
+  const slack_id = v('ch-slack-id');
+  if (!name) { alert('Preencha o nome do canal.'); return; }
   try {
-    const name = v('ch-name').replace('#','');
-    const desc = v('ch-desc');
-    const slack_id = v('ch-slack-id').trim(); 
-    
-    if (!name) { alert('Preencha o nome do canal.'); return; }
-    
-    const {data,error} = await sb.from('channels').insert({user_id:user.id, name, desc, slack_id}).select().single();
+    dbg('Salvando canal…');
+    const { data, error } = await sb.from('channels')
+      .insert({ user_id: user.id, name, desc, slack_id })
+      .select().single();
     if (error) throw error;
-    
     DB.channels.push(data);
-    ['ch-name','ch-desc','ch-slack-id'].forEach(i=>{ document.getElementById(i).value=''; });
-    toggleForm('channel-form'); renderChannelsList();
-    showStatus(`#${name} salvo!`, 'success');
-  } catch(e) {
+    ['ch-name','ch-desc','ch-slack-id'].forEach(i => { document.getElementById(i).value = ''; });
+    document.getElementById('channel-form').classList.remove('open');
+    renderChannelsList();
+    showStatus('#' + name + ' salvo! ✓', 'success');
+    dbg('Canal salvo: #' + name, 'success');
+  } catch (e) {
+    dbg('Erro canal: ' + e.message, 'error');
     alert('Erro ao salvar canal:\n' + e.message);
+    console.error(e);
   }
 }
 
 async function deleteChannel(id) {
+  if (!confirm('Remover este canal?')) return;
   try {
-    const {error} = await sb.from('channels').delete().eq('id',id);
-    if(error) throw error;
-    DB.channels=DB.channels.filter(c=>c.id!==id); renderChannelsList();
-  } catch(e) {
+    const { error } = await sb.from('channels').delete().eq('id', id);
+    if (error) throw error;
+    DB.channels = DB.channels.filter(c => c.id !== id);
+    renderChannelsList();
+  } catch (e) {
     alert('Erro ao deletar:\n' + e.message);
+    console.error(e);
   }
 }
 
 function renderChannelsList() {
-  const el=document.getElementById('channels-list');
-  if (!DB.channels.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
-  el.innerHTML=DB.channels.map(c=>`
+  const el = document.getElementById('channels-list');
+  if (!DB.channels.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML = DB.channels.map(c => `
     <div class="list-item">
       <div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div>
       <div>
         <div class="list-item-name">#${esc(c.name)}</div>
-        ${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}
-        ${c.slack_id?`<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>`:''}
+        ${c.desc ? `<div class="list-item-sub">${esc(c.desc)}</div>` : ''}
+        ${c.slack_id ? `<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>` : ''}
       </div>
-      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deleteChannel('${c.id}')"><i class="ti ti-trash"></i></button></div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button>
+      </div>
     </div>`).join('');
 }
 
-/* ════════════════════════════════════════════════
-   QUEUE (Com correção para não falhar por relação do PostgREST)
-════════════════════════════════════════════════ */
+/* ══════════════════════════════
+   QUEUE
+══════════════════════════════ */
 async function loadQueue() {
   try {
-    // Busca direto da tabela sem o join problemático "webhooks()"
-    const {data, error} = await sb.from('scheduled_messages').select('*').eq('sent',false).order('scheduled_at');
+    const { data, error } = await sb.from('scheduled_messages')
+      .select('*').eq('sent', false).order('scheduled_at');
     if (error) throw error;
-    
-    const msgs = data||[];
-    const el   = document.getElementById('queue-list-full');
-    const ct   = document.getElementById('queue-count-display');
-    const nb   = document.getElementById('nb');
-    
-    ct.textContent = msgs.length;
-    nb.textContent = msgs.length; nb.style.display = msgs.length?'inline-block':'none';
-    
-    if (!msgs.length) { el.innerHTML='<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
-    
-    el.innerHTML = msgs.map(m=>`
+    const msgs = data || [];
+    document.getElementById('queue-count-display').textContent = msgs.length;
+    const nb = document.getElementById('nb');
+    nb.textContent = msgs.length;
+    nb.style.display = msgs.length ? 'inline-block' : 'none';
+    const el = document.getElementById('queue-list-full');
+    if (!msgs.length) { el.innerHTML = '<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
+    el.innerHTML = msgs.map(m => `
       <div class="queue-item">
         <div style="font-size:18px;flex-shrink:0">📢</div>
         <div style="flex:1">
-          <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${m.webhook_name||'—'}</div>
-          <div class="queue-text">${esc(m.preview_text||'')}</div>
+          <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${esc(m.webhook_name || '—')}</div>
+          <div class="queue-text">${esc(m.preview_text || '')}</div>
         </div>
-        <button class="btn btn-danger-ghost btn-sm" onclick="cancelScheduled('${m.id}')"><i class="ti ti-x"></i> Cancelar</button>
+        <button class="btn btn-danger-ghost btn-sm" data-cancel-sched="${m.id}"><i class="ti ti-x"></i> Cancelar</button>
       </div>`).join('');
-      
-  } catch(e) {
-    document.getElementById('queue-list-full').innerHTML = `<div class="no-sugg" style="color:var(--error); padding: 1.5rem">Erro ao carregar fila:<br>${e.message}</div>`;
+  } catch (e) {
+    document.getElementById('queue-list-full').innerHTML =
+      `<div class="no-sugg" style="color:var(--error);padding:1.5rem">Erro ao carregar fila:<br>${esc(e.message)}</div>`;
   }
 }
 
 async function cancelScheduled(id) {
   try {
-    await sb.from('scheduled_messages').delete().eq('id',id);
+    await sb.from('scheduled_messages').delete().eq('id', id);
     loadQueue();
-  } catch(e) {
-    alert("Erro ao cancelar: " + e.message);
+  } catch (e) {
+    alert('Erro ao cancelar: ' + e.message);
   }
 }
 
-/* ════════════════════════════════════════════════
-   AUTOCOMPLETE — MANTÉM OS NOMES LIMPOS NA TELA
-════════════════════════════════════════════════ */
+/* ══════════════════════════════
+   AUTOCOMPLETE
+══════════════════════════════ */
 function onMsgInput(ta) { detectAC(ta); processInput(ta.value); }
 
 function detectAC(ta) {
-  const val=ta.value, pos=ta.selectionStart, before=val.substring(0,pos);
-  const atIdx=before.lastIndexOf('@'), hashIdx=before.lastIndexOf('#');
-  const lastIdx=Math.max(atIdx,hashIdx);
-  if (lastIdx===-1) { closeAC(); return; }
-  const sym=val[lastIdx], query=before.substring(lastIdx+1);
+  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
+  const atIdx = before.lastIndexOf('@'), hashIdx = before.lastIndexOf('#');
+  const lastIdx = Math.max(atIdx, hashIdx);
+  if (lastIdx === -1) { closeAC(); return; }
+  const sym = val[lastIdx], query = before.substring(lastIdx + 1);
   if (/\s/.test(query)) { closeAC(); return; }
-  ST.acMode=sym;
-  const q=query.toLowerCase();
-  let items=[];
-  if (sym==='@') {
-    document.getElementById('ac-header').textContent='Pessoas & Grupos';
-    const ppl = DB.people.filter(p=>p.name.toLowerCase().includes(q)||((p.handle||'').toLowerCase().includes(q)));
-    const grp = DB.groups.filter(g=>g.name.toLowerCase().includes(q)||g.handle.toLowerCase().includes(q));
-    
-    items=[
-      ...ppl.map(p=>({type:'person', label:p.name, insert: `@${p.handle||p.name}`, sub:p.slack_id?'ID: '+p.slack_id:(p.handle?'@'+p.handle:''), avatar:initials(p.name)})),
-      ...grp.map(g=>({type:'group',  label:g.name, insert: `@${g.handle}`,  sub:g.slack_id?'ID: '+g.slack_id:'@'+g.handle, avatar:g.emoji||'👥'}))
+  ST.acMode = sym;
+  const q = query.toLowerCase();
+  let items = [];
+  if (sym === '@') {
+    document.getElementById('ac-header').textContent = 'Pessoas & Grupos';
+    const ppl = DB.people.filter(p => p.name.toLowerCase().includes(q) || ((p.handle || '').toLowerCase().includes(q)));
+    const grp = DB.groups.filter(g => g.name.toLowerCase().includes(q) || g.handle.toLowerCase().includes(q));
+    items = [
+      ...ppl.map(p => ({ type:'person', label:p.name, insert:`@${p.handle||p.name}`, sub:p.slack_id?'ID: '+p.slack_id:(p.handle?'@'+p.handle:''), avatar:initials(p.name) })),
+      ...grp.map(g => ({ type:'group',  label:g.name, insert:`@${g.handle}`, sub:g.slack_id?'ID: '+g.slack_id:'@'+g.handle, avatar:g.emoji||'👥' }))
     ];
   } else {
-    document.getElementById('ac-header').textContent='Canais Slack';
-    items=DB.channels.filter(c=>c.name.toLowerCase().includes(q)).map(c=>({type:'channel',label:'#'+c.name,insert:'#'+c.name,sub:c.desc||'',avatar:'#'}));
+    document.getElementById('ac-header').textContent = 'Canais Slack';
+    items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
+      .map(c => ({ type:'channel', label:'#'+c.name, insert:'#'+c.name, sub:c.desc||'', avatar:'#' }));
   }
   if (!items.length) { closeAC(); return; }
-  window._acItems=items; ST.acFocus=0;
-  document.getElementById('ac-list').innerHTML=items.map((it,i)=>`
-    <div class="ac-item ${i===0?'focused':''}" onclick="insertAC('${esc(it.insert)}',${lastIdx})">
+  window._acItems = items; ST.acFocus = 0;
+  document.getElementById('ac-list').innerHTML = items.map((it, i) => `
+    <div class="ac-item ${i === 0 ? 'focused' : ''}" data-ac-idx="${i}">
       <div class="ac-avatar ${it.type}">${it.avatar}</div>
-      <div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div>
+      <div><div class="ac-name">${esc(it.label)}</div>${it.sub ? `<div class="ac-sub">${esc(it.sub)}</div>` : ''}</div>
     </div>`).join('');
   document.getElementById('ac-dropdown').classList.add('open');
 }
 
-function closeAC() { document.getElementById('ac-dropdown').classList.remove('open'); ST.acMode=null; }
+function closeAC() { document.getElementById('ac-dropdown').classList.remove('open'); ST.acMode = null; }
 
-function insertAC(insert, symIdx) {
-  const ta=document.getElementById('msg-input');
-  const val=ta.value, pos=ta.selectionStart;
-  const before=val.substring(0,pos), lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'));
-  ta.value=val.substring(0,lastIdx)+insert+' '+val.substring(pos);
-  ta.focus(); const np=lastIdx+insert.length+1; ta.setSelectionRange(np,np);
+function insertAC(insert) {
+  const ta  = document.getElementById('msg-input');
+  const val = ta.value, pos = ta.selectionStart;
+  const before = val.substring(0, pos);
+  const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
+  ta.value = val.substring(0, lastIdx) + insert + ' ' + val.substring(pos);
+  ta.focus();
+  const np = lastIdx + insert.length + 1;
+  ta.setSelectionRange(np, np);
   closeAC(); processInput(ta.value);
 }
 
 function onMsgKeydown(e) {
-  const dd=document.getElementById('ac-dropdown');
+  const dd = document.getElementById('ac-dropdown');
   if (!dd.classList.contains('open')) return;
-  const items=window._acItems||[];
-  if (e.key==='ArrowDown') { e.preventDefault(); ST.acFocus=Math.min(ST.acFocus+1,items.length-1); refreshACFocus(); }
-  if (e.key==='ArrowUp')   { e.preventDefault(); ST.acFocus=Math.max(ST.acFocus-1,0); refreshACFocus(); }
-  if (e.key==='Enter'||e.key==='Tab') {
-    const it=items[ST.acFocus];
-    if (it) { e.preventDefault(); const ta=document.getElementById('msg-input'); insertAC(it.insert,0); }
+  const items = window._acItems || [];
+  if (e.key === 'ArrowDown') { e.preventDefault(); ST.acFocus = Math.min(ST.acFocus + 1, items.length - 1); refreshACFocus(); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); ST.acFocus = Math.max(ST.acFocus - 1, 0); refreshACFocus(); }
+  if (e.key === 'Enter' || e.key === 'Tab') {
+    const it = items[ST.acFocus];
+    if (it) { e.preventDefault(); insertAC(it.insert); }
   }
-  if (e.key==='Escape') closeAC();
+  if (e.key === 'Escape') closeAC();
 }
-function refreshACFocus() { document.querySelectorAll('.ac-item').forEach((el,i)=>el.classList.toggle('focused',i===ST.acFocus)); }
+function refreshACFocus() {
+  document.querySelectorAll('.ac-item').forEach((el, i) => el.classList.toggle('focused', i === ST.acFocus));
+}
 
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════
    SCENARIOS
-════════════════════════════════════════════════ */
-const HINTS={
-  ferias: ['@nome','férias','a partir de DD/MM','retornando em DD/MM'],
-  licenca:['@nome','atestado','licença médica','retorna em DD/MM'],
-  aviso:  ['instabilidade em','falha no','indisponível','manutenção'],
-  retorno:['@nome','retornou','disponível','de volta em DD/MM']
+══════════════════════════════ */
+const HINTS = {
+  ferias:  ['@nome','férias','a partir de DD/MM','retornando em DD/MM'],
+  licenca: ['@nome','atestado','licença médica','retorna em DD/MM'],
+  aviso:   ['instabilidade em','falha no','indisponível','manutenção'],
+  retorno: ['@nome','retornou','disponível','de volta em DD/MM']
 };
-function setScenario(sc,btn) {
-  ST.scenario=sc;
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active'); renderHints(); processInput(document.getElementById('msg-input').value);
+
+function setScenario(sc) {
+  ST.scenario = sc;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + sc).classList.add('active');
+  renderHints(); processInput(document.getElementById('msg-input').value);
 }
+
 function renderHints() {
-  document.getElementById('hint-pills').innerHTML=(HINTS[ST.scenario]||[]).map(h=>`<span class="hint-pill" onclick="insertHint('${h}')">${h}</span>`).join('');
+  document.getElementById('hint-pills').innerHTML = (HINTS[ST.scenario] || [])
+    .map(h => `<span class="hint-pill" data-hint="${esc(h)}">${esc(h)}</span>`).join('');
 }
+
 function insertHint(h) {
-  const ta=document.getElementById('msg-input'),vl=ta.value;
-  ta.value=vl+(vl&&!vl.endsWith(' ')?' ':'')+h+' ';
+  const ta = document.getElementById('msg-input'), vl = ta.value;
+  ta.value = vl + (vl && !vl.endsWith(' ') ? ' ' : '') + h + ' ';
   ta.focus(); processInput(ta.value);
 }
 
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════
    OPTIONS
-════════════════════════════════════════════════ */
+══════════════════════════════ */
 function toggleContact() {
-  ST.contactOn=!ST.contactOn;
-  document.getElementById('tgl-contact').classList.toggle('on',ST.contactOn);
-  document.getElementById('contact-row').style.display=ST.contactOn?'flex':'none';
+  ST.contactOn = !ST.contactOn;
+  document.getElementById('tgl-contact').classList.toggle('on', ST.contactOn);
+  document.getElementById('contact-row').style.display = ST.contactOn ? 'flex' : 'none';
   if (ST.contactOn) document.getElementById('contact-input').focus();
   refreshSuggs();
 }
+
 function toggleSchedule() {
-  ST.schedOn=!ST.schedOn;
-  document.getElementById('tgl-sched').classList.toggle('on',ST.schedOn);
-  document.getElementById('sched-row').style.display=ST.schedOn?'flex':'none';
-  const di=document.getElementById('sched-date'),ti=document.getElementById('sched-time');
-  di.disabled=!ST.schedOn; ti.disabled=!ST.schedOn;
-  if (ST.schedOn) { di.value=new Date().toISOString().split('T')[0]; di.min=di.value; di.onchange=ti.onchange=updateSchedHint; updateSchedHint(); }
-  else { document.getElementById('sched-badge').classList.remove('visible'); document.getElementById('sched-hint').textContent=''; document.getElementById('preview-sched').classList.remove('visible'); }
+  ST.schedOn = !ST.schedOn;
+  document.getElementById('tgl-sched').classList.toggle('on', ST.schedOn);
+  document.getElementById('sched-row').style.display = ST.schedOn ? 'flex' : 'none';
+  const di = document.getElementById('sched-date'), ti = document.getElementById('sched-time');
+  di.disabled = !ST.schedOn; ti.disabled = !ST.schedOn;
+  if (ST.schedOn) {
+    di.value = new Date().toISOString().split('T')[0];
+    di.min   = di.value;
+    updateSchedHint();
+  } else {
+    document.getElementById('sched-badge').classList.remove('visible');
+    document.getElementById('sched-hint').textContent = '';
+    document.getElementById('preview-sched').classList.remove('visible');
+  }
   updateSendBtn();
 }
+
 function updateSchedHint() {
-  const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
-  if (d&&t) { document.getElementById('sched-hint').textContent=new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); document.getElementById('sched-badge').classList.add('visible'); }
+  const d = document.getElementById('sched-date').value;
+  const t = document.getElementById('sched-time').value;
+  if (d && t) {
+    document.getElementById('sched-hint').textContent =
+      new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+    document.getElementById('sched-badge').classList.add('visible');
+  }
   updatePreview(ST.selSugg);
 }
+
 function refreshSuggs() { processInput(document.getElementById('msg-input').value); }
 
-/* ════════════════════════════════════════════════
-   FORMATTER: Substitui nomes da tela pelos IDs do Slack só no envio
-════════════════════════════════════════════════ */
+/* ══════════════════════════════
+   FORMATTER
+══════════════════════════════ */
 function formatSlackTags(text) {
   let txt = text;
-  
   DB.people.forEach(p => {
-    if(p.slack_id && p.handle) {
-      const regex = new RegExp(`@${p.handle}\\b`, 'gi');
-      txt = txt.replace(regex, `<@${p.slack_id}>`);
+    if (p.slack_id && p.handle) {
+      txt = txt.replace(new RegExp('@' + p.handle + '\\b', 'gi'), `<@${p.slack_id}>`);
     }
   });
-  
   DB.groups.forEach(g => {
-    if(g.slack_id && g.handle) {
-      const regex = new RegExp(`@${g.handle}\\b`, 'gi');
-      txt = txt.replace(regex, `<!subteam^${g.slack_id}>`);
+    if (g.slack_id && g.handle) {
+      txt = txt.replace(new RegExp('@' + g.handle + '\\b', 'gi'), `<!subteam^${g.slack_id}>`);
     }
   });
-  
   DB.channels.forEach(c => {
-    if(c.slack_id && c.name) {
-      const regex = new RegExp(`#${c.name}\\b`, 'gi');
-      txt = txt.replace(regex, `<#${c.slack_id}>`);
+    if (c.slack_id && c.name) {
+      txt = txt.replace(new RegExp('#' + c.name + '\\b', 'gi'), `<#${c.slack_id}>`);
     }
   });
-  
   return txt;
 }
 
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════
    SUGGESTIONS
-════════════════════════════════════════════════ */
+══════════════════════════════ */
 function cSlack() {
   if (!ST.contactOn) return '';
-  const c=(document.getElementById('contact-input').value||'').trim();
-  return c?`\n\n📞 _Contatos urgentes: ${c}_`:'\n\n📞 _Contatos urgentes: acione o responsável da área._';
+  const c = (document.getElementById('contact-input').value || '').trim();
+  return c ? `\n\n📞 _Contatos urgentes: ${c}_` : '\n\n📞 _Contatos urgentes: acione o responsável da área._';
 }
 function cHtml() {
   if (!ST.contactOn) return '';
-  const c=(document.getElementById('contact-input').value||'').trim();
-  return c?`<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${c}</small>`:`<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
+  const c = (document.getElementById('contact-input').value || '').trim();
+  return c
+    ? `<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${c}</small>`
+    : `<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
 }
+
 function parseMsg(text) {
-  return { users:[...text.matchAll(/[@<][@]?([\w.]+)[>]?/g)].map(m=>m[0]), dates:[...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m=>m[1]) };
+  return {
+    users: [...text.matchAll(/[@<][@]?([\w.]+)[>]?/g)].map(m => m[0]),
+    dates: [...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m => m[1])
+  };
 }
-function buildSuggs(text,sc) {
-  const {users,dates}=parseMsg(text);
-  const u=users[0]||'@colaborador', d1=dates[0]||'DD/MM', d2=dates[1]||'DD/MM';
-  const cs=cSlack(), ch=cHtml();
-  if (!text.trim()||text.trim().length<5) return [];
-  const T={
+
+function buildSuggs(text, sc) {
+  const { users, dates } = parseMsg(text);
+  const u = users[0] || '@colaborador', d1 = dates[0] || 'DD/MM', d2 = dates[1] || 'DD/MM';
+  const cs = cSlack(), ch = cHtml();
+  if (!text.trim() || text.trim().length < 5) return [];
+  const T = {
     ferias:[
-      {tag:'ferias', label:'Formal com ícones',   slack:formatSlackTags(`🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`), html:`🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}`},
-      {tag:'ferias', label:'Informal e direto',   slack:formatSlackTags(`🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`), html:`🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>${ch}`},
-      {tag:'retorno',label:'Aviso de retorno',    slack:formatSlackTags(`✅ *Retorno de Férias*\n\n${u} retorna às atividades em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`), html:`✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small style="color:#888">Bem-vindo(a) de volta!</small>${ch}`},
-      {tag:'aviso',  label:'Comunicado de RH',    slack:formatSlackTags(`📢 Informamos que ${u} estará de férias 🏖️ no período de *${d1}* a *${d2}*.${cs}`), html:`📢 Informamos que ${u} estará de férias 🏖️ no período de <b>${d1}</b> a <b>${d2}</b>.${ch}`}
+      {tag:'ferias', label:'Formal com ícones',  slack:formatSlackTags(`🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`), html:`🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}`},
+      {tag:'ferias', label:'Informal e direto',  slack:formatSlackTags(`🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`), html:`🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>${ch}`},
+      {tag:'retorno',label:'Aviso de retorno',   slack:formatSlackTags(`✅ *Retorno de Férias*\n\n${u} retorna às atividades em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`), html:`✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small>Bem-vindo(a) de volta!</small>${ch}`},
+      {tag:'aviso',  label:'Comunicado de RH',   slack:formatSlackTags(`📢 Informamos que ${u} estará de férias 🏖️ no período de *${d1}* a *${d2}*.${cs}`), html:`📢 Informamos que ${u} estará de férias 🏖️ no período de <b>${d1}</b> a <b>${d2}</b>.${ch}`}
     ],
     licenca:[
-      {tag:'licenca',label:'Aviso discreto',      slack:formatSlackTags(`🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`), html:`🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>${ch}`},
-      {tag:'licenca',label:'Formal com contato',  slack:formatSlackTags(`⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`), html:`⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}`},
-      {tag:'licenca',label:'Simples e respeitoso', slack:formatSlackTags(`${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`), html:`${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>${ch}`}
+      {tag:'licenca',label:'Aviso discreto',     slack:formatSlackTags(`🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`), html:`🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small>Desejamos uma pronta recuperação! 💙</small>${ch}`},
+      {tag:'licenca',label:'Formal com contato', slack:formatSlackTags(`⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`), html:`⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}`},
+      {tag:'licenca',label:'Simples e respeitoso',slack:formatSlackTags(`${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`), html:`${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small>Contamos com a compreensão de todos! 🤝</small>${ch}`}
     ],
     aviso:[
-      {tag:'aviso',label:'Incidente crítico',     slack:formatSlackTags(`🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`), html:`🚨 <b>[INCIDENTE]</b> — Instabilidade no sistema!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise${ch}`},
-      {tag:'aviso',label:'Manutenção programada', slack:formatSlackTags(`🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas impactados: a informar\n\n_Agradecemos a compreensão!_${cs}`), html:`🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir<br>🖥️ Sistemas: a informar${ch}`},
-      {tag:'aviso',label:'Incidente resolvido',   slack:formatSlackTags(`✅ *Incidente Resolvido*\n\nO sistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`), html:`✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}`},
-      {tag:'aviso',label:'Comunicado geral',      slack:formatSlackTags(`📢 *Comunicado Importante*\n\n${text.trim()||'Descreva o aviso aqui.'}\n\n_— Equipe de TI_${cs}`), html:`📢 <b>Comunicado Importante</b><br><br>${text.trim()||'Descreva o aviso aqui.'}<br><small style="color:#888">— Equipe de TI</small>${ch}`}
+      {tag:'aviso',label:'Incidente crítico',    slack:formatSlackTags(`🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`), html:`🚨 <b>[INCIDENTE]</b> — Instabilidade no sistema!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise${ch}`},
+      {tag:'aviso',label:'Manutenção programada',slack:formatSlackTags(`🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas impactados: a informar\n\n_Agradecemos a compreensão!_${cs}`), html:`🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir${ch}`},
+      {tag:'aviso',label:'Incidente resolvido',  slack:formatSlackTags(`✅ *Incidente Resolvido*\n\nO sistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`), html:`✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}`},
+      {tag:'aviso',label:'Comunicado geral',     slack:formatSlackTags(`📢 *Comunicado Importante*\n\n${text.trim() || 'Descreva o aviso aqui.'}\n\n_— Equipe de TI_${cs}`), html:`📢 <b>Comunicado Importante</b><br><br>${text.trim() || 'Descreva o aviso aqui.'}<br><small>— Equipe de TI</small>${ch}`}
     ],
     retorno:[
-      {tag:'retorno',label:'Retorno celebrativo', slack:formatSlackTags(`🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`), html:`🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}`},
-      {tag:'retorno',label:'Simples e objetivo',  slack:formatSlackTags(`✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`), html:`✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}`}
+      {tag:'retorno',label:'Retorno celebrativo',slack:formatSlackTags(`🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`), html:`🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}`},
+      {tag:'retorno',label:'Simples e objetivo', slack:formatSlackTags(`✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`), html:`✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}`}
     ]
   };
-  return (T[sc]||T.ferias).slice(0,4);
+  return (T[sc] || T.ferias).slice(0, 4);
 }
-const TL={ferias:'Férias',licenca:'Licença',aviso:'Aviso',retorno:'Retorno'};
-const TC={ferias:'tag-ferias',licenca:'tag-licenca',aviso:'tag-aviso',retorno:'tag-retorno'};
+
+const TL = { ferias:'Férias', licenca:'Licença', aviso:'Aviso', retorno:'Retorno' };
+const TC = { ferias:'tag-ferias', licenca:'tag-licenca', aviso:'tag-aviso', retorno:'tag-retorno' };
 
 function processInput(val) {
-  const suggs=buildSuggs(val,ST.scenario), grid=document.getElementById('sugg-grid'), lbl=document.getElementById('sugg-label');
-  if (!suggs.length) { grid.innerHTML='<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>'; lbl.textContent='Variações de mensagem'; ST.selSugg=null; updatePreview(null); updateSendBtn(); return; }
-  lbl.textContent=suggs.length+' variações — escolha uma:';
-  grid.innerHTML=suggs.map((s,i)=>`
-    <div class="sugg-card" id="sc-${i}" onclick="selectSugg(${i})">
+  const suggs = buildSuggs(val, ST.scenario);
+  const grid  = document.getElementById('sugg-grid');
+  const lbl   = document.getElementById('sugg-label');
+  if (!suggs.length) {
+    grid.innerHTML = '<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
+    lbl.textContent = 'Variações de mensagem';
+    ST.selSugg = null; updatePreview(null); updateSendBtn(); return;
+  }
+  lbl.textContent = suggs.length + ' variações — escolha uma:';
+  grid.innerHTML = suggs.map((s, i) => `
+    <div class="sugg-card" id="sc-${i}" data-sugg-idx="${i}">
       <div class="sugg-card-hdr"><span class="tag ${TC[s.tag]}">${TL[s.tag]}</span><span class="sugg-name">${s.label}</span><div class="sel-dot" id="dot-${i}"></div></div>
       <div class="sugg-preview">${s.html}</div>
     </div>`).join('');
-  window._suggs=suggs;
-  if (ST.selSugg) { const idx=suggs.findIndex(s=>s.label===ST.selSugg.label); if(idx>=0){hiCard(idx);ST.selSugg=suggs[idx];updatePreview(ST.selSugg);}else{ST.selSugg=null;updatePreview(null);} }
+  window._suggs = suggs;
+  if (ST.selSugg) {
+    const idx = suggs.findIndex(s => s.label === ST.selSugg.label);
+    if (idx >= 0) { hiCard(idx); ST.selSugg = suggs[idx]; updatePreview(ST.selSugg); }
+    else { ST.selSugg = null; updatePreview(null); }
+  }
   updateSendBtn();
 }
-function hiCard(i) { document.querySelectorAll('.sugg-card').forEach((c,j)=>{c.classList.toggle('selected',j===i);document.getElementById('dot-'+j).className='sel-dot'+(j===i?' on':'');}); }
-function selectSugg(i) { hiCard(i); ST.selSugg=window._suggs[i]; updatePreview(ST.selSugg); updateSendBtn(); }
 
-/* ════════════════════════════════════════════════
+function hiCard(i) {
+  document.querySelectorAll('.sugg-card').forEach((c, j) => {
+    c.classList.toggle('selected', j === i);
+    document.getElementById('dot-' + j).className = 'sel-dot' + (j === i ? ' on' : '');
+  });
+}
+
+function selectSugg(i) {
+  hiCard(i); ST.selSugg = window._suggs[i]; updatePreview(ST.selSugg); updateSendBtn();
+}
+
+/* ══════════════════════════════
    PREVIEW
-════════════════════════════════════════════════ */
+══════════════════════════════ */
 function updatePreview(s) {
-  const msg=document.getElementById('preview-msg'),emp=document.getElementById('preview-empty'),sc=document.getElementById('preview-sched');
-  if (!s) { msg.classList.remove('visible'); emp.style.display=''; sc.classList.remove('visible'); return; }
-  msg.classList.add('visible'); emp.style.display='none';
-  document.getElementById('preview-text').innerHTML=s.html;
-  const now=new Date(); document.getElementById('preview-time').textContent=' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const msg = document.getElementById('preview-msg');
+  const emp = document.getElementById('preview-empty');
+  const sc  = document.getElementById('preview-sched');
+  if (!s) { msg.classList.remove('visible'); emp.style.display = ''; sc.classList.remove('visible'); return; }
+  msg.classList.add('visible'); emp.style.display = 'none';
+  document.getElementById('preview-text').innerHTML = s.html;
+  const now = new Date();
+  document.getElementById('preview-time').textContent = ' ' +
+    now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
   if (ST.schedOn) {
-    const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
-    if(d&&t){document.getElementById('preview-sched-txt').textContent='Agendado para '+new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});sc.classList.add('visible');}
-    else sc.classList.remove('visible');
+    const d = document.getElementById('sched-date').value;
+    const t = document.getElementById('sched-time').value;
+    if (d && t) {
+      document.getElementById('preview-sched-txt').textContent =
+        'Agendado para ' + new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      sc.classList.add('visible');
+    } else sc.classList.remove('visible');
   } else sc.classList.remove('visible');
 }
 
-/* ════════════════════════════════════════════════
-   SEND — via Edge Function (resolve CORS)
-════════════════════════════════════════════════ */
+/* ══════════════════════════════
+   SEND
+══════════════════════════════ */
 function updateSendBtn() {
-  const btn=document.getElementById('btn-send'),lbl=document.getElementById('btn-send-label');
-  btn.disabled=!(ST.selSugg&&ST.selWh);
-  lbl.textContent=ST.schedOn?'Agendar mensagem':'Enviar para o Slack';
-  const st=document.getElementById('send-status');
-  if (ST.selSugg&&!ST.selWh) { st.className='status-msg warn'; st.innerHTML='<i class="ti ti-alert-triangle"></i> Selecione um canal de destino'; }
-  else if (st.className.includes('warn')) { st.textContent=''; st.className='status-msg'; }
+  const btn = document.getElementById('btn-send');
+  const lbl = document.getElementById('btn-send-label');
+  btn.disabled = !(ST.selSugg && ST.selWh);
+  lbl.textContent = ST.schedOn ? 'Agendar mensagem' : 'Enviar para o Slack';
+  const st = document.getElementById('send-status');
+  if (ST.selSugg && !ST.selWh) {
+    st.className = 'status-msg warn';
+    st.innerHTML = '<i class="ti ti-alert-triangle"></i> Selecione um canal de destino';
+  } else if (st.className.includes('warn')) { st.textContent = ''; st.className = 'status-msg'; }
 }
 
 async function sendMessage() {
-  if (!ST.selSugg||!ST.selWh) return;
+  if (!ST.selSugg || !ST.selWh) return;
   if (ST.schedOn) { await scheduleMsg(); return; }
-
-  const btn=document.getElementById('btn-send');
-  btn.disabled=true; document.getElementById('btn-send-label').textContent='Enviando...';
-
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true;
+  document.getElementById('btn-send-label').textContent = 'Enviando…';
   try {
     const { data: { session } } = await sb.auth.getSession();
     const res = await fetch(EDGE_SEND_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': `Bearer ${session.access_token}`
-      },
-      body: JSON.stringify({
-        webhook_url:  ST.selWh.url,
-        message_text: ST.selSugg.slack
-      })
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+      body: JSON.stringify({ webhook_url: ST.selWh.url, message_text: ST.selSugg.slack })
     });
-    
     const textResult = await res.text();
     let result = {};
-    try { result = JSON.parse(textResult); } catch(e) { throw new Error(textResult); }
-    
+    try { result = JSON.parse(textResult); } catch (e) { throw new Error(textResult); }
     if (res.ok && result.ok) {
-      showStatus('Mensagem enviada com sucesso!','success');
-      document.getElementById('btn-send-label').textContent='Enviado!';
-      setTimeout(()=>{ document.getElementById('btn-send-label').textContent='Enviar para o Slack'; btn.disabled=false; updateSendBtn(); },2500);
-    } else { throw new Error(result.error||'Erro na resposta da Edge Function'); }
-  } catch(e) {
-    showStatus('Erro ao enviar. Verifique console (F12) e a URL da Edge Function.','error');
+      showStatus('Mensagem enviada com sucesso! ✓', 'success');
+      document.getElementById('btn-send-label').textContent = 'Enviado!';
+      setTimeout(() => { document.getElementById('btn-send-label').textContent = 'Enviar para o Slack'; btn.disabled = false; updateSendBtn(); }, 2500);
+    } else { throw new Error(result.error || 'Erro na resposta da Edge Function'); }
+  } catch (e) {
+    showStatus('Erro ao enviar: ' + e.message, 'error');
     console.error(e);
-    document.getElementById('btn-send-label').textContent='Enviar para o Slack';
-    btn.disabled=false;
+    document.getElementById('btn-send-label').textContent = 'Enviar para o Slack';
+    btn.disabled = false;
   }
 }
 
 async function scheduleMsg() {
+  const d = document.getElementById('sched-date').value;
+  const t = document.getElementById('sched-time').value;
+  if (!d || !t) { alert('Selecione data e hora.'); return; }
+  const dt = new Date(d + 'T' + t);
+  if (dt <= new Date()) { alert('Selecione um horário futuro.'); return; }
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true;
+  document.getElementById('btn-send-label').textContent = 'Agendando…';
   try {
-    const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
-    if (!d||!t) { alert('Selecione data e hora.'); return; }
-    const dt=new Date(d+'T'+t);
-    if (dt<=new Date()) { alert('Selecione um horário futuro.'); return; }
-    const btn=document.getElementById('btn-send');
-    btn.disabled=true; document.getElementById('btn-send-label').textContent='Agendando...';
-    
-    const {error}=await sb.from('scheduled_messages').insert({
+    const { error } = await sb.from('scheduled_messages').insert({
       user_id:      user.id,
       webhook_id:   ST.selWh.id,
       webhook_name: ST.selWh.name,
       slack_text:   ST.selSugg.slack,
-      preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g,''),
+      preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g, ''),
       scheduled_at: dt.toISOString(),
     });
-    
     if (error) throw error;
-    
-    showStatus('Mensagem agendada no Supabase ✓','success');
-    document.getElementById('btn-send-label').textContent='Agendado!';
-    setTimeout(()=>{ document.getElementById('btn-send-label').textContent='Agendar mensagem'; btn.disabled=false; updateSendBtn(); },2500);
+    showStatus('Mensagem agendada no Supabase ✓', 'success');
+    document.getElementById('btn-send-label').textContent = 'Agendado!';
+    setTimeout(() => { document.getElementById('btn-send-label').textContent = 'Agendar mensagem'; btn.disabled = false; updateSendBtn(); }, 2500);
     loadQueue();
-  } catch(e) {
-    alert("Erro ao agendar:\n" + e.message);
-    document.getElementById('btn-send-label').textContent='Agendar mensagem';
-    document.getElementById('btn-send').disabled=false;
+  } catch (e) {
+    alert('Erro ao agendar:\n' + e.message);
+    document.getElementById('btn-send-label').textContent = 'Agendar mensagem';
+    document.getElementById('btn-send').disabled = false;
   }
 }
 
-/* ════════════════════════════════════════════════
+/* ══════════════════════════════
    UTILS
-════════════════════════════════════════════════ */
-function showStatus(msg,type) {
-  const el=document.getElementById('send-status'); el.className='status-msg '+(type||'');
-  const icon=type==='success'?'ti-circle-check':type==='error'?'ti-alert-circle':'ti-info-circle';
-  el.innerHTML=`<i class="ti ${icon}"></i> ${msg}`;
-  if (type!=='warn') setTimeout(()=>{ el.textContent=''; el.className='status-msg'; },4000);
+══════════════════════════════ */
+function showStatus(msg, type) {
+  const el = document.getElementById('send-status');
+  el.className = 'status-msg ' + (type || '');
+  const icon = type === 'success' ? 'ti-circle-check' : type === 'error' ? 'ti-alert-circle' : 'ti-info-circle';
+  el.innerHTML = `<i class="ti ${icon}"></i> ${msg}`;
+  if (type !== 'warn') setTimeout(() => { el.textContent = ''; el.className = 'status-msg'; }, 4000);
 }
+
 function clearCompose() {
-  document.getElementById('msg-input').value='';
-  document.getElementById('sugg-grid').innerHTML='<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
-  document.getElementById('sugg-label').textContent='Variações de mensagem';
-  ST.selSugg=null; updatePreview(null); updateSendBtn();
-  const st=document.getElementById('send-status'); st.textContent=''; st.className='status-msg';
+  document.getElementById('msg-input').value = '';
+  document.getElementById('sugg-grid').innerHTML = '<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
+  document.getElementById('sugg-label').textContent = 'Variações de mensagem';
+  ST.selSugg = null; updatePreview(null); updateSendBtn();
+  const st = document.getElementById('send-status'); st.textContent = ''; st.className = 'status-msg';
 }
-function toggleForm(id) { document.getElementById(id).classList.toggle('open'); }
+
 function renderAll() { renderWhDrop(); renderWhBtn(); renderPeopleList(); renderGroupsList(); renderChannelsList(); renderWhSettings(); }
-function v(id) { return document.getElementById(id).value.trim(); }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function initials(n) { return (n||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
+function v(id)  { return document.getElementById(id).value.trim(); }
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function initials(n) { return (n || '').split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase(); }
+
+/* ══════════════════════════════
+   EVENT DELEGATION
+   FIX PRINCIPAL: todos os eventos via delegation
+   em vez de inline onclick no HTML — evita
+   erros de "cannot read properties of null"
+   quando o DOM ainda não está pronto
+══════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Bootstrap: verifica sessão ativa antes de qualquer coisa
+  bootstrap();
+
+  /* ── Auth ── */
+  document.getElementById('auth-btn').addEventListener('click', doAuth);
+  document.getElementById('auth-pw').addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); });
+  document.querySelectorAll('.auth-tab').forEach(btn => {
+    btn.addEventListener('click', () => switchAuthMode(btn.textContent === 'Entrar' ? 'login' : 'signup', btn));
+  });
+
+  /* ── Logout ── */
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    try { await sb.auth.signOut(); window.location.reload(); }
+    catch (e) { alert('Erro ao sair: ' + e.message); }
+  });
+
+  /* ── Nav ── */
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = btn.getAttribute('onclick')?.match(/'(\w+)'/)?.[1];
+      if (panel) showPanel(panel, btn);
+    });
+  });
+
+  // Reescreve nav sem onclick inline
+  const navMap = [
+    ['Enviar mensagem', 'compose'],
+    ['Agendamentos',    'queue'],
+    ['Webhooks',        'webhooks'],
+    ['Pessoas',         'people'],
+    ['Canais Slack',    'channels'],
+  ];
+  document.querySelectorAll('.nav-item').forEach((btn, i) => {
+    const id = ['compose','queue','webhooks','people','channels'][i];
+    if (id) btn.onclick = () => showPanel(id, btn);
+  });
+
+  /* ── Webhook dropdown ── */
+  document.getElementById('wh-btn').addEventListener('click', () => toggleWhDrop());
+  document.getElementById('btn-manage-wh').addEventListener('click', () => {
+    showPanel('webhooks', document.querySelectorAll('.nav-item')[2]);
+  });
+  document.addEventListener('click', e => {
+    if (!document.getElementById('wh-wrap').contains(e.target)) {
+      whOpen = false; document.getElementById('wh-dropdown').classList.remove('open');
+    }
+  });
+
+  /* ── Webhook settings ── */
+  document.getElementById('btn-add-wh').addEventListener('click', () => {
+    document.getElementById('wh-form').classList.toggle('open');
+  });
+  document.getElementById('btn-save-wh').addEventListener('click', saveWebhook);
+  document.getElementById('btn-cancel-wh').addEventListener('click', () => {
+    document.getElementById('wh-form').classList.remove('open');
+  });
+
+  /* ── People ── */
+  document.getElementById('btn-add-person').addEventListener('click', () => {
+    document.getElementById('person-form').classList.toggle('open');
+  });
+  document.getElementById('btn-save-person').addEventListener('click', savePerson);
+  document.getElementById('btn-cancel-person').addEventListener('click', () => {
+    document.getElementById('person-form').classList.remove('open');
+  });
+
+  /* ── Groups ── */
+  document.getElementById('btn-add-group').addEventListener('click', () => {
+    document.getElementById('group-form').classList.toggle('open');
+  });
+  document.getElementById('btn-save-group').addEventListener('click', saveGroup);
+  document.getElementById('btn-cancel-group').addEventListener('click', () => {
+    document.getElementById('group-form').classList.remove('open');
+  });
+
+  /* ── Channels ── */
+  document.getElementById('btn-add-channel').addEventListener('click', () => {
+    document.getElementById('channel-form').classList.toggle('open');
+  });
+  document.getElementById('btn-save-channel').addEventListener('click', saveChannel);
+  document.getElementById('btn-cancel-channel').addEventListener('click', () => {
+    document.getElementById('channel-form').classList.remove('open');
+  });
+
+  /* ── Scenario tabs ── */
+  ['ferias','licenca','aviso','retorno'].forEach(sc => {
+    document.getElementById('tab-' + sc).addEventListener('click', () => setScenario(sc));
+  });
+
+  /* ── Composer ── */
+  const msgInput = document.getElementById('msg-input');
+  msgInput.addEventListener('input',   () => onMsgInput(msgInput));
+  msgInput.addEventListener('keydown', e  => onMsgKeydown(e));
+
+  document.getElementById('contact-input').addEventListener('input', refreshSuggs);
+  document.getElementById('tgl-contact').addEventListener('click', toggleContact);
+  document.getElementById('tgl-sched').addEventListener('click', toggleSchedule);
+  document.getElementById('sched-date').addEventListener('change', updateSchedHint);
+  document.getElementById('sched-time').addEventListener('change', updateSchedHint);
+
+  document.getElementById('btn-send').addEventListener('click', sendMessage);
+  document.getElementById('btn-clear').addEventListener('click', clearCompose);
+
+  /* ── Event delegation para itens dinâmicos ── */
+  document.addEventListener('click', e => {
+    // Webhook dropdown items
+    const selWh = e.target.closest('[data-sel-wh]');
+    if (selWh) { selectWh(selWh.dataset.selWh); return; }
+
+    // Delete buttons
+    const delWh = e.target.closest('[data-del-wh]');
+    if (delWh) { deleteWebhook(delWh.dataset.delWh); return; }
+
+    const delPerson = e.target.closest('[data-del-person]');
+    if (delPerson) { deletePerson(delPerson.dataset.delPerson); return; }
+
+    const delGroup = e.target.closest('[data-del-group]');
+    if (delGroup) { deleteGroup(delGroup.dataset.delGroup); return; }
+
+    const delChannel = e.target.closest('[data-del-channel]');
+    if (delChannel) { deleteChannel(delChannel.dataset.delChannel); return; }
+
+    // Queue cancel
+    const cancelSched = e.target.closest('[data-cancel-sched]');
+    if (cancelSched) { cancelScheduled(cancelSched.dataset.cancelSched); return; }
+
+    // Hint pills
+    const hint = e.target.closest('[data-hint]');
+    if (hint) { insertHint(hint.dataset.hint); return; }
+
+    // Suggestion cards
+    const suggCard = e.target.closest('[data-sugg-idx]');
+    if (suggCard) { selectSugg(parseInt(suggCard.dataset.suggIdx)); return; }
+
+    // Autocomplete items
+    const acItem = e.target.closest('[data-ac-idx]');
+    if (acItem) {
+      const it = (window._acItems || [])[parseInt(acItem.dataset.acIdx)];
+      if (it) insertAC(it.insert);
+      return;
+    }
+  });
+
+  renderHints();
+  dbg('Interface pronta — aguardando sessão…');
+});
 </script>
 </body>
 </html>
