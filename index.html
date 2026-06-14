@@ -1202,7 +1202,17 @@ function refreshSuggs() { processInput(document.getElementById('msg-input').valu
 ══════════════════════════════ */
 function formatSlackTags(text) {
   let txt = text;
+  
+    // ── MENÇÕES ESPECIAIS 
+  txt = txt.replace(/@here\b/gi,     '<!here>');
+  txt = txt.replace(/@channel\b/gi,  '<!channel>');
+  txt = txt.replace(/@everyone\b/gi, '<!everyone>');
 
+  // ── VERSÕES EM PORTUGUÊS ──
+  txt = txt.replace(/@aqui\b/gi,     '<!here>');
+  txt = txt.replace(/@canal\b/gi,    '<!channel>');
+  txt = txt.replace(/@todos\b/gi,    '<!everyone>');
+  
   // ── PESSOAS ──
   // Estratégia: tenta pelo nome de exibição (com ou sem espaço), depois pelo handle
   // Ordena do nome mais longo para o mais curto para evitar substituição parcial
