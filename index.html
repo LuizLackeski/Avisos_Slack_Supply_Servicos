@@ -8,16 +8,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root {
-  --cobli-navy:        #07074E;
-  --cobli-blue:        #001BB8;
-  --cobli-blue-light:  #3248C6;
-  --cobli-blue-chart:  #7F8DDB;
-  --cobli-red:         #FF4633;
-  --cobli-green:       #00AE97;
-  --cobli-green2:      #0FFDC9;
-  --cobli-green3:      #1FEF51;
-  --cobli-text:        #E6E6ED;
-  --cobli-kpi:         #1F1F5F;
+  --cobli-navy:       #07074E;
+  --cobli-blue:       #001BB8;
+  --cobli-blue-light: #3248C6;
+  --cobli-blue-chart: #7F8DDB;
+  --cobli-red:        #FF4633;
+  --cobli-green:      #00AE97;
+  --cobli-green2:     #0FFDC9;
   --bg:           #07074E;
   --bg-card:      #0f0f6a;
   --bg-input:     #1F1F5F;
@@ -27,8 +24,6 @@
   --text:         #E6E6ED;
   --text-muted:   rgba(230,230,237,0.55);
   --text-hint:    rgba(230,230,237,0.35);
-  --accent:       #001BB8;
-  --accent-hover: #3248C6;
   --success:      #00AE97;
   --error:        #FF4633;
   --warn:         #F59E0B;
@@ -36,197 +31,239 @@
   --radius-md: 10px;
   --radius-lg: 14px;
 }
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; }
-.layout { display:flex; min-height:100vh; }
-.sidebar { width:260px; flex-shrink:0; background:var(--cobli-navy); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:100; }
-.sidebar-logo { padding:20px 20px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
-.logo-mark { width:36px; height:36px; background:linear-gradient(135deg,#001BB8,#0FFDC9); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; color:#fff; }
-.logo-text { font-size:15px; font-weight:700; color:#E6E6ED; }
-.logo-sub  { font-size:11px; color:var(--text-muted); }
-.sidebar-nav { flex:1; padding:12px 10px; overflow-y:auto; }
-.nav-label { font-size:10px; font-weight:700; color:var(--text-hint); letter-spacing:.08em; text-transform:uppercase; padding:10px 10px 4px; }
-.nav-item { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius-md); font-size:13px; color:var(--text-muted); cursor:pointer; transition:all .15s; margin-bottom:2px; border:none; background:transparent; width:100%; text-align:left; }
-.nav-item:hover { background:var(--bg-hover); color:var(--text); }
-.nav-item.active { background:var(--bg-input); color:var(--cobli-green2); }
-.nav-item i { font-size:16px; flex-shrink:0; }
-.nav-badge { margin-left:auto; font-size:10px; font-weight:700; background:var(--cobli-blue-light); color:#fff; padding:2px 7px; border-radius:10px; }
-.sb-user { padding:12px 16px; border-top:1px solid var(--border); display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }
-.sb-user i { font-size:15px; }
-.btn-logout { margin-left:auto; font-size:11px; background:rgba(255,70,51,.15); color:var(--cobli-red); border:none; padding:3px 9px; border-radius:4px; cursor:pointer; }
-.btn-logout:hover { background:rgba(255,70,51,.28); }
-.main { margin-left:260px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
-.topbar { background:rgba(7,7,78,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:50; }
-.topbar-title { font-size:16px; font-weight:600; }
-.topbar-sub { font-size:12px; color:var(--text-muted); margin-top:1px; }
-.topbar-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
-.status-connected { font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; background:rgba(0,174,151,.15); color:var(--cobli-green); border:1px solid rgba(0,174,151,.3); display:flex; align-items:center; gap:5px; }
-.status-dot { width:6px; height:6px; border-radius:50%; background:var(--cobli-green); }
-.content { padding:24px 28px; display:flex; flex-direction:column; gap:18px; max-width:820px; }
-#auth-screen { display:none; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
-.auth-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:36px; width:100%; max-width:380px; display:flex; flex-direction:column; gap:18px; }
-.auth-tabs { display:flex; border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
-.auth-tab { flex:1; padding:8px; font-size:13px; font-weight:500; border:none; background:transparent; cursor:pointer; color:var(--text-muted); transition:all .15s; }
-.auth-tab.active { background:var(--cobli-blue); color:#fff; }
-.auth-err { font-size:12px; color:var(--cobli-red); background:rgba(255,70,51,.1); padding:8px 12px; border-radius:var(--radius-sm); display:none; }
-.form-label { font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px; display:block; letter-spacing:.04em; }
-.panel { display:none; }
-.panel.active { display:flex; flex-direction:column; gap:18px; }
-.card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; }
-.card-title { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--cobli-blue-chart); margin-bottom:12px; display:flex; align-items:center; gap:6px; }
-input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],textarea,select {
-  font-family:inherit; font-size:13px; color:var(--text);
-  background:var(--bg-input); border:1px solid var(--border);
-  border-radius:var(--radius-md); padding:8px 12px;
-  transition:border .15s,box-shadow .15s; width:100%;
-}
-input:focus,textarea:focus,select:focus { outline:none; border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(50,72,198,.25); }
-input::placeholder,textarea::placeholder { color:var(--text-hint); }
-.toggle { width:40px; height:22px; border-radius:11px; background:var(--border); border:none; cursor:pointer; position:relative; transition:background .2s; flex-shrink:0; padding:0; }
-.toggle.on { background:var(--cobli-green); }
-.toggle::after { content:''; width:16px; height:16px; border-radius:50%; background:#fff; position:absolute; top:3px; left:3px; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.3); }
-.toggle.on::after { left:21px; }
-.toggle-row { display:flex; align-items:center; gap:10px; }
-.toggle-label { font-size:13px; font-weight:500; }
-.btn { display:inline-flex; align-items:center; gap:7px; padding:9px 20px; border-radius:var(--radius-md); font-size:13px; font-weight:600; border:none; cursor:pointer; transition:all .15s; white-space:nowrap; }
-.btn-primary { background:var(--cobli-blue); color:#fff; }
-.btn-primary:hover { background:var(--cobli-blue-light); }
-.btn-primary:disabled { opacity:.4; cursor:not-allowed; }
-.btn-success { background:var(--cobli-green); color:#07074E; }
-.btn-success:hover { background:var(--cobli-green2); }
-.btn-ghost { background:transparent; color:var(--text-muted); border:1px solid var(--border); }
-.btn-ghost:hover { background:var(--bg-hover); color:var(--text); }
-.btn-danger-ghost { background:transparent; color:var(--error); border:1px solid rgba(255,70,51,.3); }
-.btn-danger-ghost:hover { background:rgba(255,70,51,.1); }
-.btn-sm { padding:5px 12px; font-size:12px; }
-.tag { font-size:11px; font-weight:700; padding:2px 9px; border-radius:10px; }
-.tag-ferias  { background:rgba(0,174,151,.2);  color:var(--cobli-green);  border:1px solid rgba(0,174,151,.35); }
-.tag-licenca { background:rgba(50,72,198,.2);  color:#7F8DDB; border:1px solid rgba(127,141,219,.35); }
-.tag-aviso   { background:rgba(255,70,51,.15); color:var(--cobli-red);    border:1px solid rgba(255,70,51,.35); }
-.tag-retorno { background:rgba(15,253,201,.12);color:var(--cobli-green2); border:1px solid rgba(15,253,201,.3); }
-.tabs { display:flex; gap:8px; flex-wrap:wrap; }
-.tab-btn { font-size:12px; padding:7px 16px; border-radius:20px; background:var(--bg-input); color:var(--text-muted); border:1px solid var(--border); cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .15s; font-weight:500; }
-.tab-btn:hover { color:var(--text); border-color:var(--cobli-blue-chart); }
-.tab-btn.active { background:var(--cobli-blue); color:#fff; border-color:var(--cobli-blue); }
-.msg-wrap { position:relative; }
-textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12px 14px; }
-.hint-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
-.hint-pill { font-size:11px; padding:3px 10px; border-radius:12px; border:1px solid var(--border); color:var(--text-hint); cursor:pointer; transition:all .15s; }
-.hint-pill:hover { background:rgba(50,72,198,.2); color:var(--cobli-blue-chart); border-color:var(--cobli-blue-chart); }
-.autocomplete-dropdown { position:absolute; z-index:200; background:#0d0d60; border:1px solid var(--cobli-blue-light); border-radius:var(--radius-md); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.5); min-width:240px; max-height:220px; overflow-y:auto; display:none; top:calc(100% + 4px); left:0; }
-.autocomplete-dropdown.open { display:block; }
-.ac-header { font-size:10px; font-weight:700; color:var(--text-hint); padding:8px 12px 4px; letter-spacing:.06em; text-transform:uppercase; }
-.ac-item { display:flex; align-items:center; gap:10px; padding:8px 12px; cursor:pointer; transition:background .1s; font-size:13px; }
-.ac-item:hover,.ac-item.focused { background:var(--bg-hover); }
-.ac-avatar { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; font-weight:700; }
-.ac-avatar.person  { background:rgba(50,72,198,.35); color:#7F8DDB; }
-.ac-avatar.group   { background:rgba(0,174,151,.25); color:var(--cobli-green); }
-.ac-avatar.channel { background:rgba(15,253,201,.15); color:var(--cobli-green2); }
-.ac-name { font-weight:600; }
-.ac-sub  { font-size:11px; color:var(--text-hint); }
-.sugg-grid { display:grid; gap:8px; }
-.sugg-card { border:1px solid var(--border); border-radius:var(--radius-lg); padding:12px 14px; cursor:pointer; transition:all .15s; background:var(--bg-card); }
-.sugg-card:hover { border-color:var(--cobli-blue-light); background:var(--bg-input); }
-.sugg-card.selected { border:1.5px solid var(--cobli-green); background:var(--bg-input); }
-.sugg-card-hdr { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-.sugg-name { font-size:12px; color:var(--text-muted); }
-.sel-dot { width:16px; height:16px; border-radius:50%; border:2px solid var(--border); margin-left:auto; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .15s; }
-.sel-dot.on { background:var(--cobli-green); border-color:var(--cobli-green); }
-.sel-dot.on::after { content:''; width:6px; height:6px; border-radius:50%; background:#07074E; }
-.sugg-preview { font-size:13px; line-height:1.75; color:var(--text); }
-.no-sugg { font-size:13px; color:var(--text-hint); text-align:center; padding:2.5rem; }
-.webhook-select-wrap { position:relative; }
-.webhook-select-btn { width:100%; display:flex; align-items:center; gap:10px; padding:9px 14px; border-radius:var(--radius-md); background:var(--bg-input); border:1px solid var(--border); color:var(--text); cursor:pointer; transition:all .15s; }
-.webhook-select-btn:hover { border-color:var(--cobli-blue-chart); }
-.wh-dot { width:8px; height:8px; border-radius:50%; background:var(--error); flex-shrink:0; }
-.wh-dot.ok { background:var(--success); }
-.wh-name { font-size:13px; font-weight:500; flex:1; text-align:left; }
-.wh-dropdown { display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; background:#0d0d60; border:1px solid var(--cobli-blue-light); border-radius:var(--radius-md); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.5); z-index:200; }
-.wh-dropdown.open { display:block; }
-.wh-opt { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; transition:background .1s; font-size:13px; }
-.wh-opt:hover,.wh-opt.active { background:var(--bg-hover); }
-.wh-opt.active .wh-name { color:var(--cobli-green2); }
-.wh-check { margin-left:auto; color:var(--cobli-green); font-size:14px; display:none; }
-.wh-opt.active .wh-check { display:block; }
-.preview-card { background:#111; border:1px solid #2a2a2a; border-radius:var(--radius-lg); padding:1rem 1.25rem; }
-.preview-hdr { font-size:11px; color:#555; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
-.preview-msg { display:none; }
-.preview-msg.visible { display:flex; gap:10px; }
-.preview-avatar-wrap { width:36px; height:36px; border-radius:8px; background:var(--cobli-blue); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-.preview-name { font-size:13px; font-weight:700; color:#fff; }
-.preview-time { font-size:11px; color:#555; margin-left:6px; }
-.preview-text { font-size:14px; color:#CCC; line-height:1.75; margin-top:3px; }
-.preview-sched { font-size:11px; color:var(--cobli-green2); margin-top:6px; display:none; }
-.preview-sched.visible { display:block; }
-.preview-empty { font-size:13px; color:#444; }
-.options-card { background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; display:flex; flex-direction:column; gap:12px; }
-.sub-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-left:50px; }
-.sched-inputs { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.sched-inputs input[type=date],.sched-inputs input[type=time] { width:auto; }
-.sched-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; background:rgba(0,174,151,.2); color:var(--cobli-green); border:1px solid rgba(0,174,151,.35); display:none; }
-.sched-badge.visible { display:inline-block; }
-.divider-h { height:1px; background:var(--border); }
-.status-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-.status-msg { font-size:13px; display:flex; align-items:center; gap:6px; }
-.status-msg.success { color:var(--cobli-green); }
-.status-msg.error   { color:var(--error); }
-.status-msg.warn    { color:var(--warn); }
-.queue-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px; background:var(--bg-card); }
-.queue-time { font-size:11px; font-weight:700; color:var(--cobli-green2); white-space:nowrap; min-width:90px; padding-top:2px; }
-.queue-text { font-size:12px; color:var(--text-muted); flex:1; line-height:1.5; }
-.list-item { display:flex; align-items:center; gap:12px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--bg-card); margin-bottom:6px; }
-.list-item-avatar { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; font-weight:700; }
-.list-item-name { font-size:13px; font-weight:600; }
-.list-item-sub  { font-size:11px; color:var(--text-muted); margin-top:2px; font-family:monospace; }
-.list-item-actions { margin-left:auto; display:flex; gap:6px; }
-.add-form { border:1px dashed rgba(50,72,198,.4); border-radius:var(--radius-md); padding:14px; margin-top:8px; display:none; flex-direction:column; gap:10px; }
-.add-form.open { display:flex; }
-.form-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
-.form-row > div { flex:1; min-width:120px; }
-.slack-id-tip { font-size:11px; color:var(--cobli-blue-chart); background:rgba(50,72,198,.12); padding:8px 12px; border-radius:var(--radius-sm); border-left:2px solid var(--cobli-blue-light); line-height:1.6; }
-.loading { display:flex; align-items:center; justify-content:center; padding:24px; color:var(--text-hint); font-size:13px; gap:8px; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.spin { animation:spin .8s linear infinite; display:inline-block; }
-::-webkit-scrollbar { width:5px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+.layout{display:flex;min-height:100vh}
 
-/* ── DEBUG BANNER ── */
-.debug-banner { position:fixed; bottom:0; left:0; right:0; background:#1a0020; border-top:1px solid #6b21a8; padding:6px 16px; font-size:11px; font-family:monospace; color:#d8b4fe; z-index:9999; display:flex; gap:12px; align-items:center; max-height:42px; overflow:hidden; }
-.debug-banner.error { background:#1a0000; border-color:#991b1b; color:#fca5a5; }
-.debug-banner.success { background:#001a0e; border-color:#166534; color:#86efac; }
+/* SIDEBAR */
+.sidebar{width:260px;flex-shrink:0;background:var(--cobli-navy);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#001BB8,#0FFDC9);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff}
+.logo-text{font-size:15px;font-weight:700;color:#E6E6ED}
+.logo-sub{font-size:11px;color:var(--text-muted)}
+.sidebar-nav{flex:1;padding:12px 10px;overflow-y:auto}
+.nav-label{font-size:10px;font-weight:700;color:var(--text-hint);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-md);font-size:13px;color:var(--text-muted);cursor:pointer;transition:all .15s;margin-bottom:2px;border:none;background:transparent;width:100%;text-align:left}
+.nav-item:hover{background:var(--bg-hover);color:var(--text)}
+.nav-item.active{background:var(--bg-input);color:var(--cobli-green2)}
+.nav-item i{font-size:16px;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--cobli-blue-light);color:#fff;padding:2px 7px;border-radius:10px;display:none}
+.sb-user{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)}
+.btn-logout{margin-left:auto;font-size:11px;background:rgba(255,70,51,.15);color:var(--cobli-red);border:none;padding:3px 9px;border-radius:4px;cursor:pointer}
+.btn-logout:hover{background:rgba(255,70,51,.28)}
+
+/* MAIN */
+.main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:rgba(7,7,78,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:16px;font-weight:600}
+.topbar-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.status-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(0,174,151,.15);color:var(--cobli-green);border:1px solid rgba(0,174,151,.3);display:flex;align-items:center;gap:5px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--cobli-green)}
+.content{padding:24px 28px;display:flex;flex-direction:column;gap:18px;max-width:860px}
+
+/* AUTH */
+#auth-screen{display:none;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)}
+.auth-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:18px}
+.auth-tabs{display:flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
+.auth-tab{flex:1;padding:8px;font-size:13px;font-weight:500;border:none;background:transparent;cursor:pointer;color:var(--text-muted);transition:all .15s}
+.auth-tab.active{background:var(--cobli-blue);color:#fff}
+.auth-err{font-size:12px;color:var(--cobli-red);background:rgba(255,70,51,.1);padding:8px 12px;border-radius:var(--radius-sm);display:none}
+.form-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;display:block;letter-spacing:.04em}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:flex;flex-direction:column;gap:18px}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* INPUTS */
+input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px 12px;transition:border .15s,box-shadow .15s;width:100%}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(50,72,198,.25)}
+input::placeholder,textarea::placeholder{color:var(--text-hint)}
+textarea{resize:vertical;line-height:1.65}
+
+/* TOGGLE */
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--border);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;padding:0}
+.toggle.on{background:var(--cobli-green)}
+.toggle::after{content:'';width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.toggle.on::after{left:21px}
+.toggle-row{display:flex;align-items:center;gap:10px}
+.toggle-label{font-size:13px;font-weight:500}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:var(--radius-md);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--cobli-blue);color:#fff}
+.btn-primary:hover{background:var(--cobli-blue-light)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-success{background:var(--cobli-green);color:#07074E}
+.btn-success:hover{background:var(--cobli-green2)}
+.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg-hover);color:var(--text)}
+.btn-danger-ghost{background:transparent;color:var(--error);border:1px solid rgba(255,70,51,.3)}
+.btn-danger-ghost:hover{background:rgba(255,70,51,.1)}
+.btn-warn{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid rgba(245,158,11,.3)}
+.btn-warn:hover{background:rgba(245,158,11,.25)}
+.btn-sm{padding:5px 12px;font-size:12px}
+
+/* TAGS */
+.tag{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px}
+.tag-ferias {background:rgba(0,174,151,.2);color:var(--cobli-green);border:1px solid rgba(0,174,151,.35)}
+.tag-licenca{background:rgba(50,72,198,.2);color:#7F8DDB;border:1px solid rgba(127,141,219,.35)}
+.tag-aviso  {background:rgba(255,70,51,.15);color:var(--cobli-red);border:1px solid rgba(255,70,51,.35)}
+.tag-retorno{background:rgba(15,253,201,.12);color:var(--cobli-green2);border:1px solid rgba(15,253,201,.3)}
+.tag-aviso-geral{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid rgba(245,158,11,.3)}
+
+/* SCENARIO TABS */
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab-btn{font-size:12px;padding:7px 16px;border-radius:20px;background:var(--bg-input);color:var(--text-muted);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;font-weight:500}
+.tab-btn:hover{color:var(--text);border-color:var(--cobli-blue-chart)}
+.tab-btn.active{background:var(--cobli-blue);color:#fff;border-color:var(--cobli-blue)}
+
+/* COMPOSER INPUT */
+.msg-wrap{position:relative}
+textarea.msg-ta{min-height:80px;padding:12px 14px}
+.hint-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.hint-pill{font-size:11px;padding:3px 10px;border-radius:12px;border:1px solid var(--border);color:var(--text-hint);cursor:pointer;transition:all .15s;user-select:none}
+.hint-pill:hover{background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);border-color:var(--cobli-blue-chart)}
+
+/* MULTI-WEBHOOK SELECTOR */
+.wh-multi-wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.wh-chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:20px;background:var(--bg-input);border:1px solid var(--cobli-green);font-size:12px;font-weight:600;color:var(--cobli-green2);cursor:default}
+.wh-chip-remove{background:none;border:none;color:var(--cobli-red);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;opacity:.7}
+.wh-chip-remove:hover{opacity:1}
+.wh-add-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:transparent;border:1px dashed var(--border);font-size:12px;color:var(--text-muted);cursor:pointer;transition:all .15s}
+.wh-add-btn:hover{border-color:var(--cobli-blue-chart);color:var(--text)}
+.wh-picker-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:260px;background:#0d0d60;border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:200}
+.wh-picker-dropdown.open{display:block}
+.wh-picker-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;font-size:13px}
+.wh-picker-item:hover{background:var(--bg-hover)}
+.wh-picker-item.selected{background:rgba(0,174,151,.1)}
+.wh-picker-item.selected .wh-name{color:var(--cobli-green2)}
+.wh-check{margin-left:auto;color:var(--cobli-green);font-size:14px;display:none}
+.wh-picker-item.selected .wh-check{display:block}
+.wh-name{font-size:13px;font-weight:500}
+
+/* AUTOCOMPLETE */
+.autocomplete-dropdown{position:absolute;z-index:300;background:#0d0d60;border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);min-width:260px;max-height:220px;overflow-y:auto;display:none;top:calc(100% + 4px);left:0}
+.autocomplete-dropdown.open{display:block}
+.ac-header{font-size:10px;font-weight:700;color:var(--text-hint);padding:8px 12px 4px;letter-spacing:.06em;text-transform:uppercase}
+.ac-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .1s;font-size:13px}
+.ac-item:hover,.ac-item.focused{background:var(--bg-hover)}
+.ac-avatar{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700}
+.ac-avatar.person {background:rgba(50,72,198,.35);color:#7F8DDB}
+.ac-avatar.group  {background:rgba(0,174,151,.25);color:var(--cobli-green)}
+.ac-avatar.channel{background:rgba(15,253,201,.15);color:var(--cobli-green2)}
+.ac-name{font-weight:600}
+.ac-sub {font-size:11px;color:var(--text-hint)}
+
+/* SUGG GRID — 2 colunas em telas grandes */
+.sugg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:700px){.sugg-grid{grid-template-columns:1fr}}
+.sugg-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;cursor:pointer;transition:all .15s;background:var(--bg-card);display:flex;flex-direction:column;gap:8px}
+.sugg-card:hover{border-color:var(--cobli-blue-light);background:var(--bg-input)}
+.sugg-card.selected{border:1.5px solid var(--cobli-green);background:var(--bg-input)}
+.sugg-card-hdr{display:flex;align-items:center;gap:8px}
+.sugg-name{font-size:11px;color:var(--text-muted);flex:1}
+.sel-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.sel-dot.on{background:var(--cobli-green);border-color:var(--cobli-green)}
+.sel-dot.on::after{content:'';width:5px;height:5px;border-radius:50%;background:#07074E}
+.sugg-preview{font-size:12px;line-height:1.7;color:var(--text-muted)}
+
+/* RETORNO BLOCK — dentro de férias */
+.retorno-block{border:1px solid rgba(15,253,201,.2);border-radius:var(--radius-md);padding:12px 14px;background:rgba(15,253,201,.04);display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.retorno-block-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-green2);display:flex;align-items:center;gap:6px}
+.retorno-edit{font-size:13px;line-height:1.7;color:var(--text);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;min-height:60px;resize:vertical}
+.retorno-edit:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(50,72,198,.25)}
+
+/* OPTIONS CARD */
+.options-card{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;display:flex;flex-direction:column;gap:14px}
+.sub-row{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-left:50px}
+.divider-h{height:1px;background:var(--border)}
+.sched-inputs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sched-inputs input[type=date],.sched-inputs input[type=time]{width:auto}
+.sched-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(0,174,151,.2);color:var(--cobli-green);border:1px solid rgba(0,174,151,.35);display:none}
+.sched-badge.visible{display:inline-block}
+
+/* PREVIEW SLACK */
+.preview-card{background:#111;border:1px solid #2a2a2a;border-radius:var(--radius-lg);padding:1rem 1.25rem}
+.preview-hdr{font-size:11px;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.preview-msg{display:none}
+.preview-msg.visible{display:flex;gap:10px}
+.preview-avatar-wrap{width:36px;height:36px;border-radius:8px;background:var(--cobli-blue);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.preview-name{font-size:13px;font-weight:700;color:#fff}
+.preview-time{font-size:11px;color:#555;margin-left:6px}
+.preview-text{font-size:13px;color:#CCC;line-height:1.75;margin-top:4px}
+.preview-sched{font-size:11px;color:var(--cobli-green2);margin-top:6px;display:none}
+.preview-sched.visible{display:block}
+.preview-empty{font-size:13px;color:#444}
+
+/* Barra lateral colorida no preview */
+.slack-block{display:flex;gap:0}
+.slack-bar{width:4px;border-radius:2px;flex-shrink:0;margin-right:10px}
+.slack-body{flex:1}
+
+/* STATUS BAR */
+.status-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.status-msg{font-size:13px;display:flex;align-items:center;gap:6px}
+.status-msg.success{color:var(--cobli-green)}
+.status-msg.error  {color:var(--error)}
+.status-msg.warn   {color:var(--warn)}
+
+/* QUEUE */
+.queue-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:6px;background:var(--bg-card)}
+.queue-time{font-size:11px;font-weight:700;color:var(--cobli-green2);white-space:nowrap;min-width:90px;padding-top:2px}
+.queue-text{font-size:12px;color:var(--text-muted);flex:1;line-height:1.5}
+
+/* LIST ITEMS (settings) */
+.list-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);margin-bottom:6px}
+.list-item-avatar{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
+.list-item-name{font-size:13px;font-weight:600}
+.list-item-sub{font-size:11px;color:var(--text-muted);margin-top:2px;font-family:monospace}
+.list-item-actions{margin-left:auto;display:flex;gap:6px}
+.add-form{border:1px dashed rgba(50,72,198,.4);border-radius:var(--radius-md);padding:14px;margin-top:8px;display:none;flex-direction:column;gap:10px}
+.add-form.open{display:flex}
+.form-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.form-row>div{flex:1;min-width:120px}
+.slack-id-tip{font-size:11px;color:var(--cobli-blue-chart);background:rgba(50,72,198,.12);padding:8px 12px;border-radius:var(--radius-sm);border-left:2px solid var(--cobli-blue-light);line-height:1.6}
+.no-sugg{font-size:13px;color:var(--text-hint);text-align:center;padding:2rem}
+.loading{display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text-hint);font-size:13px;gap:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* DEBUG BANNER */
+.debug-banner{position:fixed;bottom:0;left:0;right:0;background:#1a0020;border-top:1px solid #6b21a8;padding:6px 16px;font-size:11px;font-family:monospace;color:#d8b4fe;z-index:9999;max-height:42px;overflow:hidden}
+.debug-banner.error  {background:#1a0000;border-color:#991b1b;color:#fca5a5}
+.debug-banner.success{background:#001a0e;border-color:#166534;color:#86efac}
 </style>
 </head>
 <body>
+<div class="debug-banner" id="debug-banner">⏳ Iniciando…</div>
 
-<!-- DEBUG BANNER — remove em produção -->
-<div class="debug-banner" id="debug-banner">⏳ Iniciando conexão com Supabase…</div>
-
+<!-- AUTH -->
 <div id="auth-screen" style="display:flex">
   <div class="auth-card">
-    <div class="sidebar-logo" style="padding:0;border:none;margin-bottom:4px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
       <div class="logo-mark">Co</div>
       <div><div class="logo-text" style="font-size:18px">Cobli Slack</div><div class="logo-sub">Notificações inteligentes</div></div>
     </div>
     <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchAuthMode('login',this)">Entrar</button>
-      <button class="auth-tab" onclick="switchAuthMode('signup',this)">Criar conta</button>
+      <button class="auth-tab active" id="tab-login">Entrar</button>
+      <button class="auth-tab" id="tab-signup">Criar conta</button>
     </div>
-    <div>
-      <label class="form-label">E-mail</label>
-      <input type="email" id="auth-email" placeholder="seu@cobli.co" />
-    </div>
-    <div>
-      <label class="form-label">Senha</label>
-      <input type="password" id="auth-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()" />
-    </div>
+    <div><label class="form-label">E-mail</label><input type="email" id="auth-email" placeholder="seu@cobli.co" /></div>
+    <div><label class="form-label">Senha</label><input type="password" id="auth-pw" placeholder="••••••••" /></div>
     <div id="auth-err" class="auth-err"></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;height:40px" onclick="doAuth()" id="auth-btn">
-      <i class="ti ti-login"></i> Entrar
-    </button>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;height:40px" id="auth-btn"><i class="ti ti-login"></i> Entrar</button>
   </div>
 </div>
 
+<!-- APP -->
 <div class="layout" id="app" style="display:none">
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -235,12 +272,12 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
   </div>
   <nav class="sidebar-nav">
     <div class="nav-label">Composer</div>
-    <button class="nav-item active" onclick="showPanel('compose',this)"><i class="ti ti-send"></i> Enviar mensagem</button>
-    <button class="nav-item" onclick="showPanel('queue',this)"><i class="ti ti-clock"></i> Agendamentos <span class="nav-badge" id="nb" style="display:none">0</span></button>
+    <button class="nav-item active" data-panel="compose"><i class="ti ti-send"></i> Enviar mensagem</button>
+    <button class="nav-item" data-panel="queue"><i class="ti ti-clock"></i> Agendamentos <span class="nav-badge" id="nb">0</span></button>
     <div class="nav-label" style="margin-top:8px">Configurações</div>
-    <button class="nav-item" onclick="showPanel('webhooks',this)"><i class="ti ti-plug"></i> Webhooks / Canais</button>
-    <button class="nav-item" onclick="showPanel('people',this)"><i class="ti ti-users"></i> Pessoas &amp; Grupos (@)</button>
-    <button class="nav-item" onclick="showPanel('channels',this)"><i class="ti ti-hash"></i> Canais Slack (#)</button>
+    <button class="nav-item" data-panel="webhooks"><i class="ti ti-plug"></i> Webhooks / Canais</button>
+    <button class="nav-item" data-panel="people"><i class="ti ti-users"></i> Pessoas &amp; Grupos (@)</button>
+    <button class="nav-item" data-panel="channels"><i class="ti ti-hash"></i> Canais Slack (#)</button>
   </nav>
   <div class="sb-user">
     <i class="ti ti-user-circle"></i>
@@ -256,94 +293,109 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div class="topbar-sub" id="topbar-sub">Digite, escolha uma variação e envie para o Slack</div>
     </div>
     <div class="topbar-right">
-      <span class="status-connected"><span class="status-dot"></span> Conectado</span>
+      <span class="status-pill"><span class="status-dot"></span> Conectado</span>
     </div>
   </div>
 
   <div class="content">
 
+    <!-- ═══ COMPOSE ═══ -->
     <div class="panel active" id="panel-compose">
+
+      <!-- Multi-webhook selector -->
       <div class="card">
-        <div class="card-title"><i class="ti ti-plug"></i> Canal de destino</div>
-        <div class="webhook-select-wrap" id="wh-wrap">
-          <button class="webhook-select-btn" id="wh-btn">
-            <span class="wh-dot" id="wh-dot"></span>
-            <span class="wh-name" id="wh-name">— Selecione um canal —</span>
-            <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-muted)"></i>
-          </button>
-          <div class="wh-dropdown" id="wh-dropdown">
-            <div id="wh-list"></div>
+        <div class="card-title"><i class="ti ti-plug"></i> Canais de destino <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0">(selecione um ou mais)</span></div>
+        <div style="position:relative">
+          <div class="wh-multi-wrap" id="wh-chips">
+            <button class="wh-add-btn" id="wh-add-btn"><i class="ti ti-plus"></i> Adicionar canal</button>
+          </div>
+          <div class="wh-picker-dropdown" id="wh-picker">
+            <div id="wh-picker-list"></div>
             <div style="padding:8px 10px;border-top:1px solid var(--border)">
-              <button class="btn btn-ghost btn-sm" style="width:100%" id="btn-manage-wh"><i class="ti ti-plus"></i> Gerenciar canais</button>
+              <button class="btn btn-ghost btn-sm" style="width:100%" id="btn-go-webhooks"><i class="ti ti-settings"></i> Gerenciar canais</button>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Scenario tabs -->
       <div class="tabs">
-        <button class="tab-btn active" id="tab-ferias"><i class="ti ti-beach"></i> Férias</button>
-        <button class="tab-btn" id="tab-licenca"><i class="ti ti-heart-plus"></i> Licença/Atestado</button>
-        <button class="tab-btn" id="tab-aviso"><i class="ti ti-alert-triangle"></i> Aviso/Incidente</button>
-        <button class="tab-btn" id="tab-retorno"><i class="ti ti-player-play"></i> Retorno</button>
+        <button class="tab-btn active" data-sc="ferias"><i class="ti ti-beach"></i> Férias</button>
+        <button class="tab-btn" data-sc="licenca"><i class="ti ti-heart-plus"></i> Licença/Atestado</button>
+        <button class="tab-btn" data-sc="incidente"><i class="ti ti-alert-triangle"></i> Incidente/Sistema</button>
+        <button class="tab-btn" data-sc="aviso-geral"><i class="ti ti-speakerphone"></i> Aviso Geral</button>
       </div>
 
+      <!-- Message composer -->
       <div class="card">
-        <div class="card-title"><i class="ti ti-pencil"></i> Mensagem — use @ para pessoas/grupos · # para canais</div>
-        <div class="msg-wrap">
-          <textarea id="msg-input" placeholder="Ex: O @leonardo estará de férias a partir de 12/06 retornando em 20/06"></textarea>
-          <div class="autocomplete-dropdown" id="ac-dropdown">
-            <div class="ac-header" id="ac-header">Pessoas &amp; Grupos</div>
-            <div id="ac-list"></div>
-          </div>
+        <div class="card-title"><i class="ti ti-pencil"></i> <span id="composer-label">Mensagem</span>
+          <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— use @ para pessoas/grupos · # para canais</span>
         </div>
+        <!-- Campos dinâmicos por cenário -->
+        <div id="fields-container"></div>
         <div class="hint-pills" id="hint-pills"></div>
       </div>
 
+      <!-- Options: contact + schedule -->
       <div class="options-card">
         <div class="toggle-row">
-          <button class="toggle" id="tgl-contact" aria-label="Contato de suporte"></button>
-          <span class="toggle-label">📞 Contato para emergências</span>
+          <button class="toggle" id="tgl-contact"></button>
+          <span class="toggle-label">📞 Entrar em contato com:</span>
         </div>
-<!-- DEPOIS -->
-<div class="sub-row" id="contact-row" style="display:none">
-  <i class="ti ti-phone" style="font-size:15px;color:var(--text-muted)"></i>
-  <div style="position:relative;max-width:340px;flex:1">
-    <input type="text" id="contact-input"
-      placeholder="Digite @ para pessoas ou # para canais de contato"
-      style="width:100%"
-      oninput="onContactInput(this)"
-      onkeydown="onContactKeydown(event)" />
-    <div class="autocomplete-dropdown" id="ac-contact" style="min-width:260px">
-      <div class="ac-header" id="ac-contact-header">Pessoas &amp; Grupos</div>
-      <div id="ac-contact-list"></div>
-    </div>
-  </div>
-  <span style="font-size:11px;color:var(--text-hint)">Contato para emergências — aparece no rodapé</span>
-</div>
+        <div class="sub-row" id="contact-row" style="display:none">
+          <div style="position:relative;flex:1;max-width:400px" class="msg-wrap">
+            <input type="text" id="contact-input" placeholder="@pessoa, @grupo ou #canal" autocomplete="off" />
+            <div class="autocomplete-dropdown" id="ac-contact">
+              <div class="ac-header" id="ac-contact-hdr">Pessoas &amp; Grupos</div>
+              <div id="ac-contact-list"></div>
+            </div>
+          </div>
+          <span style="font-size:11px;color:var(--text-hint);align-self:center">Aparece no rodapé de todas as variações</span>
+        </div>
         <div class="divider-h"></div>
         <div class="toggle-row">
-          <button class="toggle" id="tgl-sched" aria-label="Agendar envio"></button>
+          <button class="toggle" id="tgl-sched"></button>
           <span class="toggle-label">Agendar envio</span>
           <span class="sched-badge" id="sched-badge">⏰ Agendado</span>
         </div>
         <div class="sub-row" id="sched-row" style="display:none">
-          <i class="ti ti-calendar-time" style="font-size:15px;color:var(--text-muted)"></i>
+          <i class="ti ti-calendar-time" style="font-size:15px;color:var(--text-muted);margin-top:2px"></i>
           <div class="sched-inputs">
             <input type="date" id="sched-date" disabled />
             <input type="time" id="sched-time" value="09:00" disabled />
           </div>
-          <span style="font-size:11px;color:var(--text-hint)" id="sched-hint"></span>
+          <span style="font-size:11px;color:var(--text-hint);align-self:center" id="sched-hint"></span>
         </div>
       </div>
 
+      <!-- Suggestions -->
       <div>
         <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:10px;display:flex;align-items:center;gap:6px">
           <i class="ti ti-sparkles" style="font-size:14px"></i>
           <span id="sugg-label">Variações de mensagem</span>
         </div>
-        <div class="sugg-grid" id="sugg-grid"><div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div></div>
+        <div class="sugg-grid" id="sugg-grid"><div class="no-sugg" style="grid-column:1/-1">Preencha os campos acima para ver as sugestões ✨</div></div>
+
+        <!-- Bloco agendamento retorno (aparece só no cenário férias) -->
+        <div class="retorno-block" id="retorno-block" style="display:none">
+          <div class="retorno-block-title"><i class="ti ti-player-play"></i> Mensagem de Retorno — agende já</div>
+          <p style="font-size:12px;color:var(--text-muted)">Baseada nos dados acima. Edite se quiser e agende para o dia do retorno.</p>
+          <div style="position:relative" class="msg-wrap">
+            <textarea class="retorno-edit" id="retorno-text" placeholder="Mensagem de retorno…"></textarea>
+            <div class="autocomplete-dropdown" id="ac-retorno">
+              <div class="ac-header" id="ac-retorno-hdr">Pessoas &amp; Grupos</div>
+              <div id="ac-retorno-list"></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input type="date" id="retorno-date" style="width:auto" />
+            <input type="time" id="retorno-time" value="08:00" style="width:auto" />
+            <button class="btn btn-success btn-sm" id="btn-sched-retorno"><i class="ti ti-clock"></i> Agendar retorno</button>
+          </div>
+        </div>
       </div>
 
+      <!-- Preview -->
       <div class="preview-card">
         <div class="preview-hdr"><i class="ti ti-brand-slack" style="font-size:14px"></i> Pré-visualização no Slack</div>
         <div class="preview-msg" id="preview-msg">
@@ -357,6 +409,7 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
         <div class="preview-empty" id="preview-empty">Selecione uma sugestão para pré-visualizar</div>
       </div>
 
+      <!-- Send bar -->
       <div class="status-bar">
         <button class="btn btn-primary" id="btn-send" disabled>
           <i class="ti ti-send"></i><span id="btn-send-label">Enviar para o Slack</span>
@@ -366,19 +419,19 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
+    <!-- ═══ QUEUE ═══ -->
     <div class="panel" id="panel-queue">
       <div class="card">
         <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
         <div id="queue-list-full"><div class="loading"><i class="ti ti-loader-2 spin"></i> Carregando...</div></div>
       </div>
       <div class="card" style="border-color:rgba(0,174,151,.3);background:rgba(0,174,151,.05)">
-        <div class="card-title" style="color:var(--cobli-green)"><i class="ti ti-brand-supabase"></i> Agendamento via Supabase</div>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.7">
-          As mensagens agendadas ficam salvas no <strong style="color:var(--text)">Supabase</strong> e são enviadas automaticamente pela <strong style="color:var(--cobli-green2)">Edge Function</strong> via <strong style="color:var(--cobli-green2)">pg_cron</strong>.
-        </p>
+        <div class="card-title" style="color:var(--cobli-green)"><i class="ti ti-info-circle"></i> Como funciona</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7">Mensagens agendadas ficam salvas no <strong style="color:var(--text)">Supabase</strong> e são disparadas pela <strong style="color:var(--cobli-green2)">Edge Function</strong> via <strong style="color:var(--cobli-green2)">pg_cron</strong>.</p>
       </div>
     </div>
 
+    <!-- ═══ WEBHOOKS ═══ -->
     <div class="panel" id="panel-webhooks">
       <div class="card">
         <div class="card-title"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
@@ -396,17 +449,14 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
+    <!-- ═══ PEOPLE ═══ -->
     <div class="panel" id="panel-people">
       <div class="card">
         <div class="card-title"><i class="ti ti-user"></i> Pessoas cadastradas</div>
         <div id="people-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
         <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-person"><i class="ti ti-plus"></i> Adicionar pessoa</button>
         <div class="add-form" id="person-form">
-          <div class="slack-id-tip">
-            <strong>💡 Como pegar o Slack User ID:</strong><br>
-            No Slack, clique no perfil da pessoa → <em>Ver perfil</em> → menu <strong>⋯</strong> → <em>Copiar ID do membro</em>.<br>
-            O ID tem o formato <code>U07EADY4SGN</code>.
-          </div>
+          <div class="slack-id-tip"><strong>💡 Slack User ID:</strong> Clique no perfil → <em>Ver perfil</em> → <strong>⋯</strong> → <em>Copiar ID do membro</em>. Formato: <code>U07EADY4SGN</code></div>
           <div class="form-row">
             <div><label class="form-label">Nome de exibição</label><input type="text" id="p-name" placeholder="Leonardo Silva" /></div>
             <div><label class="form-label">Slack User ID</label><input type="text" id="p-slack-id" placeholder="U07EADY4SGN" /></div>
@@ -421,16 +471,12 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-title"><i class="ti ti-users"></i> Grupos de pessoas (@)</div>
         <div id="groups-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
         <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-group"><i class="ti ti-plus"></i> Adicionar grupo</button>
         <div class="add-form" id="group-form">
-          <div class="slack-id-tip">
-            <strong>💡 Como pegar o Slack Group ID:</strong><br>
-            No Slack, vá em <em>Configurações do espaço de trabalho → Grupos de usuários</em>. ID formato: <code>S0614TZR7</code>.
-          </div>
+          <div class="slack-id-tip"><strong>💡 Slack Group ID:</strong> Configurações → Grupos de usuários. Formato: <code>S0614TZR7</code></div>
           <div class="form-row">
             <div><label class="form-label">Nome do grupo</label><input type="text" id="g-name" placeholder="Time de TI" /></div>
             <div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="g-handle" placeholder="time-ti" /></div>
@@ -447,6 +493,7 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
+    <!-- ═══ CHANNELS ═══ -->
     <div class="panel" id="panel-channels">
       <div class="card">
         <div class="card-title"><i class="ti ti-hash"></i> Canais Slack (#)</div>
@@ -454,12 +501,10 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
         <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-channel"><i class="ti ti-plus"></i> Adicionar canal</button>
         <div class="add-form" id="channel-form">
           <div class="form-row">
-            <div><label class="form-label">Nome do canal (sem #)</label><input type="text" id="ch-name" placeholder="suporte-geral" /></div>
-            <div><label class="form-label">ID do Canal (Channel ID)</label><input type="text" id="ch-slack-id" placeholder="C01234567" /></div>
+            <div><label class="form-label">Nome (sem #)</label><input type="text" id="ch-name" placeholder="suporte-geral" /></div>
+            <div><label class="form-label">Channel ID</label><input type="text" id="ch-slack-id" placeholder="C01234567" /></div>
           </div>
-          <div>
-            <label class="form-label">Descrição (opcional)</label><input type="text" id="ch-desc" placeholder="Canal de suporte ao cliente" />
-          </div>
+          <div><label class="form-label">Descrição (opcional)</label><input type="text" id="ch-desc" placeholder="Canal de suporte ao cliente" /></div>
           <div class="form-row">
             <button class="btn btn-success btn-sm" id="btn-save-channel"><i class="ti ti-check"></i> Salvar</button>
             <button class="btn btn-ghost btn-sm" id="btn-cancel-channel">Cancelar</button>
@@ -468,601 +513,405 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
-  </div>
-</div>
-</div>
+  </div><!-- .content -->
+</div><!-- .main -->
+</div><!-- .layout -->
 
 <script>
-/* ═══ CONFIG ═══ */
+/* ══════════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════════ */
 const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';
 const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled';
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const SCENARIO_COLORS = { ferias:'#00AE97', licenca:'#3248C6', incidente:'#FF4633', 'aviso-geral':'#F59E0B' };
 
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let user = null;
 let DB   = { webhooks:[], people:[], groups:[], channels:[] };
-let ST   = { scenario:'ferias', selWh:null, selSugg:null, contactOn:false, schedOn:false, acMode:null, acFocus:0 };
+let ST   = {
+  scenario: 'ferias',
+  selWhIds: [],   // array de IDs selecionados (multi-webhook)
+  selSugg:  null,
+  contactOn: false,
+  schedOn:   false,
+  whPickerOpen: false
+};
 let authMode = 'login';
-let whOpen = false;
 
-/* ══════════════════════════════
-   DEBUG HELPER
-══════════════════════════════ */
-function dbg(msg, type) {
+/* ══════════════════════════════════════════════════
+   DEBUG
+══════════════════════════════════════════════════ */
+function dbg(msg, type='') {
   const el = document.getElementById('debug-banner');
   if (!el) return;
-  el.className = 'debug-banner' + (type ? ' ' + type : '');
+  el.className = 'debug-banner' + (type ? ' '+type : '');
   el.textContent = msg;
-  console.log('[COBLI DEBUG]', msg);
+  console.log('[COBLI]', msg);
 }
 
-/* ══════════════════════════════
+/* ══════════════════════════════════════════════════
    AUTH
-══════════════════════════════ */
-function switchAuthMode(m, btn) {
+══════════════════════════════════════════════════ */
+function switchAuthMode(m) {
   authMode = m;
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('auth-btn').innerHTML =
-    m === 'login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+  document.getElementById('tab-login').classList.toggle('active', m==='login');
+  document.getElementById('tab-signup').classList.toggle('active', m==='signup');
+  document.getElementById('auth-btn').innerHTML = m==='login'
+    ? '<i class="ti ti-login"></i> Entrar'
+    : '<i class="ti ti-user-plus"></i> Criar conta';
   document.getElementById('auth-err').style.display = 'none';
 }
 
 async function doAuth() {
   const email = document.getElementById('auth-email').value.trim();
   const pw    = document.getElementById('auth-pw').value;
-  const errEl = document.getElementById('auth-err');
-  errEl.style.display = 'none';
-  if (!email || !pw) { showAuthErr('Preencha e-mail e senha.'); return; }
-
+  if (!email||!pw) { showAuthErr('Preencha e-mail e senha.'); return; }
   const btn = document.getElementById('auth-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2 spin"></i> Aguarde...';
-
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2 spin"></i> Aguarde...';
   try {
-    dbg('Autenticando…');
-    const { data, error } = authMode === 'login'
-      ? await sb.auth.signInWithPassword({ email, password: pw })
-      : await sb.auth.signUp({ email, password: pw });
-
+    const {error} = authMode==='login'
+      ? await sb.auth.signInWithPassword({email,password:pw})
+      : await sb.auth.signUp({email,password:pw});
     if (error) throw error;
-
-    if (authMode === 'signup') {
-      showAuthErr('Conta criada! Verifique seu e-mail e faça login.');
-      switchAuthMode('login', document.querySelectorAll('.auth-tab')[0]);
-    }
-    // onAuthStateChange vai pegar a sessão e chamar initApp()
-  } catch (e) {
-    dbg('Erro de auth: ' + e.message, 'error');
-    showAuthErr(e.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = authMode === 'login'
-      ? '<i class="ti ti-login"></i> Entrar'
-      : '<i class="ti ti-user-plus"></i> Criar conta';
-  }
+    if (authMode==='signup') { showAuthErr('Conta criada! Verifique seu e-mail.'); switchAuthMode('login'); }
+  } catch(e) { showAuthErr(e.message); }
+  finally { btn.disabled=false; btn.innerHTML=authMode==='login'?'<i class="ti ti-login"></i> Entrar':'<i class="ti ti-user-plus"></i> Criar conta'; }
 }
+function showAuthErr(m) { const e=document.getElementById('auth-err'); e.textContent=m; e.style.display='block'; }
 
-function showAuthErr(m) {
-  const e = document.getElementById('auth-err');
-  e.textContent = m;
-  e.style.display = 'block';
-}
-
-/* ══════════════════════════════
-   INIT — FIX: verifica sessão existente NO CARREGAMENTO
-   sem depender só do evento onAuthStateChange
-══════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   BOOTSTRAP
+══════════════════════════════════════════════════ */
 async function bootstrap() {
-  dbg('Verificando sessão salva…');
+  dbg('Verificando sessão…');
   try {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session && session.user) {
-      dbg('Sessão encontrada: ' + session.user.email, 'success');
-      await initApp(session.user);
-    } else {
-      dbg('Nenhuma sessão — aguardando login.', '');
-      showAuth();
-    }
-  } catch (e) {
-    dbg('Erro ao verificar sessão: ' + e.message, 'error');
-    showAuth();
-  }
+    const {data:{session}} = await sb.auth.getSession();
+    if (session?.user) { await initApp(session.user); }
+    else { showAuth(); dbg('Aguardando login.'); }
+  } catch(e) { showAuth(); dbg('Erro sessão: '+e.message,'error'); }
 
-  // Continua ouvindo mudanças (login/logout futuros)
-  sb.auth.onAuthStateChange(async (_ev, session) => {
-    const newUser = session?.user ?? null;
-    if (newUser && (!user || user.id !== newUser.id)) {
-      await initApp(newUser);
-    } else if (!newUser && user) {
-      user = null;
-      showAuth();
-    }
+  sb.auth.onAuthStateChange(async(_ev,session) => {
+    const nu = session?.user ?? null;
+    if (nu && (!user||user.id!==nu.id)) await initApp(nu);
+    else if (!nu && user) { user=null; showAuth(); }
   });
 }
 
 async function initApp(u) {
-  user = u;
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('sb-email').textContent = user.email;
-  dbg('Logado como ' + user.email + ' — carregando dados…');
+  user=u;
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('sb-email').textContent=u.email;
+  dbg('Logado: '+u.email);
   await loadAll();
-  renderHints();
-  dbg('Pronto ✓', 'success');
+  renderScenarioFields();
+  dbg('Pronto ✓','success');
 }
-
 function showAuth() {
-  document.getElementById('auth-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
 }
 
-/* ══════════════════════════════
+/* ══════════════════════════════════════════════════
    LOAD
-══════════════════════════════ */
+══════════════════════════════════════════════════ */
 async function loadAll() {
   try {
-    dbg('Buscando dados do Supabase…');
-
-    // FIX: faz cada query individualmente para isolar erros
-    const pRes = await sb.from('people').select('*').order('name');
-    const gRes = await sb.from('groups').select('*').order('name');
-    const cRes = await sb.from('channels').select('*').order('name');
-    const wRes = await sb.from('webhooks').select('*').order('name');
-
-    if (pRes.error)  throw new Error('Tabela people: '   + pRes.error.message  + ' | Código: ' + pRes.error.code);
-    if (gRes.error)  throw new Error('Tabela groups: '   + gRes.error.message  + ' | Código: ' + gRes.error.code);
-    if (cRes.error)  throw new Error('Tabela channels: ' + cRes.error.message  + ' | Código: ' + cRes.error.code);
-    if (wRes.error)  throw new Error('Tabela webhooks: ' + wRes.error.message  + ' | Código: ' + wRes.error.code);
-
-    DB.people   = pRes.data || [];
-    DB.groups   = gRes.data || [];
-    DB.channels = cRes.data || [];
-    DB.webhooks = wRes.data || [];
-
-    dbg(`Dados carregados — ${DB.people.length} pessoas, ${DB.groups.length} grupos, ${DB.channels.length} canais, ${DB.webhooks.length} webhooks`, 'success');
+    const [p,g,c,w] = await Promise.all([
+      sb.from('people').select('*').order('name'),
+      sb.from('groups').select('*').order('name'),
+      sb.from('channels').select('*').order('name'),
+      sb.from('webhooks').select('*').order('name'),
+    ]);
+    if(p.error) throw new Error('people: '+p.error.message);
+    if(g.error) throw new Error('groups: '+g.error.message);
+    if(c.error) throw new Error('channels: '+c.error.message);
+    if(w.error) throw new Error('webhooks: '+w.error.message);
+    DB.people=p.data||[]; DB.groups=g.data||[]; DB.channels=c.data||[]; DB.webhooks=w.data||[];
+    dbg(`BD: ${DB.people.length}p ${DB.groups.length}g ${DB.channels.length}c ${DB.webhooks.length}w`,'success');
     renderAll();
-  } catch (e) {
-    dbg('ERRO BD: ' + e.message, 'error');
-    alert('Erro ao carregar dados do Supabase:\n\n' + e.message +
-      '\n\n⚠️ Verifique:\n1. As tabelas existem no Supabase\n2. RLS está desativado ou com policies corretas\n3. Abra o console (F12) para mais detalhes.');
-    console.error('[COBLI] loadAll error:', e);
+  } catch(e) {
+    dbg('ERRO BD: '+e.message,'error');
+    alert('Erro ao carregar dados:\n'+e.message+'\n\nVerifique as tabelas e RLS no Supabase.');
+    console.error(e);
   }
 }
 
-/* ══════════════════════════════
+/* ══════════════════════════════════════════════════
    NAV
-══════════════════════════════ */
+══════════════════════════════════════════════════ */
 const PMETA = {
-  compose:  { t:'Compositor de Mensagens',  s:'Digite, escolha uma variação e envie para o Slack' },
-  queue:    { t:'Agendamentos',             s:'Mensagens programadas no Supabase' },
-  webhooks: { t:'Webhooks / Canais',        s:'Gerencie os canais de destino' },
-  people:   { t:'Pessoas & Grupos (@)',     s:'Autocomplete de menções' },
-  channels: { t:'Canais Slack (#)',         s:'Autocomplete de canais' },
+  compose:    {t:'Compositor de Mensagens',  s:'Digite, escolha uma variação e envie para o Slack'},
+  queue:      {t:'Agendamentos',             s:'Mensagens programadas no Supabase'},
+  webhooks:   {t:'Webhooks / Canais',        s:'Gerencie os canais de destino'},
+  people:     {t:'Pessoas & Grupos (@)',     s:'Autocomplete de menções'},
+  channels:   {t:'Canais Slack (#)',         s:'Autocomplete de canais'},
 };
-
-function showPanel(id, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  const m = PMETA[id] || {};
-  document.getElementById('topbar-title').textContent = m.t || '';
-  document.getElementById('topbar-sub').textContent   = m.s || '';
-  if (id === 'webhooks') renderWhSettings();
-  if (id === 'people')   { renderPeopleList(); renderGroupsList(); }
-  if (id === 'channels') renderChannelsList();
-  if (id === 'queue')    loadQueue();
-  if (id === 'compose')  renderWhDrop();
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelector(`.nav-item[data-panel="${id}"]`)?.classList.add('active');
+  const m=PMETA[id]||{};
+  document.getElementById('topbar-title').textContent=m.t||'';
+  document.getElementById('topbar-sub').textContent=m.s||'';
+  if(id==='webhooks') renderWhSettings();
+  if(id==='people')   { renderPeopleList(); renderGroupsList(); }
+  if(id==='channels') renderChannelsList();
+  if(id==='queue')    loadQueue();
+  if(id==='compose')  renderWhPicker();
 }
 
-/* ══════════════════════════════
-   WEBHOOKS
-══════════════════════════════ */
-async function saveWebhook() {
-  const name  = v('wh-add-name');
-  const url   = v('wh-add-url');
-  const emoji = v('wh-add-emoji') || '📢';
-  if (!name || !url) { alert('Preencha nome e URL.'); return; }
-  if (!url.startsWith('https://hooks.slack.com/')) {
-    alert('URL inválida. Use uma Incoming Webhook do Slack (começa com https://hooks.slack.com/).'); return;
-  }
-  try {
-    dbg('Salvando webhook…');
-    const { data, error } = await sb.from('webhooks')
-      .insert({ user_id: user.id, name, url, emoji, channel: '' })
-      .select().single();
-    if (error) throw error;
-    DB.webhooks.push(data);
-    ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i => { document.getElementById(i).value = ''; });
-    document.getElementById('wh-form').classList.remove('open');
-    renderWhSettings(); renderWhDrop();
-    showStatus('Canal salvo! ✓', 'success');
-    dbg('Webhook salvo: ' + name, 'success');
-  } catch (e) {
-    dbg('Erro webhook: ' + e.message, 'error');
-    alert('Erro ao salvar Webhook:\n' + e.message);
-    console.error(e);
-  }
-}
-
-async function deleteWebhook(id) {
-  if (!confirm('Remover este webhook?')) return;
-  try {
-    const { error } = await sb.from('webhooks').delete().eq('id', id);
-    if (error) throw error;
-    DB.webhooks = DB.webhooks.filter(w => w.id !== id);
-    if (ST.selWh && ST.selWh.id === id) { ST.selWh = null; renderWhBtn(); }
-    renderWhSettings(); renderWhDrop(); updateSendBtn();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
-}
-
-function renderWhSettings() {
-  const el = document.getElementById('wh-settings-list');
-  if (!DB.webhooks.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
-  el.innerHTML = DB.webhooks.map(w => `
-    <div class="list-item">
-      <div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji || '📢'}</div>
-      <div><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,50))}…</div></div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-function renderWhDrop() {
-  const el = document.getElementById('wh-list');
-  if (!DB.webhooks.length) {
-    el.innerHTML = '<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>';
-    return;
-  }
-  el.innerHTML = DB.webhooks.map(w => `
-    <div class="wh-opt ${ST.selWh && ST.selWh.id === w.id ? 'active' : ''}" data-sel-wh="${w.id}">
-      <span style="font-size:18px">${w.emoji || '📢'}</span>
-      <div><div class="wh-name">${esc(w.name)}</div></div>
+/* ══════════════════════════════════════════════════
+   MULTI-WEBHOOK SELECTOR
+══════════════════════════════════════════════════ */
+function renderWhPicker() {
+  const list = document.getElementById('wh-picker-list');
+  if (!DB.webhooks.length) { list.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>'; return; }
+  list.innerHTML = DB.webhooks.map(w=>`
+    <div class="wh-picker-item ${ST.selWhIds.includes(w.id)?'selected':''}" data-pick-wh="${w.id}">
+      <span style="font-size:18px">${w.emoji||'📢'}</span>
+      <div class="wh-name">${esc(w.name)}</div>
       <i class="ti ti-check wh-check"></i>
     </div>`).join('');
 }
 
-function selectWh(id) {
-  ST.selWh = DB.webhooks.find(w => w.id === id) || null;
-  toggleWhDrop(true); renderWhBtn(); updateSendBtn();
+function renderWhChips() {
+  const wrap = document.getElementById('wh-chips');
+  const chips = ST.selWhIds.map(id=>{
+    const w = DB.webhooks.find(x=>x.id===id);
+    if (!w) return '';
+    return `<span class="wh-chip">${w.emoji||'📢'} ${esc(w.name)}<button class="wh-chip-remove" data-remove-wh="${w.id}" title="Remover">×</button></span>`;
+  }).join('');
+  wrap.innerHTML = chips + `<button class="wh-add-btn" id="wh-add-btn"><i class="ti ti-plus"></i> ${ST.selWhIds.length?'Adicionar canal':'Selecionar canal'}</button>`;
+  updateSendBtn();
 }
 
-function renderWhBtn() {
-  const dot = document.getElementById('wh-dot');
-  const nm  = document.getElementById('wh-name');
-  if (!ST.selWh) { dot.className = 'wh-dot'; nm.textContent = '— Selecione um canal —'; }
-  else { dot.className = 'wh-dot ok'; nm.textContent = (ST.selWh.emoji || '📢') + ' ' + ST.selWh.name; }
-  renderWhDrop();
+function toggleWhPicker(forceClose) {
+  ST.whPickerOpen = forceClose ? false : !ST.whPickerOpen;
+  document.getElementById('wh-picker').classList.toggle('open', ST.whPickerOpen);
+  if (ST.whPickerOpen) renderWhPicker();
 }
 
-function toggleWhDrop(forceClose) {
-  whOpen = forceClose ? false : !whOpen;
-  document.getElementById('wh-dropdown').classList.toggle('open', whOpen);
+function pickWh(id) {
+  if (ST.selWhIds.includes(id)) ST.selWhIds = ST.selWhIds.filter(x=>x!==id);
+  else ST.selWhIds.push(id);
+  renderWhChips(); renderWhPicker(); updateSendBtn();
 }
 
-/* ══════════════════════════════
-   PEOPLE
-══════════════════════════════ */
-async function savePerson() {
-  const name     = v('p-name');
-  const slack_id = v('p-slack-id').replace(/[<@>]/g, '');
-  const handle   = v('p-handle').replace('@', '');
-  const role     = v('p-role');
-  if (!name) { alert('Preencha o nome.'); return; }
-  try {
-    dbg('Salvando pessoa…');
-    const { data, error } = await sb.from('people')
-      .insert({ user_id: user.id, name, slack_id, handle, role })
-      .select().single();
-    if (error) throw error;
-    DB.people.push(data);
-    ['p-name','p-slack-id','p-handle','p-role'].forEach(i => { document.getElementById(i).value = ''; });
-    document.getElementById('person-form').classList.remove('open');
-    renderPeopleList();
-    showStatus(name + ' salvo! ✓', 'success');
-    dbg('Pessoa salva: ' + name, 'success');
-  } catch (e) {
-    dbg('Erro pessoa: ' + e.message, 'error');
-    alert('Erro ao salvar pessoa:\n' + e.message);
-    console.error(e);
-  }
-}
+/* ══════════════════════════════════════════════════
+   SCENARIO FIELDS — campos dinâmicos por cenário
+══════════════════════════════════════════════════ */
+const SCENARIO_CFG = {
+  ferias: {
+    label: 'Detalhes das férias',
+    fields: [
+      {id:'f-nome',    label:'Pessoa (@)',          ph:'@Nome Sobrenome',              hint:'Use @ para buscar cadastros'},
+      {id:'f-inicio',  label:'Data de início',      ph:'25/06',                        hint:'Ex: 25/06'},
+      {id:'f-retorno', label:'Data de retorno',     ph:'15/07',                        hint:'Ex: 15/07'},
+      {id:'f-obs',     label:'Observação (opcional)',ph:'Qualquer dúvida falar com…',  hint:'', ta:true},
+    ],
+    hints:['@here','@channel','@nome','25/06','15/07'],
+    color:'#00AE97',
+  },
+  licenca: {
+    label: 'Detalhes da licença/atestado',
+    fields: [
+      {id:'f-nome',    label:'Pessoa (@)',          ph:'@Nome Sobrenome',              hint:'Use @ para buscar'},
+      {id:'f-retorno', label:'Previsão de retorno', ph:'15/07',                        hint:'Ex: 15/07'},
+      {id:'f-obs',     label:'Observação (opcional)',ph:'Não compartilhar motivo se preferir', hint:'', ta:true},
+    ],
+    hints:['@here','@channel','@nome','retorno em DD/MM'],
+    color:'#3248C6',
+  },
+  incidente: {
+    label: 'Incidente / Instabilidade',
+    fields: [
+      {id:'f-sistema',  label:'Sistema/serviço afetado', ph:'Ex: App Cobli, API Rastreamento…',    hint:''},
+      {id:'f-problema', label:'O que está acontecendo',  ph:'Descreva o problema…',                hint:'', ta:true},
+      {id:'f-impacto',  label:'Quem/o que é afetado',    ph:'Ex: Todos os usuários, módulo X…',   hint:''},
+      {id:'f-status',   label:'Status atual',            ph:'Em investigação / Equipe atuando…',   hint:''},
+    ],
+    hints:['@here','@channel','em investigação','equipe atuando','resolvido'],
+    color:'#FF4633',
+  },
+  'aviso-geral': {
+    label: 'Aviso / Comunicado',
+    fields: [
+      {id:'f-titulo',   label:'Título do aviso',    ph:'Ex: Manutenção programada',    hint:''},
+      {id:'f-msg',      label:'Mensagem principal', ph:'Detalhe o comunicado…',        hint:'Use @ para marcar pessoas/grupos', ta:true},
+    ],
+    hints:['@here','@channel','@nome','📢','🔧','✅'],
+    color:'#F59E0B',
+  },
+};
 
-async function deletePerson(id) {
-  if (!confirm('Remover esta pessoa?')) return;
-  try {
-    const { error } = await sb.from('people').delete().eq('id', id);
-    if (error) throw error;
-    DB.people = DB.people.filter(p => p.id !== id);
-    renderPeopleList();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
-}
+function renderScenarioFields() {
+  const cfg = SCENARIO_CFG[ST.scenario];
+  if (!cfg) return;
+  const container = document.getElementById('fields-container');
+  document.getElementById('composer-label').textContent = cfg.label;
 
-function renderPeopleList() {
-  const el = document.getElementById('people-list');
-  if (!DB.people.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>'; return; }
-  el.innerHTML = DB.people.map(p => `
-    <div class="list-item">
-      <div class="list-item-avatar ac-avatar person">${initials(p.name)}</div>
-      <div>
-        <div class="list-item-name">${esc(p.name)}</div>
-        <div class="list-item-sub">${p.slack_id ? 'ID: ' + esc(p.slack_id) : ''}${p.handle ? ' · @' + esc(p.handle) : ''}${p.role ? ' · ' + esc(p.role) : ''}</div>
-      </div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-/* ══════════════════════════════
-   GROUPS
-══════════════════════════════ */
-async function saveGroup() {
-  const name     = v('g-name');
-  const handle   = v('g-handle').replace('@', '');
-  const slack_id = v('g-slack-id');
-  const emoji    = v('g-emoji') || '👥';
-  if (!name || !handle) { alert('Preencha nome e handle.'); return; }
-  try {
-    dbg('Salvando grupo…');
-    const { data, error } = await sb.from('groups')
-      .insert({ user_id: user.id, name, handle, slack_id, emoji })
-      .select().single();
-    if (error) throw error;
-    DB.groups.push(data);
-    ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i => { document.getElementById(i).value = ''; });
-    document.getElementById('group-form').classList.remove('open');
-    renderGroupsList();
-    showStatus('Grupo ' + name + ' salvo! ✓', 'success');
-    dbg('Grupo salvo: ' + name, 'success');
-  } catch (e) {
-    dbg('Erro grupo: ' + e.message, 'error');
-    alert('Erro ao salvar grupo:\n' + e.message);
-    console.error(e);
-  }
-}
-
-async function deleteGroup(id) {
-  if (!confirm('Remover este grupo?')) return;
-  try {
-    const { error } = await sb.from('groups').delete().eq('id', id);
-    if (error) throw error;
-    DB.groups = DB.groups.filter(g => g.id !== id);
-    renderGroupsList();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
-}
-
-function renderGroupsList() {
-  const el = document.getElementById('groups-list');
-  if (!DB.groups.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>'; return; }
-  el.innerHTML = DB.groups.map(g => `
-    <div class="list-item">
-      <div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji || '👥'}</div>
-      <div>
-        <div class="list-item-name">${esc(g.name)}</div>
-        <div class="list-item-sub">@${esc(g.handle)}${g.slack_id ? ' · ID: ' + esc(g.slack_id) : ''}</div>
-      </div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-/* ══════════════════════════════
-   CHANNELS
-══════════════════════════════ */
-async function saveChannel() {
-  const name     = v('ch-name').replace('#', '');
-  const desc     = v('ch-desc');
-  const slack_id = v('ch-slack-id');
-  if (!name) { alert('Preencha o nome do canal.'); return; }
-  try {
-    dbg('Salvando canal…');
-    const { data, error } = await sb.from('channels')
-      .insert({ user_id: user.id, name, desc, slack_id })
-      .select().single();
-    if (error) throw error;
-    DB.channels.push(data);
-    ['ch-name','ch-desc','ch-slack-id'].forEach(i => { document.getElementById(i).value = ''; });
-    document.getElementById('channel-form').classList.remove('open');
-    renderChannelsList();
-    showStatus('#' + name + ' salvo! ✓', 'success');
-    dbg('Canal salvo: #' + name, 'success');
-  } catch (e) {
-    dbg('Erro canal: ' + e.message, 'error');
-    alert('Erro ao salvar canal:\n' + e.message);
-    console.error(e);
-  }
-}
-
-async function deleteChannel(id) {
-  if (!confirm('Remover este canal?')) return;
-  try {
-    const { error } = await sb.from('channels').delete().eq('id', id);
-    if (error) throw error;
-    DB.channels = DB.channels.filter(c => c.id !== id);
-    renderChannelsList();
-  } catch (e) {
-    alert('Erro ao deletar:\n' + e.message);
-    console.error(e);
-  }
-}
-
-function renderChannelsList() {
-  const el = document.getElementById('channels-list');
-  if (!DB.channels.length) { el.innerHTML = '<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
-  el.innerHTML = DB.channels.map(c => `
-    <div class="list-item">
-      <div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div>
-      <div>
-        <div class="list-item-name">#${esc(c.name)}</div>
-        ${c.desc ? `<div class="list-item-sub">${esc(c.desc)}</div>` : ''}
-        ${c.slack_id ? `<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>` : ''}
-      </div>
-      <div class="list-item-actions">
-        <button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-/* ══════════════════════════════
-   QUEUE
-══════════════════════════════ */
-async function loadQueue() {
-  try {
-    const { data, error } = await sb.from('scheduled_messages')
-      .select('*').eq('sent', false).order('scheduled_at');
-    if (error) throw error;
-    const msgs = data || [];
-    document.getElementById('queue-count-display').textContent = msgs.length;
-    const nb = document.getElementById('nb');
-    nb.textContent = msgs.length;
-    nb.style.display = msgs.length ? 'inline-block' : 'none';
-    const el = document.getElementById('queue-list-full');
-    if (!msgs.length) { el.innerHTML = '<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
-    el.innerHTML = msgs.map(m => `
-      <div class="queue-item">
-        <div style="font-size:18px;flex-shrink:0">📢</div>
-        <div style="flex:1">
-          <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${esc(m.webhook_name || '—')}</div>
-          <div class="queue-text">${esc(m.preview_text || '')}</div>
+  container.innerHTML = cfg.fields.map(f => {
+    const el = f.ta
+      ? `<textarea class="msg-ta" id="${f.id}" placeholder="${esc(f.ph)}" autocomplete="off" data-field-id="${f.id}"></textarea>`
+      : `<input type="text" id="${f.id}" placeholder="${esc(f.ph)}" autocomplete="off" data-field-id="${f.id}" />`;
+    return `<div style="margin-bottom:10px">
+      <label class="form-label">${esc(f.label)}${f.hint?` <span style="color:var(--text-hint);font-weight:400">${esc(f.hint)}</span>`:''}</label>
+      <div class="msg-wrap">
+        ${el}
+        <div class="autocomplete-dropdown" id="ac-field-${f.id}">
+          <div class="ac-header" id="ac-hdr-${f.id}">Pessoas &amp; Grupos</div>
+          <div id="ac-list-${f.id}"></div>
         </div>
-        <button class="btn btn-danger-ghost btn-sm" data-cancel-sched="${m.id}"><i class="ti ti-x"></i> Cancelar</button>
-      </div>`).join('');
-  } catch (e) {
-    document.getElementById('queue-list-full').innerHTML =
-      `<div class="no-sugg" style="color:var(--error);padding:1.5rem">Erro ao carregar fila:<br>${esc(e.message)}</div>`;
+      </div>
+    </div>`;
+  }).join('');
+
+  // Hint pills
+  document.getElementById('hint-pills').innerHTML = cfg.hints
+    .map(h=>`<span class="hint-pill" data-hint="${esc(h)}">${esc(h)}</span>`).join('');
+
+  // Bloco retorno — só em férias
+  document.getElementById('retorno-block').style.display = ST.scenario==='ferias' ? 'flex' : 'none';
+
+  // Listeners nos campos
+  cfg.fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    if (!el) return;
+    el.addEventListener('input', () => { detectFieldAC(el, f.id); buildAndRender(); });
+    el.addEventListener('keydown', e => onFieldKeydown(e, f.id));
+  });
+
+  // Listener no textarea de retorno
+  const retEl = document.getElementById('retorno-text');
+  if (retEl) {
+    retEl.addEventListener('input', () => detectFieldAC(retEl, 'retorno'));
+    retEl.addEventListener('keydown', e => onFieldKeydown(e, 'retorno'));
   }
+
+  buildAndRender();
 }
 
-async function cancelScheduled(id) {
-  try {
-    await sb.from('scheduled_messages').delete().eq('id', id);
-    loadQueue();
-  } catch (e) {
-    alert('Erro ao cancelar: ' + e.message);
-  }
-}
+/* ══════════════════════════════════════════════════
+   FIELD AUTOCOMPLETE — um autocomplete por campo
+══════════════════════════════════════════════════ */
+let _fieldAcItems = {};
+let _fieldAcFocus = {};
 
-/* ══════════════════════════════
-   AUTOCOMPLETE
-══════════════════════════════ */
-function onMsgInput(ta) { detectAC(ta); processInput(ta.value); }
-
-function detectAC(ta) {
-  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
+function detectFieldAC(el, fieldId) {
+  const val = el.value || '', pos = el.selectionStart || val.length;
+  const before = val.substring(0, pos);
   const atIdx = before.lastIndexOf('@'), hashIdx = before.lastIndexOf('#');
   const lastIdx = Math.max(atIdx, hashIdx);
-  if (lastIdx === -1) { closeAC(); return; }
+  const ddId = fieldId === 'retorno' ? 'ac-retorno' : 'ac-field-'+fieldId;
+  const listId = fieldId === 'retorno' ? 'ac-retorno-list' : 'ac-list-'+fieldId;
+  const hdrId  = fieldId === 'retorno' ? 'ac-retorno-hdr'  : 'ac-hdr-'+fieldId;
+  const dd = document.getElementById(ddId);
+  if (!dd) return;
+
+  if (lastIdx === -1) { dd.classList.remove('open'); return; }
   const sym = val[lastIdx];
-
-  // FIX: permite query com espaços (nomes compostos) — só fecha se tiver 2+ espaços
-  // ou se o caractere antes do @ for letra/número (evita falso positivo)
   const query = before.substring(lastIdx + 1);
-  const spaceCount = (query.match(/ /g) || []).length;
-  if (spaceCount >= 2) { closeAC(); return; }
+  const spaces = (query.match(/ /g)||[]).length;
+  if (spaces >= 2) { dd.classList.remove('open'); return; }
 
-  // ── NOVO: ignora palavras reservadas do Slack ──
-  const SLACK_RESERVED = new Set(['here','channel','everyone','aqui','canal','todos']);
-  if (sym === '@' && SLACK_RESERVED.has(query.toLowerCase().trim())) {
-    closeAC(); return;
-  }
-  ST.acMode = sym;
+  const RESERVED = new Set(['here','channel','everyone','aqui','canal','todos']);
+  if (sym==='@' && RESERVED.has(query.toLowerCase().trim())) { dd.classList.remove('open'); return; }
+
   const q = query.toLowerCase().trim();
   let items = [];
-
   if (sym === '@') {
-    document.getElementById('ac-header').textContent = 'Pessoas & Grupos';
-    const ppl = DB.people.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      (p.handle || '').toLowerCase().includes(q)
-    );
-    const grp = DB.groups.filter(g =>
-      g.name.toLowerCase().includes(q) ||
-      (g.handle || '').toLowerCase().includes(q)
-    );
+    document.getElementById(hdrId).textContent = 'Pessoas & Grupos';
     items = [
-      // FIX: insert usa __pid:ID__ como marcador interno — resolvido no formatSlackTags
-      // Se não tem handle, usa o nome como rótulo mas o ID como chave real
-      ...ppl.map(p => ({
-        type:   'person',
-        label:  p.name,
-        insert: p.slack_id ? `__pid:${p.slack_id}:${p.name}__` : `@${p.handle || p.name}`,
-        sub:    p.slack_id ? 'ID: ' + p.slack_id : (p.handle ? '@' + p.handle : 'sem ID'),
-        avatar: initials(p.name)
-      })),
-      ...grp.map(g => ({
-        type:   'group',
-        label:  g.name,
-        insert: g.slack_id ? `__gid:${g.slack_id}:${g.name}__` : `@${g.handle}`,
-        sub:    g.slack_id ? 'ID: ' + g.slack_id + ' · @' + g.handle : '@' + g.handle,
-        avatar: g.emoji || '👥'
-      }))
+      ...DB.people.filter(p=>p.name.toLowerCase().includes(q)||(p.handle||'').toLowerCase().includes(q))
+        .map(p=>({type:'person',label:p.name,insert:p.slack_id?`<@${p.slack_id}>`: `@${p.handle||p.name}`,display:`@${p.name}`,sub:p.slack_id?'ID:'+p.slack_id:'',avatar:initials(p.name)})),
+      ...DB.groups.filter(g=>g.name.toLowerCase().includes(q)||(g.handle||'').toLowerCase().includes(q))
+        .map(g=>({type:'group',label:g.name,insert:g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`,display:`@${g.name}`,sub:'@'+g.handle,avatar:g.emoji||'👥'})),
     ];
   } else {
-    document.getElementById('ac-header').textContent = 'Canais Slack';
-    items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
-      .map(c => ({
-        type:   'channel',
-        label:  '#' + c.name,
-        insert: c.slack_id ? `__cid:${c.slack_id}:${c.name}__` : '#' + c.name,
-        sub:    c.desc || (c.slack_id ? 'ID: ' + c.slack_id : ''),
-        avatar: '#'
-      }));
+    document.getElementById(hdrId).textContent = 'Canais Slack';
+    items = DB.channels.filter(c=>c.name.toLowerCase().includes(q))
+      .map(c=>({type:'channel',label:'#'+c.name,insert:c.slack_id?`<#${c.slack_id}>`:'#'+c.name,display:'#'+c.name,sub:c.desc||'',avatar:'#'}));
   }
 
-  if (!items.length) { closeAC(); return; }
-  window._acItems = items; ST.acFocus = 0;
-  document.getElementById('ac-list').innerHTML = items.map((it, i) => `
-    <div class="ac-item ${i === 0 ? 'focused' : ''}" data-ac-idx="${i}">
+  if (!items.length) { dd.classList.remove('open'); return; }
+  _fieldAcItems[fieldId] = items;
+  _fieldAcFocus[fieldId] = 0;
+  document.getElementById(listId).innerHTML = items.map((it,i)=>`
+    <div class="ac-item ${i===0?'focused':''}" data-fac-field="${fieldId}" data-fac-idx="${i}">
       <div class="ac-avatar ${it.type}">${it.avatar}</div>
-      <div><div class="ac-name">${esc(it.label)}</div>${it.sub ? `<div class="ac-sub">${esc(it.sub)}</div>` : ''}</div>
+      <div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div>
     </div>`).join('');
-  document.getElementById('ac-dropdown').classList.add('open');
+  dd.classList.add('open');
 }
 
-function closeAC() { document.getElementById('ac-dropdown').classList.remove('open'); ST.acMode = null; }
+function insertFieldAC(fieldId, idx) {
+  const items = _fieldAcItems[fieldId]||[];
+  const it = items[idx]; if (!it) return;
+  const elId = fieldId==='retorno' ? 'retorno-text' : fieldId;
+  const el = document.getElementById(elId); if (!el) return;
+  const val=el.value, pos=el.selectionStart||val.length, before=val.substring(0,pos);
+  const lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'));
+  // Insere o texto de exibição bonito no campo; o insert real (com ID) vai na hora do envio
+  el.value = val.substring(0,lastIdx) + it.display + ' ' + val.substring(pos);
+  el.focus();
+  const np=lastIdx+it.display.length+1; el.setSelectionRange(np,np);
+  const ddId = fieldId==='retorno'?'ac-retorno':'ac-field-'+fieldId;
+  document.getElementById(ddId)?.classList.remove('open');
+  buildAndRender();
+}
 
-  let contactAcItems = [], contactAcFocus = 0;
+function onFieldKeydown(e, fieldId) {
+  const ddId = fieldId==='retorno'?'ac-retorno':'ac-field-'+fieldId;
+  const dd = document.getElementById(ddId);
+  if (!dd?.classList.contains('open')) return;
+  const items = _fieldAcItems[fieldId]||[];
+  if (e.key==='ArrowDown') { e.preventDefault(); _fieldAcFocus[fieldId]=Math.min((_fieldAcFocus[fieldId]||0)+1,items.length-1); refreshFieldAcFocus(fieldId); }
+  if (e.key==='ArrowUp')   { e.preventDefault(); _fieldAcFocus[fieldId]=Math.max((_fieldAcFocus[fieldId]||0)-1,0); refreshFieldAcFocus(fieldId); }
+  if (e.key==='Enter'||e.key==='Tab') { e.preventDefault(); insertFieldAC(fieldId,_fieldAcFocus[fieldId]||0); }
+  if (e.key==='Escape') dd.classList.remove('open');
+}
 
-function onContactInput(ta) {
-  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
-  const atIdx = before.lastIndexOf('@'), hashIdx = before.lastIndexOf('#');
-  const lastIdx = Math.max(atIdx, hashIdx);
-  if (lastIdx === -1) { closeContactAC(); refreshSuggs(); return; }
-  const sym = val[lastIdx], query = before.substring(lastIdx + 1);
-  if (/\s\s/.test(query)) { closeContactAC(); refreshSuggs(); return; }
-  const q = query.toLowerCase().trim();
-  let items = [];
-  if (sym === '@') {
-    document.getElementById('ac-contact-header').textContent = 'Pessoas & Grupos';
-    items = [
-      ...DB.people.filter(p => p.name.toLowerCase().includes(q) || (p.handle||'').toLowerCase().includes(q))
-        .map(p => ({ label: p.name, insert: p.slack_id ? `<@${p.slack_id}>` : `@${p.handle||p.name}`, sub: p.handle ? '@'+p.handle : '', avatar: initials(p.name), type:'person' })),
-      ...DB.groups.filter(g => g.name.toLowerCase().includes(q) || (g.handle||'').toLowerCase().includes(q))
-        .map(g => ({ label: g.name, insert: g.slack_id ? `<!subteam^${g.slack_id}|@${g.handle}>` : `@${g.handle}`, sub: '@'+g.handle, avatar: g.emoji||'👥', type:'group' }))
+function refreshFieldAcFocus(fieldId) {
+  const listId=fieldId==='retorno'?'ac-retorno-list':'ac-list-'+fieldId;
+  document.querySelectorAll(`#${listId} .ac-item`).forEach((el,i)=>el.classList.toggle('focused',i===(_fieldAcFocus[fieldId]||0)));
+}
+
+/* ══════════════════════════════════════════════════
+   CONTACT AUTOCOMPLETE
+══════════════════════════════════════════════════ */
+let _contactAcItems=[], _contactAcFocus=0;
+
+function onContactInput() {
+  const el=document.getElementById('contact-input');
+  const val=el.value, pos=el.selectionStart||val.length, before=val.substring(0,pos);
+  const atIdx=before.lastIndexOf('@'), hashIdx=before.lastIndexOf('#');
+  const lastIdx=Math.max(atIdx,hashIdx);
+  const dd=document.getElementById('ac-contact');
+  if(lastIdx===-1){dd.classList.remove('open');refreshSuggs();return;}
+  const sym=val[lastIdx], query=before.substring(lastIdx+1);
+  if(/\s\s/.test(query)){dd.classList.remove('open');refreshSuggs();return;}
+  const q=query.toLowerCase().trim();
+  let items=[];
+  if(sym==='@'){
+    document.getElementById('ac-contact-hdr').textContent='Pessoas & Grupos';
+    items=[
+      ...DB.people.filter(p=>p.name.toLowerCase().includes(q)||(p.handle||'').toLowerCase().includes(q))
+        .map(p=>({type:'person',label:p.name,insert:p.slack_id?`<@${p.slack_id}>`:`@${p.handle||p.name}`,display:`@${p.name}`,sub:p.handle?'@'+p.handle:'',avatar:initials(p.name)})),
+      ...DB.groups.filter(g=>g.name.toLowerCase().includes(q)||(g.handle||'').toLowerCase().includes(q))
+        .map(g=>({type:'group',label:g.name,insert:g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`,display:`@${g.name}`,sub:'@'+g.handle,avatar:g.emoji||'👥'})),
     ];
   } else {
-    document.getElementById('ac-contact-header').textContent = 'Canais Slack';
-    items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
-      .map(c => ({ label: '#'+c.name, insert: c.slack_id ? `<#${c.slack_id}>` : '#'+c.name, sub: c.desc||'', avatar:'#', type:'channel' }));
+    document.getElementById('ac-contact-hdr').textContent='Canais Slack';
+    items=DB.channels.filter(c=>c.name.toLowerCase().includes(q))
+      .map(c=>({type:'channel',label:'#'+c.name,insert:c.slack_id?`<#${c.slack_id}>`:'#'+c.name,display:'#'+c.name,sub:c.desc||'',avatar:'#'}));
   }
-  contactAcItems = items; contactAcFocus = 0;
-  const dd = document.getElementById('ac-contact');
-  if (!items.length) { dd.classList.remove('open'); refreshSuggs(); return; }
-  document.getElementById('ac-contact-list').innerHTML = items.map((it, i) => `
+  _contactAcItems=items; _contactAcFocus=0;
+  if(!items.length){dd.classList.remove('open');refreshSuggs();return;}
+  document.getElementById('ac-contact-list').innerHTML=items.map((it,i)=>`
     <div class="ac-item ${i===0?'focused':''}" data-cac-idx="${i}">
       <div class="ac-avatar ${it.type}">${it.avatar}</div>
       <div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div>
@@ -1071,712 +920,860 @@ function onContactInput(ta) {
   refreshSuggs();
 }
 
-function closeContactAC() {
-  document.getElementById('ac-contact').classList.remove('open');
-}
-
 function insertContactAC(idx) {
-  const it = contactAcItems[idx]; if (!it) return;
-  const ta = document.getElementById('contact-input');
-  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
-  const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
-  ta.value = val.substring(0, lastIdx) + it.insert + ' ' + val.substring(pos);
-  ta.focus(); closeContactAC(); refreshSuggs();
+  const it=_contactAcItems[idx]; if(!it) return;
+  const el=document.getElementById('contact-input');
+  const val=el.value, pos=el.selectionStart||val.length, before=val.substring(0,pos);
+  const lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'));
+  // Guarda o insert real (com ID Slack) diretamente no campo value para cSlack()
+  // mas mostra o display bonito
+  el.value=val.substring(0,lastIdx)+it.insert+' '+val.substring(pos);
+  el.setAttribute('data-display', (el.getAttribute('data-display')||'').trim()+' '+it.display);
+  el.focus(); document.getElementById('ac-contact').classList.remove('open'); refreshSuggs();
 }
 
 function onContactKeydown(e) {
-  const dd = document.getElementById('ac-contact');
-  if (!dd.classList.contains('open')) return;
-  if (e.key==='ArrowDown') { e.preventDefault(); contactAcFocus=Math.min(contactAcFocus+1,contactAcItems.length-1); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
-  if (e.key==='ArrowUp')   { e.preventDefault(); contactAcFocus=Math.max(contactAcFocus-1,0); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
-  if (e.key==='Enter'||e.key==='Tab') { e.preventDefault(); insertContactAC(contactAcFocus); }
-  if (e.key==='Escape') closeContactAC();
+  const dd=document.getElementById('ac-contact');
+  if(!dd.classList.contains('open')) return;
+  if(e.key==='ArrowDown'){e.preventDefault();_contactAcFocus=Math.min(_contactAcFocus+1,_contactAcItems.length-1);document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===_contactAcFocus));}
+  if(e.key==='ArrowUp')  {e.preventDefault();_contactAcFocus=Math.max(_contactAcFocus-1,0);document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===_contactAcFocus));}
+  if(e.key==='Enter'||e.key==='Tab'){e.preventDefault();insertContactAC(_contactAcFocus);}
+  if(e.key==='Escape') dd.classList.remove('open');
 }
 
-function insertAC(insert) {
-  const ta  = document.getElementById('msg-input');
-  const val = ta.value, pos = ta.selectionStart;
-  const before = val.substring(0, pos);
-  const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
+/* ══════════════════════════════════════════════════
+   SLACK TAG FORMATTER
+   Converte @Nome / #canal nos IDs reais do Slack
+══════════════════════════════════════════════════ */
+function escapeRegex(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
-  // Extrai o nome de exibição do marcador interno se for __pid/gid/cid:ID:Nome__
-  // Na tela mostramos o nome bonito; na hora do envio formatSlackTags resolve o ID
-  let display = insert;
-  const pidMatch = insert.match(/^__pid:([^:]+):(.+)__$/);
-  const gidMatch = insert.match(/^__gid:([^:]+):(.+)__$/);
-  const cidMatch = insert.match(/^__cid:([^:]+):(.+)__$/);
-  if (pidMatch) display = '@' + pidMatch[2];
-  if (gidMatch) display = '@' + gidMatch[2];
-  if (cidMatch) display = '#' + cidMatch[2];
-
-  ta.value = val.substring(0, lastIdx) + display + ' ' + val.substring(pos);
-  ta.focus();
-  const np = lastIdx + display.length + 1;
-  ta.setSelectionRange(np, np);
-  closeAC(); processInput(ta.value);
+// Tags especiais Slack
+function applySpecialTags(txt) {
+  return txt
+    .replace(/@here\b/gi,'<!here>')
+    .replace(/@channel\b/gi,'<!channel>')
+    .replace(/@everyone\b/gi,'<!everyone>')
+    .replace(/@aqui\b/gi,'<!here>')
+    .replace(/@canal\b/gi,'<!channel>')
+    .replace(/@todos\b/gi,'<!everyone>');
 }
 
-function onMsgKeydown(e) {
-  const dd = document.getElementById('ac-dropdown');
-  if (!dd.classList.contains('open')) return;
-  const items = window._acItems || [];
-  if (e.key === 'ArrowDown') { e.preventDefault(); ST.acFocus = Math.min(ST.acFocus + 1, items.length - 1); refreshACFocus(); }
-  if (e.key === 'ArrowUp')   { e.preventDefault(); ST.acFocus = Math.max(ST.acFocus - 1, 0); refreshACFocus(); }
-  if (e.key === 'Enter' || e.key === 'Tab') {
-    const it = items[ST.acFocus];
-    if (it) { e.preventDefault(); insertAC(it.insert); }
-  }
-  if (e.key === 'Escape') closeAC();
-}
-function refreshACFocus() {
-  document.querySelectorAll('.ac-item').forEach((el, i) => el.classList.toggle('focused', i === ST.acFocus));
-}
+function resolveSlackTags(text) {
+  // Se o texto já contém tags Slack brutas (<@U...>, <!subteam^...>, <#C...>), não reprocessa
+  // Apenas aplica as especiais que ainda não foram convertidas
+  let txt = applySpecialTags(text);
 
-/* ══════════════════════════════
-   SCENARIOS
-══════════════════════════════ */
-const HINTS = {
-  ferias:  ['@nome','férias','a partir de DD/MM','retornando em DD/MM'],
-  licenca: ['@nome','atestado','licença médica','retorna em DD/MM'],
-  aviso:   ['instabilidade em','falha no','indisponível','manutenção'],
-  retorno: ['@nome','retornou','disponível','de volta em DD/MM']
-};
-
-function setScenario(sc) {
-  ST.scenario = sc;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + sc).classList.add('active');
-  renderHints(); processInput(document.getElementById('msg-input').value);
-}
-
-function renderHints() {
-  document.getElementById('hint-pills').innerHTML = (HINTS[ST.scenario] || [])
-    .map(h => `<span class="hint-pill" data-hint="${esc(h)}">${esc(h)}</span>`).join('');
-}
-
-function insertHint(h) {
-  const ta = document.getElementById('msg-input'), vl = ta.value;
-  ta.value = vl + (vl && !vl.endsWith(' ') ? ' ' : '') + h + ' ';
-  ta.focus(); processInput(ta.value);
-}
-
-/* ══════════════════════════════
-   OPTIONS
-══════════════════════════════ */
-function toggleContact() {
-  ST.contactOn = !ST.contactOn;
-  document.getElementById('tgl-contact').classList.toggle('on', ST.contactOn);
-  document.getElementById('contact-row').style.display = ST.contactOn ? 'flex' : 'none';
-  if (ST.contactOn) document.getElementById('contact-input').focus();
-  refreshSuggs();
-}
-
-function toggleSchedule() {
-  ST.schedOn = !ST.schedOn;
-  document.getElementById('tgl-sched').classList.toggle('on', ST.schedOn);
-  document.getElementById('sched-row').style.display = ST.schedOn ? 'flex' : 'none';
-  const di = document.getElementById('sched-date'), ti = document.getElementById('sched-time');
-  di.disabled = !ST.schedOn; ti.disabled = !ST.schedOn;
-  if (ST.schedOn) {
-    di.value = new Date().toISOString().split('T')[0];
-    di.min   = di.value;
-    updateSchedHint();
-  } else {
-    document.getElementById('sched-badge').classList.remove('visible');
-    document.getElementById('sched-hint').textContent = '';
-    document.getElementById('preview-sched').classList.remove('visible');
-  }
-  updateSendBtn();
-}
-
-function updateSchedHint() {
-  const d = document.getElementById('sched-date').value;
-  const t = document.getElementById('sched-time').value;
-  if (d && t) {
-    document.getElementById('sched-hint').textContent =
-      new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
-    document.getElementById('sched-badge').classList.add('visible');
-  }
-  updatePreview(ST.selSugg);
-}
-
-function refreshSuggs() { processInput(document.getElementById('msg-input').value); }
-
-/* ══════════════════════════════
-   FORMATTER
-══════════════════════════════ */
-function formatSlackTags(text) {
-  let txt = text;
-  
-    // ── MENÇÕES ESPECIAIS 
-  txt = txt.replace(/@here\b/gi,     '<!here>');
-  txt = txt.replace(/@channel\b/gi,  '<!channel>');
-  txt = txt.replace(/@everyone\b/gi, '<!everyone>');
-
-  // ── VERSÕES EM PORTUGUÊS ──
-  txt = txt.replace(/@aqui\b/gi,     '<!here>');
-  txt = txt.replace(/@canal\b/gi,    '<!channel>');
-  txt = txt.replace(/@todos\b/gi,    '<!everyone>');
-  
-  // ── PESSOAS ──
-  // Estratégia: tenta pelo nome de exibição (com ou sem espaço), depois pelo handle
-  // Ordena do nome mais longo para o mais curto para evitar substituição parcial
-  const peopleSorted = [...DB.people].sort((a, b) => b.name.length - a.name.length);
-
-  peopleSorted.forEach(p => {
-    if (!p.slack_id) return; // sem ID não há como marcar
-
-    // 1. Tenta pelo handle (sem espaço) — ex: @luiz.lackeski
-    if (p.handle) {
-      const reHandle = new RegExp('@' + escapeRegex(p.handle) + '(?=[\\s,;.!?]|$)', 'gi');
-      txt = txt.replace(reHandle, `<@${p.slack_id}>`);
-    }
-
-    // 2. Tenta pelo nome completo — ex: @Luiz Lackeski
-    const reNome = new RegExp('@' + escapeRegex(p.name) + '(?=[\\s,;.!?]|$)', 'gi');
-    txt = txt.replace(reNome, `<@${p.slack_id}>`);
-
-    // 3. Tenta pelo primeiro nome — ex: @Luiz  (só se nome tiver mais de uma palavra)
-    const firstName = p.name.split(' ')[0];
-    if (firstName && p.name.includes(' ')) {
-      const reFirst = new RegExp('@' + escapeRegex(firstName) + '(?=[\\s,;.!?]|$)', 'gi');
-      // Só substitui se ainda não foi substituído (não tem <@ já no lugar)
-      txt = txt.replace(reFirst, (match, offset) => {
-        // Verifica que não é parte de uma tag já substituída
-        const before = txt.substring(Math.max(0, offset - 2), offset);
-        return before.includes('<') ? match : `<@${p.slack_id}>`;
+  // Pessoas — por nome completo e handle
+  const peopleSorted = [...DB.people].sort((a,b)=>b.name.length-a.name.length);
+  peopleSorted.forEach(p=>{
+    if(!p.slack_id) return;
+    // Já tem tag? Pula
+    const tagAlready = new RegExp(`<@${p.slack_id}>`,'g');
+    if(tagAlready.test(txt)) return;
+    // Por handle
+    if(p.handle){ txt=txt.replace(new RegExp('@'+escapeRegex(p.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`); }
+    // Por nome completo
+    txt=txt.replace(new RegExp('@'+escapeRegex(p.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);
+    // Por primeiro nome (fallback)
+    const fn=p.name.split(' ')[0];
+    if(fn&&p.name.includes(' ')){
+      txt=txt.replace(new RegExp('@'+escapeRegex(fn)+'(?=[\\s,;.!?\\n]|$)','gi'),(m,off)=>{
+        const pre=txt.substring(Math.max(0,off-2),off);
+        return pre.includes('<')?m:`<@${p.slack_id}>`;
       });
     }
   });
 
-  // ── GRUPOS ──
-  const groupsSorted = [...DB.groups].sort((a, b) => b.name.length - a.name.length);
-
-  groupsSorted.forEach(g => {
-    if (!g.handle) return;
-
-    const reHandle = new RegExp('@' + escapeRegex(g.handle) + '(?=[\\s,;.!?]|$)', 'gi');
-
-    if (g.slack_id) {
-      // Com ID: marca o subteam corretamente
-      txt = txt.replace(reHandle, `<!subteam^${g.slack_id}|@${g.handle}>`);
-    } else {
-      // Sem ID: usa @handle — o Slack reconhece grupos por handle também
-      txt = txt.replace(reHandle, `@${g.handle}`);
-    }
-
-    // Tenta pelo nome do grupo também — ex: @Time de TI
-    const reNome = new RegExp('@' + escapeRegex(g.name) + '(?=[\\s,;.!?]|$)', 'gi');
-    if (g.slack_id) {
-      txt = txt.replace(reNome, `<!subteam^${g.slack_id}|@${g.handle}>`);
-    }
+  // Grupos
+  const groupsSorted=[...DB.groups].sort((a,b)=>b.name.length-a.name.length);
+  groupsSorted.forEach(g=>{
+    if(!g.handle) return;
+    const tag=g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`;
+    txt=txt.replace(new RegExp('@'+escapeRegex(g.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);
+    txt=txt.replace(new RegExp('@'+escapeRegex(g.name)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);
   });
 
-  // ── CANAIS ──
-  const channelsSorted = [...DB.channels].sort((a, b) => b.name.length - a.name.length);
-
-  channelsSorted.forEach(c => {
-    if (!c.slack_id) return;
-    const re = new RegExp('#' + escapeRegex(c.name) + '(?=[\\s,;.!?]|$)', 'gi');
-    txt = txt.replace(re, `<#${c.slack_id}>`);
+  // Canais
+  const chSorted=[...DB.channels].sort((a,b)=>b.name.length-a.name.length);
+  chSorted.forEach(c=>{
+    if(!c.slack_id) return;
+    txt=txt.replace(new RegExp('#'+escapeRegex(c.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<#${c.slack_id}>`);
   });
 
   return txt;
 }
 
-// Escapa caracteres especiais de regex no nome/handle
-function escapeRegex(s) {
-  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// Converte tags Slack para HTML bonito no preview
+function slackTagsToHtml(txt) {
+  return txt
+    .replace(/<@(U[A-Z0-9]+)>/g,(_,id)=>{
+      const p=DB.people.find(x=>x.slack_id===id);
+      return `<span style="background:rgba(50,72,198,.2);color:#a5b4fc;border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;
+    })
+    .replace(/<!subteam\^([^|>]+)\|?([^>]*)>/g,(_,id,label)=>{
+      const g=DB.groups.find(x=>x.slack_id===id);
+      return `<span style="background:rgba(0,174,151,.15);color:var(--cobli-green);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;
+    })
+    .replace(/<#(C[A-Z0-9]+)>/g,(_,id)=>{
+      const c=DB.channels.find(x=>x.slack_id===id);
+      return `<span style="background:rgba(15,253,201,.1);color:var(--cobli-green2);border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;
+    })
+    .replace(/<!here>/g,   '<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@here</span>')
+    .replace(/<!channel>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@channel</span>')
+    .replace(/<!everyone>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@everyone</span>')
+    .replace(/\*([^*]+)\*/g,'<strong>$1</strong>')
+    .replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>')
+    .replace(/\n/g,'<br>');
 }
 
-/* ══════════════════════════════
-   SUGGESTIONS
-══════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   CONTACT FOOTER
+══════════════════════════════════════════════════ */
 function cSlack() {
   if (!ST.contactOn) return '';
-  const c = (document.getElementById('contact-input').value || '').trim();
-  return c ? `\n\n📞 _Contatos urgentes: ${c}_` : '\n\n📞 _Contatos urgentes: acione o responsável da área._';
+  const raw = (document.getElementById('contact-input').value||'').trim();
+  if (!raw) return '\n\n📞 _Entrar em contato com: acione o responsável da área._';
+  // raw já pode conter tags Slack brutas se veio do autocomplete
+  return '\n\n📞 _Entrar em contato com: '+raw+'_';
 }
 function cHtml() {
   if (!ST.contactOn) return '';
-  const raw = (document.getElementById('contact-input').value || '').trim();
-  if (!raw) return `<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
-  // Converte as tags reais do Slack (<@U...>, <!subteam^...>, <#C...>)
-  // para versão legível no preview HTML
-  const display = raw
-    .replace(/<@(U[A-Z0-9]+)>/g, (_, id) => {
-      const p = DB.people.find(p => p.slack_id === id);
-      return `<span style="color:var(--cobli-green2)">@${p ? p.name : id}</span>`;
-    })
-    .replace(/<!subteam\^([^|>]+)\|?([^>]*)>/g, (_, id, label) => {
-      const g = DB.groups.find(g => g.slack_id === id);
-      return `<span style="color:var(--cobli-green)">@${g ? g.name : (label || id)}</span>`;
-    })
-    .replace(/<#(C[A-Z0-9]+)>/g, (_, id) => {
-      const c = DB.channels.find(c => c.slack_id === id);
-      return `<span style="color:var(--cobli-blue-chart)">#${c ? c.name : id}</span>`;
-    });
-  return `<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${display}</small>`;
+  const raw = (document.getElementById('contact-input').value||'').trim();
+  if (!raw) return '<br><small style="color:#666">📞 Entrar em contato com: acione o responsável da área.</small>';
+  return '<br><small style="color:var(--cobli-green2)">📞 Entrar em contato com: '+slackTagsToHtml(raw)+'</small>';
 }
 
-function parseMsg(text) {
-  const userMatches = [];
-  // Captura @Palavra ou @Palavra Palavra — máximo 2 palavras, nenhuma pode ser número ou palavra comum
-  const STOP_WORDS = new Set(['de','da','do','em','até','a','as','o','os','na','no','para','por','com','hoje','amanhã','volta','férias','retorno','retornando','licença','atestado','disponível']);
-  const re = /@([\w.]+(?:\s+[\w.]+)?)/g;
-  let m;
-  while ((m = re.exec(text)) !== null) {
-    const parts = m[1].split(/\s+/).filter(p => !STOP_WORDS.has(p.toLowerCase()) && !/^\d+$/.test(p));
-    if (parts.length) userMatches.push('@' + parts.slice(0, 2).join(' '));
-  }
-  return {
-    users: userMatches,
-    dates: [...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m => m[1])
-  };
-}
+/* ══════════════════════════════════════════════════
+   BUILD SUGGESTIONS
+══════════════════════════════════════════════════ */
+function getFieldVal(id) { return (document.getElementById(id)?.value||'').trim(); }
 
-function buildSuggs(text, sc) {
-  const { users, dates } = parseMsg(text);
-  const u  = users[0] || '@colaborador';
-  const d1 = dates[0] || 'DD/MM';
-  const d2 = dates[1] || 'DD/MM';
-  const cs = cSlack();
-  const ch = cHtml();
-  if (!text.trim() || text.trim().length < 5) return [];
-
-  // Texto completo formatado para Slack (com todas as menções resolvidas)
-  const fullSlack = formatSlackTags(text.trim());
-  // Texto completo para preview HTML (mantém @ e # visíveis)
-  const fullHtml  = esc(text.trim()).replace(/@([\w.]+(?:\s+[\w.]+)*)/g, '<span style="color:var(--cobli-green2)">@$1</span>').replace(/#([\w-]+)/g, '<span style="color:var(--cobli-blue-chart)">#$1</span>');
-  // ADICIONA esta linha nova logo abaixo das duas
-const uFormatted = users[0] ? formatSlackTags(users[0]) : '@colaborador';
-
-  // Helper: gera bloco Slack com barra colorida lateral (attachment)
-  // Slack suporta "attachments" com color — usamos JSON no payload
-  // Mas como o payload é texto simples aqui, simulamos com bloco de citação > 
-  // Para barra real, a Edge Function precisaria usar attachments — 
-  // então guardamos o texto normal e a Edge Function adiciona a barra.
-  // No preview HTML simulamos a barra com CSS.
-
-  function slackBlock(emoji, title, body) {
-    return `${emoji} *${title}*\n\n${body}${cs}`;
-  }
-  function htmlBlock(emoji, title, body, color) {
-    // Converte \n em <br> para renderizar no preview
-    const bodyHtml = body.replace(/\n/g, '<br>');
-    return `<div style="display:flex;gap:10px;align-items:stretch">
-      <div style="width:4px;border-radius:2px;background:${color || 'var(--cobli-green)'};flex-shrink:0"></div>
-      <div>${emoji}${title ? ` <b>${title}</b><br><br>` : ''}${bodyHtml}${ch}</div>
-    </div>`;
-  }
-
-  const T = {
-    ferias: [
-      { tag:'ferias', label:'Formal — texto completo',
-        slack: slackBlock('🏖️','Aviso de Férias 🌴', `${fullSlack}\n\n📅 Férias de *${d1}* até *${d2}* 🔙`),
-        html:  htmlBlock('🏖️','Aviso de Férias 🌴', `${fullHtml}<br><br>📅 Férias de <b>${d1}</b> até <b>${d2}</b> 🔙`, 'var(--cobli-green)') },
-
-      { tag:'ferias', label:'Informal — texto completo',
-        slack: `🌴 ${fullSlack}\n\n📅 *${d1}* → *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`,
-        html:  htmlBlock('🌴','', `${fullHtml}<br>📅 <b>${d1}</b> → <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>`, '#3248C6') },
-
-      { tag:'retorno', label:'Aviso de retorno',
-        slack: slackBlock('✅','Retorno de Férias 🎉', `${u} retorna às atividades em *${d2}*.\n_Bem-vindo(a) de volta!_ 🙌`),
-        html:  htmlBlock('✅','Retorno de Férias 🎉', `${u} retorna em <b>${d2}</b>.<br><small style="color:#888">Bem-vindo(a) de volta!</small>`, 'var(--cobli-green2)') },
-
-      { tag:'aviso', label:'Comunicado de RH',
-        slack: `📢 Informamos que ${fullSlack}.\n\n📅 Período: *${d1}* a *${d2}*${cs}`,
-        html:  htmlBlock('📢','Comunicado', `${fullHtml}<br>📅 Período: <b>${d1}</b> a <b>${d2}</b>`, '#7F8DDB') },
-    ],
-  licenca: [
-      { tag:'licenca', label:'Aviso discreto',
-        slack: slackBlock('🩺','Aviso de Ausência 🏥', `${uFormatted} está de licença médica e retorna em *${d1}*.\n_Desejamos uma pronta recuperação! 💙_`),
-        html:  htmlBlock('🩺','Aviso de Ausência 🏥', `${uFormatted} está de licença médica e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>`, '#3248C6') },
-
-      { tag:'licenca', label:'Formal',
-        slack: `⚕️ ${uFormatted} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`,
-        html:  htmlBlock('⚕️','', `${uFormatted} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>`, '#7F8DDB') },
-
-      { tag:'licenca', label:'Simples',
-        slack: `${uFormatted} ficará ausente até *${d1}*. 🩺\n_Contamos com a compreensão de todos! 🤝_${cs}`,
-        html:  htmlBlock('🩺','', `${uFormatted} ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>`, 'var(--cobli-green)') },
-    ],
-    aviso: [
-      { tag:'aviso', label:'Incidente crítico',
-        slack: slackBlock('🚨','[INCIDENTE]', `${fullSlack}\n\n📌 Equipe técnica *já está atuando*.\n⏱️ Previsão: em análise\n\n_Atualizações serão postadas aqui._`),
-        html:  htmlBlock('🚨','[INCIDENTE]', `${fullHtml}<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise`, 'var(--cobli-red)') },
-
-      { tag:'aviso', label:'Manutenção programada',
-        slack: slackBlock('🔧','Manutenção Programada', `${fullSlack}\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n\n_Agradecemos a compreensão!_`),
-        html:  htmlBlock('🔧','Manutenção Programada', `${fullHtml}<br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir`, 'var(--warn)') },
-
-      { tag:'aviso', label:'Incidente resolvido',
-        slack: slackBlock('✅','Incidente Resolvido 🟢', `Sistema voltou a operar normalmente.\n📅 Resolvido em: *${d1}*\n\n${fullSlack}\n\n_Pedimos desculpas pelo transtorno._`),
-        html:  htmlBlock('✅','Incidente Resolvido 🟢', `Sistema operando normalmente.<br>📅 Resolvido em: <b>${d1}</b>`, 'var(--cobli-green)') },
-
-      { tag:'aviso', label:'Comunicado geral',
-        slack: slackBlock('📢','Comunicado Importante', `${fullSlack}\n\n_— Equipe de TI_`),
-        html:  htmlBlock('📢','Comunicado Importante', `${fullHtml}<br><small style="color:#888">— Equipe de TI</small>`, '#7F8DDB') },
-    ],
-retorno: [
-      { tag:'retorno', label:'Retorno celebrativo',
-        slack: slackBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨`),
-        html:  htmlBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌\n📅 Retornou em: <b>${d1}</b>`, 'var(--cobli-green2)') },
-
-      { tag:'retorno', label:'Simples e objetivo',
-        slack: `✅ ${uFormatted} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`,
-        html:  htmlBlock('✅', '', `${uFormatted} retornou e já está disponível a partir de <b>${d1}</b>. 🟢`, 'var(--cobli-green)') },
-    ],
-  };
-  return (T[sc] || T.ferias).slice(0, 4);
-}
-
-const TL = { ferias:'Férias', licenca:'Licença', aviso:'Aviso', retorno:'Retorno' };
-const TC = { ferias:'tag-ferias', licenca:'tag-licenca', aviso:'tag-aviso', retorno:'tag-retorno' };
-
-function processInput(val) {
-  const suggs = buildSuggs(val, ST.scenario);
+function buildAndRender() {
+  const suggs = buildSuggs();
   const grid  = document.getElementById('sugg-grid');
   const lbl   = document.getElementById('sugg-label');
+
   if (!suggs.length) {
-    grid.innerHTML = '<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
-    lbl.textContent = 'Variações de mensagem';
-    ST.selSugg = null; updatePreview(null); updateSendBtn(); return;
+    grid.innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos acima para ver as sugestões ✨</div>';
+    lbl.textContent='Variações de mensagem';
+    ST.selSugg=null; updatePreview(null); updateSendBtn(); return;
   }
-  lbl.textContent = suggs.length + ' variações — escolha uma:';
-  grid.innerHTML = suggs.map((s, i) => `
-    <div class="sugg-card" id="sc-${i}" data-sugg-idx="${i}">
-      <div class="sugg-card-hdr"><span class="tag ${TC[s.tag]}">${TL[s.tag]}</span><span class="sugg-name">${s.label}</span><div class="sel-dot" id="dot-${i}"></div></div>
+  lbl.textContent=suggs.length+' variações — clique para selecionar:';
+  const TL={ferias:'Férias',licenca:'Licença',incidente:'Incidente','aviso-geral':'Aviso',retorno:'Retorno'};
+  const TC={ferias:'tag-ferias',licenca:'tag-licenca',incidente:'tag-aviso','aviso-geral':'tag-aviso-geral',retorno:'tag-retorno'};
+  grid.innerHTML=suggs.map((s,i)=>`
+    <div class="sugg-card${ST.selSugg&&ST.selSugg.label===s.label?' selected':''}" data-sugg-idx="${i}">
+      <div class="sugg-card-hdr">
+        <span class="tag ${TC[s.tag]||'tag-aviso'}">${TL[s.tag]||s.tag}</span>
+        <span class="sugg-name">${esc(s.label)}</span>
+        <div class="sel-dot${ST.selSugg&&ST.selSugg.label===s.label?' on':''}"></div>
+      </div>
       <div class="sugg-preview">${s.html}</div>
     </div>`).join('');
-  window._suggs = suggs;
-  if (ST.selSugg) {
-    const idx = suggs.findIndex(s => s.label === ST.selSugg.label);
-    if (idx >= 0) { hiCard(idx); ST.selSugg = suggs[idx]; updatePreview(ST.selSugg); }
-    else { ST.selSugg = null; updatePreview(null); }
+  window._suggs=suggs;
+  if(ST.selSugg){
+    const idx=suggs.findIndex(s=>s.label===ST.selSugg.label);
+    if(idx>=0){ST.selSugg=suggs[idx];updatePreview(ST.selSugg);}
+    else{ST.selSugg=null;updatePreview(null);}
   }
   updateSendBtn();
+
+  // Preenche o texto de retorno automático se cenário for férias
+  if(ST.scenario==='ferias') fillRetornoText();
 }
 
-function hiCard(i) {
-  document.querySelectorAll('.sugg-card').forEach((c, j) => {
-    c.classList.toggle('selected', j === i);
-    document.getElementById('dot-' + j).className = 'sel-dot' + (j === i ? ' on' : '');
+function buildSuggs() {
+  const sc   = ST.scenario;
+  const cs   = cSlack();
+  const ch   = cHtml();
+  const cfg  = SCENARIO_CFG[sc];
+  if (!cfg) return [];
+
+  // Helpers de bloco
+  function slackMsg(emoji, title, lines, extra='') {
+    const body = lines.filter(Boolean).join('\n');
+    return `${emoji} *${title}*\n\n${body}${extra}${cs}`;
+  }
+  function htmlMsg(color, emoji, title, linesHtml, extra='') {
+    const body = linesHtml.filter(Boolean).join('<br>');
+    return `<div class="slack-block"><div class="slack-bar" style="background:${color}"></div><div class="slack-body">${emoji} <b>${title}</b><br><br>${body}${extra}${ch}</div></div>`;
+  }
+
+  if (sc==='ferias') {
+    const nome   = getFieldVal('f-nome');
+    const inicio = getFieldVal('f-inicio');
+    const ret    = getFieldVal('f-retorno');
+    const obs    = getFieldVal('f-obs');
+    if (!nome && !inicio) return [];
+    const nomeSlack = resolveSlackTags(nome);
+    const nomeHtml  = slackTagsToHtml(resolveSlackTags(nome));
+    const obsSlack  = obs ? resolveSlackTags(obs) : '';
+    const obsHtml   = obs ? slackTagsToHtml(resolveSlackTags(obs)) : '';
+    const color = cfg.color;
+    return [
+      { tag:'ferias', label:'Comunicado formal',
+        slack: slackMsg('🏖️','Aviso de Férias 🌴',[
+          `${nomeSlack} estará de férias 📅`,
+          inicio?`📆 Início: *${inicio}*`:'',
+          ret?`🔙 Retorno: *${ret}*`:'',
+          obsSlack?`\n_${obsSlack}_`:'',
+        ]),
+        html: htmlMsg(color,'🏖️','Aviso de Férias 🌴',[
+          `${nomeHtml} estará de férias 📅`,
+          inicio?`📆 Início: <b>${inicio}</b>`:'',
+          ret?`🔙 Retorno: <b>${ret}</b>`:'',
+          obsHtml?`<em style="color:var(--text-muted)">${obsHtml}</em>`:'',
+        ])},
+      { tag:'ferias', label:'Tom informal 🌴',
+        slack: slackMsg('🌴','Alerta de Praia!',[
+          `${nomeSlack} está de férias! 🏝️`,
+          (inicio&&ret)?`📅 *${inicio}* até *${ret}*`:'',
+          '_Qualquer dúvida, falar com o time!_',
+          obsSlack?`_${obsSlack}_`:'',
+        ]),
+        html: htmlMsg(color,'🌴','Alerta de Praia!',[
+          `${nomeHtml} está de férias! 🏝️`,
+          (inicio&&ret)?`📅 <b>${inicio}</b> até <b>${ret}</b>`:'',
+          `<em style="color:var(--text-muted)">Qualquer dúvida, falar com o time!</em>`,
+          obsHtml?`<em style="color:var(--text-muted)">${obsHtml}</em>`:'',
+        ])},
+      { tag:'ferias', label:'Comunicado de RH 📢',
+        slack: slackMsg('📢','Comunicado — Período de Férias',[
+          `Informamos que ${nomeSlack} estará de férias${inicio&&ret?` no período de *${inicio}* a *${ret}*`:''}.`,
+          obsSlack?`\n_${obsSlack}_`:'',
+        ]),
+        html: htmlMsg('#7F8DDB','📢','Comunicado — Período de Férias',[
+          `Informamos que ${nomeHtml} estará de férias${inicio&&ret?` no período de <b>${inicio}</b> a <b>${ret}</b>`:''}`,
+          obsHtml?`<em style="color:var(--text-muted)">${obsHtml}</em>`:'',
+        ])},
+    ];
+  }
+
+  if (sc==='licenca') {
+    const nome = getFieldVal('f-nome');
+    const ret  = getFieldVal('f-retorno');
+    const obs  = getFieldVal('f-obs');
+    if (!nome) return [];
+    const nomeSlack = resolveSlackTags(nome);
+    const nomeHtml  = slackTagsToHtml(resolveSlackTags(nome));
+    const obsSlack  = obs?resolveSlackTags(obs):'';
+    const obsHtml   = obs?slackTagsToHtml(resolveSlackTags(obs)):'';
+    const color = cfg.color;
+    return [
+      { tag:'licenca', label:'Aviso discreto 🩺',
+        slack: slackMsg('🩺','Aviso de Ausência',[
+          `${nomeSlack} está de licença médica 🏥`,
+          ret?`📅 Previsão de retorno: *${ret}*`:'',
+          '_Desejamos uma pronta recuperação! 💙_',
+          obsSlack?`_${obsSlack}_`:'',
+        ]),
+        html: htmlMsg(color,'🩺','Aviso de Ausência',[
+          `${nomeHtml} está de licença médica 🏥`,
+          ret?`📅 Previsão de retorno: <b>${ret}</b>`:'',
+          `<em style="color:var(--text-muted)">Desejamos uma pronta recuperação! 💙</em>`,
+          obsHtml?`<em style="color:var(--text-muted)">${obsHtml}</em>`:'',
+        ])},
+      { tag:'licenca', label:'Formal ⚕️',
+        slack: slackMsg('⚕️','Comunicado de Licença',[
+          `${nomeSlack} encontra-se de licença médica.`,
+          ret?`📅 Previsão de retorno: *${ret}*`:'',
+          obsSlack?`_${obsSlack}_`:'',
+        ]),
+        html: htmlMsg(color,'⚕️','Comunicado de Licença',[
+          `${nomeHtml} encontra-se de licença médica.`,
+          ret?`📅 Previsão de retorno: <b>${ret}</b>`:'',
+          obsHtml?`<em style="color:var(--text-muted)">${obsHtml}</em>`:'',
+        ])},
+      { tag:'licenca', label:'Simples e respeitoso',
+        slack: `${resolveSlackTags(nome)} ficará ausente${ret?` até *${ret}*`:''} por motivo de saúde. 🩺\n_Contamos com a compreensão de todos! 🤝_${obsSlack?'\n_'+obsSlack+'_':''}${cs}`,
+        html: htmlMsg(color,'🤝','',[
+          `${nomeHtml} ficará ausente${ret?` até <b>${ret}</b>`:''} por motivo de saúde. 🩺`,
+          `<em style="color:var(--text-muted)">Contamos com a compreensão de todos!</em>`,
+          obsHtml?`<em style="color:var(--text-muted)">${obsHtml}</em>`:'',
+        ])},
+    ];
+  }
+
+  if (sc==='incidente') {
+    const sistema  = getFieldVal('f-sistema');
+    const problema = getFieldVal('f-problema');
+    const impacto  = getFieldVal('f-impacto');
+    const status   = getFieldVal('f-status');
+    if (!sistema && !problema) return [];
+    const sisSlack = sistema?resolveSlackTags(sistema):'';
+    const sisHtml  = sistema?slackTagsToHtml(resolveSlackTags(sistema)):'';
+    const probSlack= problema?resolveSlackTags(problema):'';
+    const probHtml = problema?slackTagsToHtml(resolveSlackTags(problema)):'';
+    const impSlack = impacto?resolveSlackTags(impacto):'';
+    const impHtml  = impacto?slackTagsToHtml(resolveSlackTags(impacto)):'';
+    const stSlack  = status?resolveSlackTags(status):'Em investigação';
+    const stHtml   = status?slackTagsToHtml(resolveSlackTags(status)):'Em investigação';
+    const now = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return [
+      { tag:'incidente', label:'🚨 Alerta de incidente',
+        slack: slackMsg('🚨','[INCIDENTE]',[
+          sisSlack?`🖥️ Sistema: *${sisSlack}*`:'',
+          probSlack?`📋 Problema: ${probSlack}`:'',
+          impSlack?`👥 Impacto: ${impSlack}`:'',
+          `📊 Status: *${stSlack}*`,
+          `⏰ Detectado às: ${now}`,
+          '\n_Atualizações serão postadas aqui._',
+        ]),
+        html: htmlMsg('#FF4633','🚨','[INCIDENTE]',[
+          sisHtml?`🖥️ Sistema: <b>${sisHtml}</b>`:'',
+          probHtml?`📋 Problema: ${probHtml}`:'',
+          impHtml?`👥 Impacto: ${impHtml}`:'',
+          `📊 Status: <b>${stHtml}</b>`,
+          `⏰ Detectado às: ${now}`,
+          `<em style="color:var(--text-muted)">Atualizações serão postadas aqui.</em>`,
+        ])},
+      { tag:'incidente', label:'🔧 Manutenção programada',
+        slack: slackMsg('🔧','Manutenção Programada',[
+          sisSlack?`🖥️ Sistema: *${sisSlack}*`:'',
+          probSlack?probSlack:'',
+          impSlack?`👥 Impacto esperado: ${impSlack}`:'',
+          stSlack?`📊 Status: ${stSlack}`:'',
+          '_Agradecemos a compreensão!_ 🙏',
+        ]),
+        html: htmlMsg('#F59E0B','🔧','Manutenção Programada',[
+          sisHtml?`🖥️ Sistema: <b>${sisHtml}</b>`:'',
+          probHtml?probHtml:'',
+          impHtml?`👥 Impacto esperado: ${impHtml}`:'',
+          stHtml?`📊 Status: ${stHtml}`:'',
+          `<em style="color:var(--text-muted)">Agradecemos a compreensão! 🙏</em>`,
+        ])},
+      { tag:'incidente', label:'✅ Incidente resolvido',
+        slack: slackMsg('✅','Incidente Resolvido 🟢',[
+          sisSlack?`🖥️ Sistema: *${sisSlack}*`:'',
+          'O sistema voltou a operar normalmente.',
+          `📅 Resolvido às: ${now}`,
+          probSlack?`📋 O que foi: ${probSlack}`:'',
+          '_Pedimos desculpas pelo transtorno._',
+        ]),
+        html: htmlMsg('#00AE97','✅','Incidente Resolvido 🟢',[
+          sisHtml?`🖥️ Sistema: <b>${sisHtml}</b>`:'',
+          'O sistema voltou a operar normalmente.',
+          `📅 Resolvido às: <b>${now}</b>`,
+          probHtml?`📋 O que foi: ${probHtml}`:'',
+          `<em style="color:var(--text-muted)">Pedimos desculpas pelo transtorno.</em>`,
+        ])},
+    ];
+  }
+
+  if (sc==='aviso-geral') {
+    const titulo = getFieldVal('f-titulo');
+    const msg    = getFieldVal('f-msg');
+    if (!titulo && !msg) return [];
+    const titSlack = titulo?resolveSlackTags(titulo):'Comunicado';
+    const titHtml  = titulo?slackTagsToHtml(resolveSlackTags(titulo)):'Comunicado';
+    const msgSlack = msg?resolveSlackTags(msg):'';
+    const msgHtml  = msg?slackTagsToHtml(resolveSlackTags(msg)):'';
+    return [
+      { tag:'aviso-geral', label:'📢 Comunicado padrão',
+        slack: slackMsg('📢',titSlack,[msgSlack,'_— Equipe Cobli_']),
+        html:  htmlMsg('#F59E0B','📢',titHtml,[msgHtml,`<em style="color:var(--text-muted)">— Equipe Cobli</em>`])},
+      { tag:'aviso-geral', label:'📋 Informativo simples',
+        slack: `📋 *${titSlack}*\n\n${msgSlack}${cs}`,
+        html:  `<div class="slack-block"><div class="slack-bar" style="background:#7F8DDB"></div><div class="slack-body">📋 <b>${titHtml}</b><br><br>${msgHtml}${ch}</div></div>`},
+    ];
+  }
+
+  return [];
+}
+
+/* ══════════════════════════════════════════════════
+   RETORNO AUTO-FILL (cenário férias)
+══════════════════════════════════════════════════ */
+function fillRetornoText() {
+  const nome = getFieldVal('f-nome');
+  const ret  = getFieldVal('f-retorno');
+  const el   = document.getElementById('retorno-text');
+  if (!el) return;
+  if (nome || ret) {
+    const nomeSlack = nome ? resolveSlackTags(nome) : '@colaborador';
+    el.placeholder = `🎉 *Retorno às Atividades!*\n\n${nomeSlack} está de volta! 🙌\n📅 Retornou em: ${ret||'DD/MM'}\n\n_Seja bem-vindo(a)!_ ✨`;
+    // Só preenche se estiver vazio
+    if (!el.value.trim()) {
+      el.value = `🎉 *Retorno às Atividades!*\n\n${nomeSlack} está de volta! 🙌\n📅 Retornou em: *${ret||'DD/MM'}*\n\n_Seja bem-vindo(a)!_ ✨`;
+    }
+    // Preenche a data de retorno no seletor
+    const retDate = document.getElementById('retorno-date');
+    if (retDate && !retDate.value && ret) {
+      // Tenta converter DD/MM para YYYY-MM-DD
+      const parts = ret.split('/');
+      if (parts.length >= 2) {
+        const year = new Date().getFullYear();
+        const mm = parts[1].padStart(2,'0'), dd = parts[0].padStart(2,'0');
+        retDate.value = `${year}-${mm}-${dd}`;
+      }
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   SELECT SUGG / PREVIEW
+══════════════════════════════════════════════════ */
+function selectSugg(idx) {
+  const suggs = window._suggs||[];
+  ST.selSugg = suggs[idx]||null;
+  document.querySelectorAll('.sugg-card').forEach((c,i)=>{
+    c.classList.toggle('selected',i===idx);
+    c.querySelector('.sel-dot')?.classList.toggle('on',i===idx);
   });
+  updatePreview(ST.selSugg); updateSendBtn();
 }
 
-function selectSugg(i) {
-  hiCard(i); ST.selSugg = window._suggs[i]; updatePreview(ST.selSugg); updateSendBtn();
-}
-
-/* ══════════════════════════════
-   PREVIEW
-══════════════════════════════ */
 function updatePreview(s) {
-  const msg = document.getElementById('preview-msg');
-  const emp = document.getElementById('preview-empty');
-  const sc  = document.getElementById('preview-sched');
-  if (!s) { msg.classList.remove('visible'); emp.style.display = ''; sc.classList.remove('visible'); return; }
-  msg.classList.add('visible'); emp.style.display = 'none';
-  document.getElementById('preview-text').innerHTML = s.html;
-  const now = new Date();
-  document.getElementById('preview-time').textContent = ' ' +
-    now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-  if (ST.schedOn) {
-    const d = document.getElementById('sched-date').value;
-    const t = document.getElementById('sched-time').value;
-    if (d && t) {
-      document.getElementById('preview-sched-txt').textContent =
-        'Agendado para ' + new Date(d + 'T' + t).toLocaleString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+  const msg=document.getElementById('preview-msg');
+  const emp=document.getElementById('preview-empty');
+  const sc =document.getElementById('preview-sched');
+  if(!s){msg.classList.remove('visible');emp.style.display='';sc.classList.remove('visible');return;}
+  msg.classList.add('visible'); emp.style.display='none';
+  document.getElementById('preview-text').innerHTML=s.html;
+  const now=new Date();
+  document.getElementById('preview-time').textContent=' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  if(ST.schedOn){
+    const d=document.getElementById('sched-date').value, t=document.getElementById('sched-time').value;
+    if(d&&t){
+      document.getElementById('preview-sched-txt').textContent='Agendado para '+new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
       sc.classList.add('visible');
     } else sc.classList.remove('visible');
   } else sc.classList.remove('visible');
 }
 
-/* ══════════════════════════════
-   SEND E SCHEDULE (Atualizados com Cores)
-══════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   SEND / SCHEDULE
+══════════════════════════════════════════════════ */
 function updateSendBtn() {
-  const btn = document.getElementById('btn-send');
-  const lbl = document.getElementById('btn-send-label');
-  btn.disabled = !(ST.selSugg && ST.selWh);
-  lbl.textContent = ST.schedOn ? 'Agendar mensagem' : 'Enviar para o Slack';
-  const st = document.getElementById('send-status');
-  if (ST.selSugg && !ST.selWh) {
-    st.className = 'status-msg warn';
-    st.innerHTML = '<i class="ti ti-alert-triangle"></i> Selecione um canal de destino';
-  } else if (st.className.includes('warn')) { st.textContent = ''; st.className = 'status-msg'; }
+  const btn=document.getElementById('btn-send'), lbl=document.getElementById('btn-send-label');
+  btn.disabled=!(ST.selSugg&&ST.selWhIds.length);
+  lbl.textContent=ST.schedOn?'Agendar mensagem':'Enviar para o Slack';
+  const st=document.getElementById('send-status');
+  if(ST.selSugg&&!ST.selWhIds.length){st.className='status-msg warn';st.innerHTML='<i class="ti ti-alert-triangle"></i> Selecione ao menos um canal de destino';}
+  else if(st.className.includes('warn')){st.textContent='';st.className='status-msg';}
 }
 
-// Mapa de cores para bater com a Edge Function
-const SCENARIO_COLORS = {
-  ferias:  "#00AE97",
-  licenca: "#3248C6",
-  aviso:   "#FF4633",
-  retorno: "#0FFDC9",
-  default: "#001BB8"
-};
-
 async function sendMessage() {
-  if (!ST.selSugg || !ST.selWh) return;
-  if (ST.schedOn) { await scheduleMsg(); return; }
-  
-  const btn = document.getElementById('btn-send');
-  btn.disabled = true;
-  document.getElementById('btn-send-label').textContent = 'Enviando…';
-  
-  // Pega a cor correspondente à aba escolhida
-  const msgColor = SCENARIO_COLORS[ST.selSugg.tag] || SCENARIO_COLORS.default;
-
+  if(!ST.selSugg||!ST.selWhIds.length) return;
+  if(ST.schedOn){await scheduleMsg();return;}
+  const btn=document.getElementById('btn-send');
+  btn.disabled=true; document.getElementById('btn-send-label').textContent='Enviando…';
+  const color=SCENARIO_COLORS[ST.scenario]||'#001BB8';
   try {
-    const { data: { session } } = await sb.auth.getSession();
-    const res = await fetch(EDGE_SEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-      // Envia a cor para o envio imediato
-      body: JSON.stringify({ webhook_url: ST.selWh.url, message_text: ST.selSugg.slack, color: msgColor })
-    });
-    const textResult = await res.text();
-    let result = {};
-    try { result = JSON.parse(textResult); } catch (e) { throw new Error(textResult); }
-    if (res.ok && result.ok) {
-      showStatus('Mensagem enviada com sucesso! ✓', 'success');
-      document.getElementById('btn-send-label').textContent = 'Enviado!';
-      setTimeout(() => { document.getElementById('btn-send-label').textContent = 'Enviar para o Slack'; btn.disabled = false; updateSendBtn(); }, 2500);
-    } else { throw new Error(result.error || 'Erro na resposta da Edge Function'); }
-  } catch (e) {
-    showStatus('Erro ao enviar: ' + e.message, 'error');
+    const {data:{session}}=await sb.auth.getSession();
+    const webhooks=DB.webhooks.filter(w=>ST.selWhIds.includes(w.id));
+    // Envia para todos os canais selecionados em paralelo
+    const results=await Promise.allSettled(webhooks.map(w=>
+      fetch(EDGE_SEND_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},
+        body:JSON.stringify({webhook_url:w.url,message_text:ST.selSugg.slack,color})
+      }).then(r=>r.json())
+    ));
+    const failed=results.filter(r=>r.status==='rejected'||!r.value?.ok);
+    if(!failed.length){
+      showStatus(`Enviado para ${webhooks.length} canal${webhooks.length>1?'is':''}! ✓`,'success');
+      document.getElementById('btn-send-label').textContent='Enviado!';
+      setTimeout(()=>{document.getElementById('btn-send-label').textContent='Enviar para o Slack';btn.disabled=false;updateSendBtn();},2500);
+    } else {
+      throw new Error(`${failed.length} de ${webhooks.length} envio(s) falharam`);
+    }
+  } catch(e){
+    showStatus('Erro ao enviar: '+e.message,'error');
     console.error(e);
-    document.getElementById('btn-send-label').textContent = 'Enviar para o Slack';
-    btn.disabled = false;
+    document.getElementById('btn-send-label').textContent='Enviar para o Slack';
+    btn.disabled=false;
   }
 }
 
 async function scheduleMsg() {
-  const d = document.getElementById('sched-date').value;
-  const t = document.getElementById('sched-time').value;
-  if (!d || !t) { alert('Selecione data e hora.'); return; }
-  const dt = new Date(d + 'T' + t);
-  if (dt <= new Date()) { alert('Selecione um horário futuro.'); return; }
-  
-  const btn = document.getElementById('btn-send');
-  btn.disabled = true;
-  document.getElementById('btn-send-label').textContent = 'Agendando…';
-  
-  // Pega a cor correspondente à aba escolhida
-  const msgColor = SCENARIO_COLORS[ST.selSugg.tag] || SCENARIO_COLORS.default;
-
+  const d=document.getElementById('sched-date').value, t=document.getElementById('sched-time').value;
+  if(!d||!t){alert('Selecione data e hora.');return;}
+  const dt=new Date(d+'T'+t);
+  if(dt<=new Date()){alert('Selecione um horário futuro.');return;}
+  const btn=document.getElementById('btn-send');
+  btn.disabled=true; document.getElementById('btn-send-label').textContent='Agendando…';
+  const color=SCENARIO_COLORS[ST.scenario]||'#001BB8';
   try {
-    const { error } = await sb.from('scheduled_messages').insert({
-      user_id:      user.id,
-      webhook_id:   ST.selWh.id,
-      webhook_name: ST.selWh.name,
-      slack_text:   ST.selSugg.slack,
-      color:        msgColor, // Salva a cor no banco de dados
-      preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g, ''),
-      scheduled_at: dt.toISOString(),
-    });
-    if (error) throw error;
-    showStatus('Mensagem agendada no Supabase ✓', 'success');
-    document.getElementById('btn-send-label').textContent = 'Agendado!';
-    setTimeout(() => { document.getElementById('btn-send-label').textContent = 'Agendar mensagem'; btn.disabled = false; updateSendBtn(); }, 2500);
+    // Agenda para cada canal selecionado
+    const webhooks=DB.webhooks.filter(w=>ST.selWhIds.includes(w.id));
+    const inserts=webhooks.map(w=>({
+      user_id:user.id, webhook_id:w.id, webhook_name:w.name,
+      slack_text:ST.selSugg.slack, color,
+      preview_text:ST.selSugg.slack.split('\n')[0].replace(/\*/g,''),
+      scheduled_at:dt.toISOString(),
+    }));
+    const {error}=await sb.from('scheduled_messages').insert(inserts);
+    if(error) throw error;
+    showStatus(`Agendado para ${webhooks.length} canal${webhooks.length>1?'is':''} ✓`,'success');
+    document.getElementById('btn-send-label').textContent='Agendado!';
+    setTimeout(()=>{document.getElementById('btn-send-label').textContent='Agendar mensagem';btn.disabled=false;updateSendBtn();},2500);
     loadQueue();
-  } catch (e) {
-    alert('Erro ao agendar:\n' + e.message);
-    document.getElementById('btn-send-label').textContent = 'Agendar mensagem';
-    document.getElementById('btn-send').disabled = false;
+  } catch(e){
+    alert('Erro ao agendar:\n'+e.message);
+    document.getElementById('btn-send-label').textContent='Agendar mensagem';
+    btn.disabled=false;
   }
 }
 
-/* ══════════════════════════════
+async function scheduleRetorno() {
+  const d=document.getElementById('retorno-date').value, t=document.getElementById('retorno-time').value;
+  if(!d||!t){alert('Selecione data e hora do retorno.');return;}
+  if(!ST.selWhIds.length){alert('Selecione ao menos um canal de destino.');return;}
+  const dt=new Date(d+'T'+t);
+  if(dt<=new Date()){alert('Selecione um horário futuro.');return;}
+  const retText=document.getElementById('retorno-text').value.trim();
+  if(!retText){alert('Preencha a mensagem de retorno.');return;}
+  const slackText=resolveSlackTags(retText);
+  const color=SCENARIO_COLORS['ferias'];
+  const btn=document.getElementById('btn-sched-retorno');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2 spin"></i> Agendando…';
+  try {
+    const webhooks=DB.webhooks.filter(w=>ST.selWhIds.includes(w.id));
+    const inserts=webhooks.map(w=>({
+      user_id:user.id, webhook_id:w.id, webhook_name:w.name,
+      slack_text:slackText, color,
+      preview_text:slackText.split('\n')[0].replace(/\*/g,''),
+      scheduled_at:dt.toISOString(),
+    }));
+    const {error}=await sb.from('scheduled_messages').insert(inserts);
+    if(error) throw error;
+    showStatus('Retorno agendado ✓','success');
+    btn.innerHTML='<i class="ti ti-check"></i> Agendado!';
+    setTimeout(()=>{btn.disabled=false;btn.innerHTML='<i class="ti ti-clock"></i> Agendar retorno';},2500);
+    loadQueue();
+  } catch(e){
+    alert('Erro ao agendar retorno:\n'+e.message);
+    btn.disabled=false; btn.innerHTML='<i class="ti ti-clock"></i> Agendar retorno';
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   OPTIONS — contact / schedule
+══════════════════════════════════════════════════ */
+function toggleContact() {
+  ST.contactOn=!ST.contactOn;
+  document.getElementById('tgl-contact').classList.toggle('on',ST.contactOn);
+  document.getElementById('contact-row').style.display=ST.contactOn?'flex':'none';
+  if(ST.contactOn) document.getElementById('contact-input').focus();
+  buildAndRender();
+}
+function toggleSchedule() {
+  ST.schedOn=!ST.schedOn;
+  document.getElementById('tgl-sched').classList.toggle('on',ST.schedOn);
+  document.getElementById('sched-row').style.display=ST.schedOn?'flex':'none';
+  const di=document.getElementById('sched-date'), ti=document.getElementById('sched-time');
+  di.disabled=!ST.schedOn; ti.disabled=!ST.schedOn;
+  if(ST.schedOn){
+    di.value=new Date().toISOString().split('T')[0]; di.min=di.value;
+    di.onchange=ti.onchange=updateSchedHint; updateSchedHint();
+  } else {
+    document.getElementById('sched-badge').classList.remove('visible');
+    document.getElementById('sched-hint').textContent='';
+    document.getElementById('preview-sched').classList.remove('visible');
+  }
+  updateSendBtn();
+}
+function updateSchedHint() {
+  const d=document.getElementById('sched-date').value, t=document.getElementById('sched-time').value;
+  if(d&&t){
+    document.getElementById('sched-hint').textContent=new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    document.getElementById('sched-badge').classList.add('visible');
+  }
+  updatePreview(ST.selSugg);
+}
+function refreshSuggs(){ buildAndRender(); }
+
+/* ══════════════════════════════════════════════════
+   SETTINGS — Webhooks / People / Groups / Channels
+══════════════════════════════════════════════════ */
+async function saveWebhook() {
+  const name=v('wh-add-name'), url=v('wh-add-url'), emoji=v('wh-add-emoji')||'📢';
+  if(!name||!url){alert('Preencha nome e URL.');return;}
+  if(!url.startsWith('https://hooks.slack.com/')){alert('URL inválida. Use uma Incoming Webhook do Slack.');return;}
+  try {
+    const {data,error}=await sb.from('webhooks').insert({user_id:user.id,name,url,emoji,channel:''}).select().single();
+    if(error) throw error;
+    DB.webhooks.push(data);
+    ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i=>{document.getElementById(i).value='';});
+    document.getElementById('wh-form').classList.remove('open');
+    renderWhSettings(); renderWhPicker(); renderWhChips();
+    showStatus('Canal salvo! ✓','success');
+  } catch(e){alert('Erro: '+e.message);console.error(e);}
+}
+async function deleteWebhook(id) {
+  if(!confirm('Remover este webhook?')) return;
+  try {
+    const {error}=await sb.from('webhooks').delete().eq('id',id);
+    if(error) throw error;
+    DB.webhooks=DB.webhooks.filter(w=>w.id!==id);
+    ST.selWhIds=ST.selWhIds.filter(x=>x!==id);
+    renderWhSettings(); renderWhPicker(); renderWhChips(); updateSendBtn();
+  } catch(e){alert('Erro: '+e.message);}
+}
+function renderWhSettings() {
+  const el=document.getElementById('wh-settings-list');
+  if(!DB.webhooks.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>';return;}
+  el.innerHTML=DB.webhooks.map(w=>`
+    <div class="list-item">
+      <div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji||'📢'}</div>
+      <div><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,52))}…</div></div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div>
+    </div>`).join('');
+}
+
+async function savePerson() {
+  const name=v('p-name'), slack_id=v('p-slack-id').replace(/[<@>]/g,''), handle=v('p-handle').replace('@',''), role=v('p-role');
+  if(!name){alert('Preencha o nome.');return;}
+  try {
+    const {data,error}=await sb.from('people').insert({user_id:user.id,name,slack_id,handle,role}).select().single();
+    if(error) throw error;
+    DB.people.push(data);
+    ['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{document.getElementById(i).value='';});
+    document.getElementById('person-form').classList.remove('open');
+    renderPeopleList(); showStatus(name+' salvo! ✓','success');
+  } catch(e){alert('Erro: '+e.message);console.error(e);}
+}
+async function deletePerson(id) {
+  if(!confirm('Remover?')) return;
+  try { const {error}=await sb.from('people').delete().eq('id',id); if(error) throw error; DB.people=DB.people.filter(p=>p.id!==id); renderPeopleList(); } catch(e){alert('Erro: '+e.message);}
+}
+function renderPeopleList() {
+  const el=document.getElementById('people-list');
+  if(!DB.people.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>';return;}
+  el.innerHTML=DB.people.map(p=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar person">${initials(p.name)}</div>
+      <div><div class="list-item-name">${esc(p.name)}</div><div class="list-item-sub">${p.slack_id?'ID: '+esc(p.slack_id):''}${p.handle?' · @'+esc(p.handle):''}${p.role?' · '+esc(p.role):''}</div></div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button></div>
+    </div>`).join('');
+}
+
+async function saveGroup() {
+  const name=v('g-name'), handle=v('g-handle').replace('@',''), slack_id=v('g-slack-id'), emoji=v('g-emoji')||'👥';
+  if(!name||!handle){alert('Preencha nome e handle.');return;}
+  try {
+    const {data,error}=await sb.from('groups').insert({user_id:user.id,name,handle,slack_id,emoji}).select().single();
+    if(error) throw error;
+    DB.groups.push(data);
+    ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{document.getElementById(i).value='';});
+    document.getElementById('group-form').classList.remove('open');
+    renderGroupsList(); showStatus('Grupo '+name+' salvo! ✓','success');
+  } catch(e){alert('Erro: '+e.message);console.error(e);}
+}
+async function deleteGroup(id) {
+  if(!confirm('Remover?')) return;
+  try { const {error}=await sb.from('groups').delete().eq('id',id); if(error) throw error; DB.groups=DB.groups.filter(g=>g.id!==id); renderGroupsList(); } catch(e){alert('Erro: '+e.message);}
+}
+function renderGroupsList() {
+  const el=document.getElementById('groups-list');
+  if(!DB.groups.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>';return;}
+  el.innerHTML=DB.groups.map(g=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji||'👥'}</div>
+      <div><div class="list-item-name">${esc(g.name)}</div><div class="list-item-sub">@${esc(g.handle)}${g.slack_id?' · ID: '+esc(g.slack_id):''}</div></div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button></div>
+    </div>`).join('');
+}
+
+async function saveChannel() {
+  const name=v('ch-name').replace('#',''), desc=v('ch-desc'), slack_id=v('ch-slack-id');
+  if(!name){alert('Preencha o nome do canal.');return;}
+  try {
+    const {data,error}=await sb.from('channels').insert({user_id:user.id,name,desc,slack_id}).select().single();
+    if(error) throw error;
+    DB.channels.push(data);
+    ['ch-name','ch-desc','ch-slack-id'].forEach(i=>{document.getElementById(i).value='';});
+    document.getElementById('channel-form').classList.remove('open');
+    renderChannelsList(); showStatus('#'+name+' salvo! ✓','success');
+  } catch(e){alert('Erro: '+e.message);console.error(e);}
+}
+async function deleteChannel(id) {
+  if(!confirm('Remover?')) return;
+  try { const {error}=await sb.from('channels').delete().eq('id',id); if(error) throw error; DB.channels=DB.channels.filter(c=>c.id!==id); renderChannelsList(); } catch(e){alert('Erro: '+e.message);}
+}
+function renderChannelsList() {
+  const el=document.getElementById('channels-list');
+  if(!DB.channels.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>';return;}
+  el.innerHTML=DB.channels.map(c=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div>
+      <div><div class="list-item-name">#${esc(c.name)}</div>${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}${c.slack_id?`<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>`:''}</div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button></div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════
+   QUEUE
+══════════════════════════════════════════════════ */
+async function loadQueue() {
+  try {
+    const {data,error}=await sb.from('scheduled_messages').select('*').eq('sent',false).order('scheduled_at');
+    if(error) throw error;
+    const msgs=data||[];
+    document.getElementById('queue-count-display').textContent=msgs.length;
+    const nb=document.getElementById('nb'); nb.textContent=msgs.length; nb.style.display=msgs.length?'inline-block':'none';
+    const el=document.getElementById('queue-list-full');
+    if(!msgs.length){el.innerHTML='<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>';return;}
+    el.innerHTML=msgs.map(m=>`
+      <div class="queue-item">
+        <div style="width:4px;border-radius:2px;background:${m.color||'#001BB8'};flex-shrink:0;align-self:stretch"></div>
+        <div style="flex:1">
+          <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${esc(m.webhook_name||'—')}</div>
+          <div class="queue-text">${esc(m.preview_text||'')}</div>
+        </div>
+        <button class="btn btn-danger-ghost btn-sm" data-cancel-sched="${m.id}"><i class="ti ti-x"></i> Cancelar</button>
+      </div>`).join('');
+  } catch(e){document.getElementById('queue-list-full').innerHTML=`<div class="no-sugg" style="color:var(--error);padding:1.5rem">Erro: ${esc(e.message)}</div>`;}
+}
+async function cancelScheduled(id) {
+  try { await sb.from('scheduled_messages').delete().eq('id',id); loadQueue(); } catch(e){alert('Erro: '+e.message);}
+}
+
+/* ══════════════════════════════════════════════════
    UTILS
-══════════════════════════════ */
-function showStatus(msg, type) {
-  const el = document.getElementById('send-status');
-  el.className = 'status-msg ' + (type || '');
-  const icon = type === 'success' ? 'ti-circle-check' : type === 'error' ? 'ti-alert-circle' : 'ti-info-circle';
-  el.innerHTML = `<i class="ti ${icon}"></i> ${msg}`;
-  if (type !== 'warn') setTimeout(() => { el.textContent = ''; el.className = 'status-msg'; }, 4000);
+══════════════════════════════════════════════════ */
+function showStatus(msg,type) {
+  const el=document.getElementById('send-status');
+  el.className='status-msg '+(type||'');
+  const icon=type==='success'?'ti-circle-check':type==='error'?'ti-alert-circle':'ti-info-circle';
+  el.innerHTML=`<i class="ti ${icon}"></i> ${msg}`;
+  if(type!=='warn') setTimeout(()=>{el.textContent='';el.className='status-msg';},4000);
 }
-
 function clearCompose() {
-  document.getElementById('msg-input').value = '';
-  document.getElementById('sugg-grid').innerHTML = '<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
-  document.getElementById('sugg-label').textContent = 'Variações de mensagem';
-  ST.selSugg = null; updatePreview(null); updateSendBtn();
-  const st = document.getElementById('send-status'); st.textContent = ''; st.className = 'status-msg';
+  document.getElementById('sugg-grid').innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos acima para ver as sugestões ✨</div>';
+  document.getElementById('sugg-label').textContent='Variações de mensagem';
+  ST.selSugg=null; updatePreview(null); updateSendBtn();
+  const st=document.getElementById('send-status'); st.textContent=''; st.className='status-msg';
+  renderScenarioFields();
 }
+function renderAll() { renderWhSettings(); renderWhChips(); renderPeopleList(); renderGroupsList(); renderChannelsList(); }
+function v(id)  { return document.getElementById(id)?.value.trim()||''; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function initials(n){ return (n||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
 
-function renderAll() { renderWhDrop(); renderWhBtn(); renderPeopleList(); renderGroupsList(); renderChannelsList(); renderWhSettings(); }
-function v(id)  { return document.getElementById(id).value.trim(); }
-function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function initials(n) { return (n || '').split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase(); }
-
-/* ══════════════════════════════
-   EVENT DELEGATION
-   FIX PRINCIPAL: todos os eventos via delegation
-   em vez de inline onclick no HTML — evita
-   erros de "cannot read properties of null"
-   quando o DOM ainda não está pronto
-══════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   EVENT LISTENERS
+══════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Bootstrap: verifica sessão ativa antes de qualquer coisa
   bootstrap();
 
-  /* ── Auth ── */
+  // Auth
+  document.getElementById('tab-login').addEventListener('click', ()=>switchAuthMode('login'));
+  document.getElementById('tab-signup').addEventListener('click', ()=>switchAuthMode('signup'));
   document.getElementById('auth-btn').addEventListener('click', doAuth);
-  document.getElementById('auth-pw').addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); });
-  document.querySelectorAll('.auth-tab').forEach(btn => {
-    btn.addEventListener('click', () => switchAuthMode(btn.textContent === 'Entrar' ? 'login' : 'signup', btn));
+  document.getElementById('auth-pw').addEventListener('keydown', e=>{if(e.key==='Enter') doAuth();});
+
+  // Logout
+  document.getElementById('btn-logout').addEventListener('click', async()=>{
+    try{await sb.auth.signOut();window.location.reload();}catch(e){alert('Erro: '+e.message);}
   });
 
-  /* ── Logout ── */
-  document.getElementById('btn-logout').addEventListener('click', async () => {
-    try { await sb.auth.signOut(); window.location.reload(); }
-    catch (e) { alert('Erro ao sair: ' + e.message); }
+  // Nav
+  document.querySelectorAll('.nav-item[data-panel]').forEach(btn=>{
+    btn.addEventListener('click', ()=>showPanel(btn.dataset.panel));
   });
 
-  /* ── Nav ── */
-  document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const panel = btn.getAttribute('onclick')?.match(/'(\w+)'/)?.[1];
-      if (panel) showPanel(panel, btn);
+  // Scenario tabs
+  document.querySelectorAll('.tab-btn[data-sc]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      ST.scenario=btn.dataset.sc;
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderScenarioFields();
     });
   });
 
-  // Reescreve nav sem onclick inline
-  const navMap = [
-    ['Enviar mensagem', 'compose'],
-    ['Agendamentos',    'queue'],
-    ['Webhooks',        'webhooks'],
-    ['Pessoas',         'people'],
-    ['Canais Slack',    'channels'],
-  ];
-  document.querySelectorAll('.nav-item').forEach((btn, i) => {
-    const id = ['compose','queue','webhooks','people','channels'][i];
-    if (id) btn.onclick = () => showPanel(id, btn);
+  // Multi-webhook picker
+  document.addEventListener('click', e=>{
+    // Abrir picker
+    if(e.target.closest('#wh-add-btn')){toggleWhPicker();return;}
+    // Fechar picker ao clicar fora
+    const picker=document.getElementById('wh-picker');
+    const chips=document.getElementById('wh-chips');
+    if(!picker.contains(e.target)&&!chips.contains(e.target)){toggleWhPicker(true);}
+    // Selecionar webhook no picker
+    const pickItem=e.target.closest('[data-pick-wh]');
+    if(pickItem){pickWh(pickItem.dataset.pickWh);return;}
+    // Remover chip
+    const removeWh=e.target.closest('[data-remove-wh]');
+    if(removeWh){pickWh(removeWh.dataset.removeWh);return;}
+    // Ir para gerenciar webhooks
+    if(e.target.closest('#btn-go-webhooks')){toggleWhPicker(true);showPanel('webhooks');return;}
   });
 
-  /* ── Webhook dropdown ── */
-  document.getElementById('wh-btn').addEventListener('click', () => toggleWhDrop());
-  document.getElementById('btn-manage-wh').addEventListener('click', () => {
-    showPanel('webhooks', document.querySelectorAll('.nav-item')[2]);
-  });
-  document.addEventListener('click', e => {
-    if (!document.getElementById('wh-wrap').contains(e.target)) {
-      whOpen = false; document.getElementById('wh-dropdown').classList.remove('open');
+  // Options
+  document.getElementById('tgl-contact').addEventListener('click', toggleContact);
+  document.getElementById('tgl-sched').addEventListener('click', toggleSchedule);
 
-      // Contact autocomplete — fecha ao clicar fora
-  document.addEventListener('click', e => {
-    if (!document.getElementById('contact-row').contains(e.target)) closeContactAC();
-  });
-
-  // Contact autocomplete — delegation para cliques nos itens
-  document.getElementById('contact-row').addEventListener('click', e => {
-    const item = e.target.closest('[data-cac-idx]');
-    if (item) insertContactAC(parseInt(item.dataset.cacIdx));
-  });
+  // Contact autocomplete
+  document.getElementById('contact-input').addEventListener('input', onContactInput);
+  document.getElementById('contact-input').addEventListener('keydown', onContactKeydown);
+  document.addEventListener('click', e=>{
+    if(!document.getElementById('contact-row').contains(e.target)){
+      document.getElementById('ac-contact').classList.remove('open');
     }
   });
 
-  /* ── Webhook settings ── */
-  document.getElementById('btn-add-wh').addEventListener('click', () => {
-    document.getElementById('wh-form').classList.toggle('open');
-  });
-  document.getElementById('btn-save-wh').addEventListener('click', saveWebhook);
-  document.getElementById('btn-cancel-wh').addEventListener('click', () => {
-    document.getElementById('wh-form').classList.remove('open');
-  });
+  // Retorno
+  document.getElementById('btn-sched-retorno').addEventListener('click', scheduleRetorno);
 
-  /* ── People ── */
-  document.getElementById('btn-add-person').addEventListener('click', () => {
-    document.getElementById('person-form').classList.toggle('open');
-  });
-  document.getElementById('btn-save-person').addEventListener('click', savePerson);
-  document.getElementById('btn-cancel-person').addEventListener('click', () => {
-    document.getElementById('person-form').classList.remove('open');
-  });
-
-  /* ── Groups ── */
-  document.getElementById('btn-add-group').addEventListener('click', () => {
-    document.getElementById('group-form').classList.toggle('open');
-  });
-  document.getElementById('btn-save-group').addEventListener('click', saveGroup);
-  document.getElementById('btn-cancel-group').addEventListener('click', () => {
-    document.getElementById('group-form').classList.remove('open');
-  });
-
-  /* ── Channels ── */
-  document.getElementById('btn-add-channel').addEventListener('click', () => {
-    document.getElementById('channel-form').classList.toggle('open');
-  });
-  document.getElementById('btn-save-channel').addEventListener('click', saveChannel);
-  document.getElementById('btn-cancel-channel').addEventListener('click', () => {
-    document.getElementById('channel-form').classList.remove('open');
-  });
-
-  /* ── Scenario tabs ── */
-  ['ferias','licenca','aviso','retorno'].forEach(sc => {
-    document.getElementById('tab-' + sc).addEventListener('click', () => setScenario(sc));
-  });
-
-  /* ── Composer ── */
-  const msgInput = document.getElementById('msg-input');
-  msgInput.addEventListener('input',   () => onMsgInput(msgInput));
-  msgInput.addEventListener('keydown', e  => onMsgKeydown(e));
-
-  document.getElementById('contact-input').addEventListener('input', refreshSuggs);
-  document.getElementById('tgl-contact').addEventListener('click', toggleContact);
-  document.getElementById('tgl-sched').addEventListener('click', toggleSchedule);
-  document.getElementById('sched-date').addEventListener('change', updateSchedHint);
-  document.getElementById('sched-time').addEventListener('change', updateSchedHint);
-
+  // Send / clear
   document.getElementById('btn-send').addEventListener('click', sendMessage);
   document.getElementById('btn-clear').addEventListener('click', clearCompose);
 
-  /* ── Event delegation para itens dinâmicos ── */
-  document.addEventListener('click', e => {
-    // Webhook dropdown items
-    const selWh = e.target.closest('[data-sel-wh]');
-    if (selWh) { selectWh(selWh.dataset.selWh); return; }
+  // Gerenciar canais (dentro do picker)
+  document.getElementById('btn-go-webhooks')?.addEventListener('click', ()=>showPanel('webhooks'));
 
-    // Delete buttons
-    const delWh = e.target.closest('[data-del-wh]');
-    if (delWh) { deleteWebhook(delWh.dataset.delWh); return; }
+  // Settings forms
+  document.getElementById('btn-add-wh').addEventListener('click', ()=>document.getElementById('wh-form').classList.toggle('open'));
+  document.getElementById('btn-save-wh').addEventListener('click', saveWebhook);
+  document.getElementById('btn-cancel-wh').addEventListener('click', ()=>document.getElementById('wh-form').classList.remove('open'));
 
-    const delPerson = e.target.closest('[data-del-person]');
-    if (delPerson) { deletePerson(delPerson.dataset.delPerson); return; }
+  document.getElementById('btn-add-person').addEventListener('click', ()=>document.getElementById('person-form').classList.toggle('open'));
+  document.getElementById('btn-save-person').addEventListener('click', savePerson);
+  document.getElementById('btn-cancel-person').addEventListener('click', ()=>document.getElementById('person-form').classList.remove('open'));
 
-    const delGroup = e.target.closest('[data-del-group]');
-    if (delGroup) { deleteGroup(delGroup.dataset.delGroup); return; }
+  document.getElementById('btn-add-group').addEventListener('click', ()=>document.getElementById('group-form').classList.toggle('open'));
+  document.getElementById('btn-save-group').addEventListener('click', saveGroup);
+  document.getElementById('btn-cancel-group').addEventListener('click', ()=>document.getElementById('group-form').classList.remove('open'));
 
-    const delChannel = e.target.closest('[data-del-channel]');
-    if (delChannel) { deleteChannel(delChannel.dataset.delChannel); return; }
+  document.getElementById('btn-add-channel').addEventListener('click', ()=>document.getElementById('channel-form').classList.toggle('open'));
+  document.getElementById('btn-save-channel').addEventListener('click', saveChannel);
+  document.getElementById('btn-cancel-channel').addEventListener('click', ()=>document.getElementById('channel-form').classList.remove('open'));
 
-    // Queue cancel
-    const cancelSched = e.target.closest('[data-cancel-sched]');
-    if (cancelSched) { cancelScheduled(cancelSched.dataset.cancelSched); return; }
-
+  // Event delegation — itens dinâmicos
+  document.addEventListener('click', e=>{
+    const delWh=e.target.closest('[data-del-wh]'); if(delWh){deleteWebhook(delWh.dataset.delWh);return;}
+    const delP=e.target.closest('[data-del-person]'); if(delP){deletePerson(delP.dataset.delPerson);return;}
+    const delG=e.target.closest('[data-del-group]'); if(delG){deleteGroup(delG.dataset.delGroup);return;}
+    const delC=e.target.closest('[data-del-channel]'); if(delC){deleteChannel(delC.dataset.delChannel);return;}
+    const canc=e.target.closest('[data-cancel-sched]'); if(canc){cancelScheduled(canc.dataset.cancelSched);return;}
     // Hint pills
-    const hint = e.target.closest('[data-hint]');
-    if (hint) { insertHint(hint.dataset.hint); return; }
-
-    // Suggestion cards
-    const suggCard = e.target.closest('[data-sugg-idx]');
-    if (suggCard) { selectSugg(parseInt(suggCard.dataset.suggIdx)); return; }
-
-    // Autocomplete items
-    const acItem = e.target.closest('[data-ac-idx]');
-    if (acItem) {
-      const it = (window._acItems || [])[parseInt(acItem.dataset.acIdx)];
-      if (it) insertAC(it.insert);
+    const hint=e.target.closest('[data-hint]');
+    if(hint){
+      // Inserir hint no campo ativo ou no primeiro campo do cenário
+      const cfg=SCENARIO_CFG[ST.scenario];
+      const firstField=cfg?.fields[0];
+      if(firstField){
+        const el=document.getElementById(firstField.id);
+        if(el){el.value=(el.value+(el.value&&!el.value.endsWith(' ')?' ':'')+hint.dataset.hint+' ').trimStart();el.focus();buildAndRender();}
+      }
       return;
     }
+    // Suggestion cards
+    const sc=e.target.closest('[data-sugg-idx]'); if(sc){selectSugg(parseInt(sc.dataset.suggIdx));return;}
+    // Field autocomplete items
+    const fac=e.target.closest('[data-fac-field]');
+    if(fac){insertFieldAC(fac.dataset.facField,parseInt(fac.dataset.facIdx));return;}
+    // Contact autocomplete items
+    const cac=e.target.closest('[data-cac-idx]');
+    if(cac){insertContactAC(parseInt(cac.dataset.cacIdx));return;}
+    // Fechar todos os dropdowns de campo ao clicar fora
+    document.querySelectorAll('.autocomplete-dropdown.open').forEach(dd=>{
+      if(!dd.closest('.msg-wrap')?.contains(e.target)) dd.classList.remove('open');
+    });
   });
-
-  renderHints();
-  dbg('Interface pronta — aguardando sessão…');
 });
 </script>
 </body>
