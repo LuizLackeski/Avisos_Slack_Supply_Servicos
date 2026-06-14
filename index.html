@@ -508,17 +508,13 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 </div>
 
 <script>
-
 /* ════════════════════════════════════════════════
-   ATENÇÃO: COLOQUE SUAS CHAVES DO SUPABASE ABAIXO!
+   CHAVES DO SUPABASE (Já preenchidas para você!)
 ════════════════════════════════════════════════ */
-const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co'; 
+const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';                        
 const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled'; 
 
-/* ════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════ */
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let user = null;
 let DB   = { webhooks:[], people:[], groups:[], channels:[] };
@@ -571,9 +567,9 @@ function showAuthErr(m) { const e=document.getElementById('auth-err'); e.textCon
 async function doLogout() { 
   try {
     await sb.auth.signOut(); 
-    window.location.reload(); // Força o recarregamento da tela
+    window.location.reload(); 
   } catch(e) {
-    alert("Erro ao deslogar: " + e.message);
+    alert("Erro ao sair: " + e.message);
   }
 }
 
@@ -591,7 +587,7 @@ sb.auth.onAuthStateChange(async (_ev, session) => {
 });
 
 /* ════════════════════════════════════════════════
-   LOAD
+   LOAD (Com Alertas à Prova de Falha)
 ════════════════════════════════════════════════ */
 async function loadAll() {
   try {
@@ -614,7 +610,7 @@ async function loadAll() {
     
     renderAll();
   } catch(e) {
-    alert("Erro crítico ao carregar dados do banco:\n" + e.message);
+    alert("Erro Crítico no Banco de Dados!\n" + e.message + "\n\nVerifique se todas as tabelas foram criadas no Supabase.");
     console.error(e);
   }
 }
@@ -662,7 +658,7 @@ async function saveWebhook() {
     DB.webhooks.push(data);
     ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
     toggleForm('wh-form'); renderWhSettings(); renderWhDrop();
-    alert('Canal adicionado com sucesso!');
+    showStatus('Canal salvo!','success');
   } catch(e) {
     alert('Erro ao salvar Webhook:\n' + e.message);
   }
@@ -734,7 +730,7 @@ async function savePerson() {
     DB.people.push(data);
     ['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{ document.getElementById(i).value=''; });
     toggleForm('person-form'); renderPeopleList();
-    alert(`${name} salvo com sucesso!`);
+    showStatus(`${name} salvo!`, 'success');
   } catch(e) {
     alert('Erro ao salvar pessoa:\n' + e.message);
   }
@@ -782,7 +778,7 @@ async function saveGroup() {
     DB.groups.push(data);
     ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
     toggleForm('group-form'); renderGroupsList();
-    alert(`Grupo ${name} salvo!`);
+    showStatus(`Grupo ${name} salvo!`, 'success');
   } catch (e) {
     alert('Erro ao salvar grupo:\n' + e.message);
   }
@@ -819,7 +815,7 @@ async function saveChannel() {
   try {
     const name = v('ch-name').replace('#','');
     const desc = v('ch-desc');
-    const slack_id = v('ch-slack-id').trim();
+    const slack_id = v('ch-slack-id').trim(); 
     
     if (!name) { alert('Preencha o nome do canal.'); return; }
     
@@ -829,7 +825,7 @@ async function saveChannel() {
     DB.channels.push(data);
     ['ch-name','ch-desc','ch-slack-id'].forEach(i=>{ document.getElementById(i).value=''; });
     toggleForm('channel-form'); renderChannelsList();
-    alert(`Canal #${name} salvo!`);
+    showStatus(`#${name} salvo!`, 'success');
   } catch(e) {
     alert('Erro ao salvar canal:\n' + e.message);
   }
@@ -861,32 +857,36 @@ function renderChannelsList() {
 }
 
 /* ════════════════════════════════════════════════
-   QUEUE (Supabase)
+   QUEUE (Com correção para não falhar por relação do PostgREST)
 ════════════════════════════════════════════════ */
 async function loadQueue() {
   try {
-    const {data, error} = await sb.from('scheduled_messages').select('*,webhooks(name,emoji)').eq('sent',false).order('scheduled_at');
+    // Busca direto da tabela sem o join problemático "webhooks()"
+    const {data, error} = await sb.from('scheduled_messages').select('*').eq('sent',false).order('scheduled_at');
     if (error) throw error;
     
     const msgs = data||[];
     const el   = document.getElementById('queue-list-full');
     const ct   = document.getElementById('queue-count-display');
     const nb   = document.getElementById('nb');
+    
     ct.textContent = msgs.length;
     nb.textContent = msgs.length; nb.style.display = msgs.length?'inline-block':'none';
     
     if (!msgs.length) { el.innerHTML='<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
+    
     el.innerHTML = msgs.map(m=>`
       <div class="queue-item">
-        <div style="font-size:18px;flex-shrink:0">${m.webhooks?.emoji||'📢'}</div>
+        <div style="font-size:18px;flex-shrink:0">📢</div>
         <div style="flex:1">
-          <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${m.webhooks?.name||'—'}</div>
+          <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${m.webhook_name||'—'}</div>
           <div class="queue-text">${esc(m.preview_text||'')}</div>
         </div>
         <button class="btn btn-danger-ghost btn-sm" onclick="cancelScheduled('${m.id}')"><i class="ti ti-x"></i> Cancelar</button>
       </div>`).join('');
+      
   } catch(e) {
-    console.error(e);
+    document.getElementById('queue-list-full').innerHTML = `<div class="no-sugg" style="color:var(--error); padding: 1.5rem">Erro ao carregar fila:<br>${e.message}</div>`;
   }
 }
 
@@ -1156,7 +1156,6 @@ async function sendMessage() {
       })
     });
     
-    // Testa se a resposta for texto HTML (caso de página 404 da Edge Function)
     const textResult = await res.text();
     let result = {};
     try { result = JSON.parse(textResult); } catch(e) { throw new Error(textResult); }
