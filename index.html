@@ -974,6 +974,11 @@ function detectAC(ta) {
   const spaceCount = (query.match(/ /g) || []).length;
   if (spaceCount >= 2) { closeAC(); return; }
 
+  // ── NOVO: ignora palavras reservadas do Slack ──
+  const SLACK_RESERVED = new Set(['here','channel','everyone','aqui','canal','todos']);
+  if (sym === '@' && SLACK_RESERVED.has(query.toLowerCase().trim())) {
+    closeAC(); return;
+  }
   ST.acMode = sym;
   const q = query.toLowerCase().trim();
   let items = [];
@@ -1315,15 +1320,14 @@ function cHtml() {
 }
 
 function parseMsg(text) {
-  // Captura @Nome ou @Nome Sobrenome — mas PARA antes de número/data (16/07, 12h, etc.)
-  // Regex: @ seguido de palavra(s), mas não captura tokens que parecem datas
   const userMatches = [];
-  const re = /@([\w.]+(?:\s+[\w.]+)*)/g;
+  // Captura @Palavra ou @Palavra Palavra — máximo 2 palavras, nenhuma pode ser número ou palavra comum
+  const STOP_WORDS = new Set(['de','da','do','em','até','a','as','o','os','na','no','para','por','com','hoje','amanhã','volta','férias','retorno','retornando','licença','atestado','disponível']);
+  const re = /@([\w.]+(?:\s+[\w.]+)?)/g;
   let m;
   while ((m = re.exec(text)) !== null) {
-    // Pega só palavras que NÃO sejam puramente numéricas (evita capturar "16" de "16/07")
-    const parts = m[1].split(/\s+/).filter(p => !/^\d+$/.test(p));
-    if (parts.length) userMatches.push('@' + parts.join(' '));
+    const parts = m[1].split(/\s+/).filter(p => !STOP_WORDS.has(p.toLowerCase()) && !/^\d+$/.test(p));
+    if (parts.length) userMatches.push('@' + parts.slice(0, 2).join(' '));
   }
   return {
     users: userMatches,
@@ -1358,9 +1362,11 @@ const uFormatted = users[0] ? formatSlackTags(users[0]) : '@colaborador';
     return `${emoji} *${title}*\n\n${body}${cs}`;
   }
   function htmlBlock(emoji, title, body, color) {
+    // Converte \n em <br> para renderizar no preview
+    const bodyHtml = body.replace(/\n/g, '<br>');
     return `<div style="display:flex;gap:10px;align-items:stretch">
       <div style="width:4px;border-radius:2px;background:${color || 'var(--cobli-green)'};flex-shrink:0"></div>
-      <div>${emoji} <b>${title}</b><br><br>${body}${ch}</div>
+      <div>${emoji}${title ? ` <b>${title}</b><br><br>` : ''}${bodyHtml}${ch}</div>
     </div>`;
   }
 
@@ -1412,14 +1418,14 @@ const uFormatted = users[0] ? formatSlackTags(users[0]) : '@colaborador';
         slack: slackBlock('📢','Comunicado Importante', `${fullSlack}\n\n_— Equipe de TI_`),
         html:  htmlBlock('📢','Comunicado Importante', `${fullHtml}<br><small style="color:#888">— Equipe de TI</small>`, '#7F8DDB') },
     ],
-  retorno: [
+retorno: [
       { tag:'retorno', label:'Retorno celebrativo',
         slack: slackBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨`),
-        html:  htmlBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>`, 'var(--cobli-green2)') },
+        html:  htmlBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌\n📅 Retornou em: <b>${d1}</b>`, 'var(--cobli-green2)') },
 
       { tag:'retorno', label:'Simples e objetivo',
         slack: `✅ ${uFormatted} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`,
-        html:  htmlBlock('✅','', `${uFormatted} retornou e já está disponível a partir de <b>${d1}</b>. 🟢`, 'var(--cobli-green)') },
+        html:  htmlBlock('✅', '', `${uFormatted} retornou e já está disponível a partir de <b>${d1}</b>. 🟢`, 'var(--cobli-green)') },
     ],
   };
   return (T[sc] || T.ferias).slice(0, 4);
