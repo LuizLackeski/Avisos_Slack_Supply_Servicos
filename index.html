@@ -1,1040 +1,1093 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Cobli — Notificações Slack</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cobli · Notificações Slack</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-/* ── COBLI TOKENS ─────────────────────────────────── */
-:root{
-  --navy:   #07074E;
-  --blue:   #001BB8;
-  --teal:   #00AE97;
-  --mint:   #0FFDC9;
-  --red:    #FF4633;
-  --txt:    #1F1F5F;
-  --muted:  #7F8DDB;
-  --bg:     #E6E6ED;
+/* ═══════════════════════════════════════════
+   COBLI DESIGN TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --cobli-navy:        #07074E;
+  --cobli-blue:        #001BB8;
+  --cobli-blue-light:  #3248C6;
+  --cobli-blue-chart:  #7F8DDB;
+  --cobli-red:         #FF4633;
+  --cobli-green:       #00AE97;
+  --cobli-green2:      #0FFDC9;
+  --cobli-green3:      #1FEF51;
+  --cobli-text:        #E6E6ED;
+  --cobli-kpi:         #1F1F5F;
 
-  --surface:  #ffffff;
-  --surface2: #F0F0F8;
-  --border:   #D0D0E4;
-  --border2:  #B4B4D0;
-  --text:     #07074E;
-  --tmid:     #1F1F5F;
-  --tmuted:   #5A5A9A;
-  --thint:    #9898C0;
-  --accent:   #001BB8;
-  --acch:     #0015A0;
-  --success:  #00AE97;
-  --danger:   #FF4633;
-  --warn:     #E08A00;
-  --rsm:6px; --rmd:10px; --rlg:14px;
-  --sh:0 1px 4px rgba(7,7,78,.08),0 0 0 1px rgba(7,7,78,.04);
-  --shd:0 6px 20px rgba(7,7,78,.14);
-  --font:'Inter',system-ui,sans-serif;
-  --mono:'JetBrains Mono',monospace;
+  --bg:           #07074E;
+  --bg-card:      #0f0f6a;
+  --bg-input:     #1F1F5F;
+  --bg-hover:     #1a1a7a;
+  --border:       rgba(114,141,219,0.25);
+  --border-focus: #3248C6;
+  --text:         #E6E6ED;
+  --text-muted:   rgba(230,230,237,0.55);
+  --text-hint:    rgba(230,230,237,0.35);
+  --accent:       #001BB8;
+  --accent-hover: #3248C6;
+  --success:      #00AE97;
+  --error:        #FF4633;
+  --warn:         #F59E0B;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-a{color:var(--accent)}
 
-/* ── SHELL ────────────────────────────────────────── */
-.shell{display:grid;grid-template-columns:252px 1fr;min-height:100vh}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; }
 
-/* ── SIDEBAR ─────────────────────────────────────── */
-.sb{background:var(--navy);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
-.sb-logo{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
-.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-txt{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px}
-.logo-sub{color:rgba(255,255,255,.3);font-size:10px;letter-spacing:.7px;text-transform:uppercase;margin-top:1px}
-.sb-sec{padding:14px 10px 6px}
-.sb-lbl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:0 8px;margin-bottom:4px}
-.nav{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--rmd);cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);border:none;background:none;width:100%;text-align:left;transition:all .15s}
-.nav:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.88)}
-.nav.on{background:rgba(0,27,184,.4);color:#fff}
-.nav .ti{font-size:16px}
-.nbadge{margin-left:auto;font-size:10px;font-weight:700;background:var(--teal);color:var(--navy);padding:1px 7px;border-radius:20px;min-width:20px;text-align:center}
-.sb-footer{margin-top:auto;padding:12px 16px;font-size:11px;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.06)}
-.sb-user{font-size:12px;color:rgba(255,255,255,.4);padding:10px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.06)}
-.sb-user .ti{font-size:14px}
-.btn-logout{margin-left:auto;font-size:11px;background:rgba(255,70,51,.15);color:#FF4633;border:none;padding:3px 8px;border-radius:4px;cursor:pointer}
-.btn-logout:hover{background:rgba(255,70,51,.25)}
+/* ═══ LAYOUT ═══ */
+.layout { display:flex; min-height:100vh; }
 
-/* ── MAIN ─────────────────────────────────────────── */
-.main{display:flex;flex-direction:column;min-width:0}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;box-shadow:var(--sh)}
-.ptitle{font-size:15px;font-weight:700}
-.psub{font-size:12px;color:var(--tmuted);margin-top:1px}
-.spill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:5px}
-.spill.ok{background:rgba(0,174,151,.12);color:var(--teal);border:1px solid rgba(0,174,151,.25)}
-.spill.err{background:rgba(255,70,51,.1);color:var(--danger);border:1px solid rgba(255,70,51,.2)}
-.spill.busy{background:rgba(0,27,184,.1);color:var(--blue);border:1px solid rgba(0,27,184,.2)}
-.sdot{width:6px;height:6px;border-radius:50%;background:currentColor}
-.content{padding:22px 24px;flex:1;display:flex;flex-direction:column;gap:16px}
+/* ═══ SIDEBAR ═══ */
+.sidebar { width:260px; flex-shrink:0; background:var(--cobli-navy); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:100; }
+.sidebar-logo { padding:20px 20px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+.logo-mark { width:36px; height:36px; background:linear-gradient(135deg,#001BB8,#0FFDC9); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; color:#fff; }
+.logo-text { font-size:15px; font-weight:700; color:#E6E6ED; }
+.logo-sub  { font-size:11px; color:var(--text-muted); }
+.sidebar-nav { flex:1; padding:12px 10px; overflow-y:auto; }
+.nav-label { font-size:10px; font-weight:700; color:var(--text-hint); letter-spacing:.08em; text-transform:uppercase; padding:10px 10px 4px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius-md); font-size:13px; color:var(--text-muted); cursor:pointer; transition:all .15s; margin-bottom:2px; border:none; background:transparent; width:100%; text-align:left; }
+.nav-item:hover { background:var(--bg-hover); color:var(--text); }
+.nav-item.active { background:var(--bg-input); color:var(--cobli-green2); }
+.nav-item i { font-size:16px; flex-shrink:0; }
+.nav-badge { margin-left:auto; font-size:10px; font-weight:700; background:var(--cobli-blue-light); color:#fff; padding:2px 7px; border-radius:10px; }
+.sb-user { padding:12px 16px; border-top:1px solid var(--border); display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }
+.sb-user i { font-size:15px; }
+.btn-logout { margin-left:auto; font-size:11px; background:rgba(255,70,51,.15); color:var(--cobli-red); border:none; padding:3px 9px; border-radius:4px; cursor:pointer; }
+.btn-logout:hover { background:rgba(255,70,51,.28); }
 
-/* ── AUTH SCREEN ─────────────────────────────────── */
-#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)}
-.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg);padding:36px;width:100%;max-width:380px;box-shadow:var(--shd);display:flex;flex-direction:column;gap:20px}
-.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.auth-title{font-size:20px;font-weight:700}
-.auth-sub{font-size:13px;color:var(--tmuted)}
-.auth-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--rmd);overflow:hidden}
-.auth-tab{flex:1;padding:8px;font-size:13px;font-weight:500;border:none;background:transparent;cursor:pointer;color:var(--tmuted);transition:all .15s}
-.auth-tab.on{background:var(--accent);color:#fff}
-.field-lbl{font-size:12px;font-weight:500;color:var(--tmid);margin-bottom:4px;display:block}
-.field{width:100%;font-size:13px;padding:9px 12px;height:38px;border:1px solid var(--border);border-radius:var(--rmd);background:var(--surface2);color:var(--text);font-family:var(--font)}
-.field:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,27,184,.1)}
-.field.mono{font-family:var(--mono);font-size:12px}
-.auth-err{font-size:12px;color:var(--danger);background:rgba(255,70,51,.08);padding:8px 12px;border-radius:var(--rsm)}
+/* ═══ MAIN ═══ */
+.main { margin-left:260px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.topbar { background:rgba(7,7,78,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:50; }
+.topbar-title { font-size:16px; font-weight:600; }
+.topbar-sub { font-size:12px; color:var(--text-muted); margin-top:1px; }
+.topbar-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
+.status-connected { font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; background:rgba(0,174,151,.15); color:var(--cobli-green); border:1px solid rgba(0,174,151,.3); display:flex; align-items:center; gap:5px; }
+.status-dot { width:6px; height:6px; border-radius:50%; background:var(--cobli-green); }
 
-/* ── PAGE ─────────────────────────────────────────── */
-.page{display:none}
-.page.on{display:flex;flex-direction:column;gap:16px}
+.content { padding:24px 28px; display:flex; flex-direction:column; gap:18px; max-width:820px; }
 
-/* ── PANEL ───────────────────────────────────────── */
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--rlg);box-shadow:var(--sh);overflow:hidden}
-.ph{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface2)}
-.ph-t{font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px}
-.ph-t .ti{font-size:15px;color:var(--accent)}
-.pb{padding:16px}
+/* ═══ AUTH ═══ */
+#auth-screen { display:none; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
+.auth-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:36px; width:100%; max-width:380px; display:flex; flex-direction:column; gap:18px; }
+.auth-tabs { display:flex; border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
+.auth-tab { flex:1; padding:8px; font-size:13px; font-weight:500; border:none; background:transparent; cursor:pointer; color:var(--text-muted); transition:all .15s; }
+.auth-tab.active { background:var(--cobli-blue); color:#fff; }
+.auth-err { font-size:12px; color:var(--cobli-red); background:rgba(255,70,51,.1); padding:8px 12px; border-radius:var(--radius-sm); display:none; }
+.form-label { font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px; display:block; letter-spacing:.04em; }
 
-/* ── BUTTONS ─────────────────────────────────────── */
-.btn{font-size:13px;font-weight:600;padding:8px 16px;height:36px;border-radius:var(--rmd);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn-p{background:var(--accent);color:#fff}
-.btn-p:hover:not(:disabled){background:var(--acch)}
-.btn-o{background:transparent;color:var(--tmuted);border:1px solid var(--border)}
-.btn-o:hover{background:var(--surface2);color:var(--text)}
-.btn-t{background:var(--teal);color:var(--navy);font-weight:700}
-.btn-t:hover{background:#009A85}
-.btn-d{background:var(--danger);color:#fff}
-.btn-sm{font-size:12px;padding:5px 12px;height:30px}
-.ibtn{width:28px;height:28px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tmuted);font-size:13px;transition:all .15s;flex-shrink:0}
-.ibtn:hover{background:var(--surface2);color:var(--danger);border-color:var(--danger)}
+/* ═══ PANELS ═══ */
+.panel { display:none; }
+.panel.active { display:flex; flex-direction:column; gap:18px; }
 
-/* ── INPUTS ──────────────────────────────────────── */
-.fi{font-size:13px;padding:7px 11px;height:36px;border:1px solid var(--border);border-radius:var(--rmd);background:var(--surface);color:var(--text);font-family:var(--font);flex:1;min-width:80px}
-.fi:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,27,184,.1)}
-.fi.mono{font-family:var(--mono);font-size:12px}
-.add-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:flex-end}
+/* ═══ CARDS ═══ */
+.card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; }
+.card-title { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--cobli-blue-chart); margin-bottom:12px; display:flex; align-items:center; gap:6px; }
 
-/* ── CONFIG ITEMS ─────────────────────────────────── */
-.cfg-list{display:flex;flex-direction:column;gap:7px}
-.cfg-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--rmd);background:var(--surface)}
-.cav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
-.cav-p{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff}
-.cav-g{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border-radius:var(--rsm)}
-.cav-w{background:linear-gradient(135deg,#4A154B,var(--blue));color:#fff;border-radius:var(--rsm)}
-.cname{font-weight:600;font-size:13px}
-.csub{font-size:11px;color:var(--tmuted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
-.cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+/* ═══ INPUTS ═══ */
+input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],textarea,select {
+  font-family:inherit; font-size:13px; color:var(--text);
+  background:var(--bg-input); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:8px 12px;
+  transition:border .15s,box-shadow .15s; width:100%;
+}
+input:focus,textarea:focus,select:focus { outline:none; border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(50,72,198,.25); }
+input::placeholder,textarea::placeholder { color:var(--text-hint); }
 
-/* ── TABS ────────────────────────────────────────── */
-.tabs{display:flex;gap:6px;flex-wrap:wrap}
-.tab{font-size:12px;font-weight:500;padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--tmuted);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
-.tab:hover{background:var(--surface2);color:var(--text)}
-.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* ═══ TOGGLE ═══ */
+.toggle { width:40px; height:22px; border-radius:11px; background:var(--border); border:none; cursor:pointer; position:relative; transition:background .2s; flex-shrink:0; padding:0; }
+.toggle.on { background:var(--cobli-green); }
+.toggle::after { content:''; width:16px; height:16px; border-radius:50%; background:#fff; position:absolute; top:3px; left:3px; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+.toggle.on::after { left:21px; }
+.toggle-row { display:flex; align-items:center; gap:10px; }
+.toggle-label { font-size:13px; font-weight:500; }
 
-/* ── TEXTAREA + AC ───────────────────────────────── */
-.ta-wrap{position:relative}
-.compose-ta{width:100%;min-height:80px;font-size:14px;padding:11px 13px;border:1px solid var(--border);border-radius:var(--rmd);resize:vertical;font-family:var(--font);line-height:1.65;color:var(--text);background:var(--surface2);transition:border .15s}
-.compose-ta:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,27,184,.1)}
-.ac-drop{position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--border);border-radius:var(--rmd);box-shadow:var(--shd);z-index:200;display:none;max-height:200px;overflow-y:auto}
-.ac-drop.open{display:block}
-.ac-i{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;font-size:13px;transition:background .1s}
-.ac-i:hover,.ac-i.hi{background:var(--surface2)}
-.ac-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
-.ac-av.g{border-radius:var(--rsm);background:linear-gradient(135deg,var(--navy),var(--blue))}
-.ac-nm{font-weight:600;color:var(--text);font-size:13px}
-.ac-hd{font-size:11px;color:var(--tmuted);margin-top:1px}
-.ac-empty{padding:12px 14px;font-size:12px;color:var(--thint)}
-.hints{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.hp{font-size:11px;padding:3px 9px;border-radius:12px;border:1px solid var(--border);color:var(--thint);cursor:pointer;transition:all .15s}
-.hp:hover{background:rgba(0,27,184,.06);color:var(--accent);border-color:var(--accent)}
+/* ═══ BUTTONS ═══ */
+.btn { display:inline-flex; align-items:center; gap:7px; padding:9px 20px; border-radius:var(--radius-md); font-size:13px; font-weight:600; border:none; cursor:pointer; transition:all .15s; white-space:nowrap; }
+.btn-primary { background:var(--cobli-blue); color:#fff; }
+.btn-primary:hover { background:var(--cobli-blue-light); }
+.btn-primary:disabled { opacity:.4; cursor:not-allowed; }
+.btn-success { background:var(--cobli-green); color:#07074E; }
+.btn-success:hover { background:var(--cobli-green2); }
+.btn-ghost { background:transparent; color:var(--text-muted); border:1px solid var(--border); }
+.btn-ghost:hover { background:var(--bg-hover); color:var(--text); }
+.btn-danger-ghost { background:transparent; color:var(--error); border:1px solid rgba(255,70,51,.3); }
+.btn-danger-ghost:hover { background:rgba(255,70,51,.1); }
+.btn-sm { padding:5px 12px; font-size:12px; }
 
-/* ── WEBHOOK CHIPS ───────────────────────────────── */
-.wh-chips{display:flex;gap:8px;flex-wrap:wrap}
-.wh-chip{display:flex;align-items:center;gap:9px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--rmd);cursor:pointer;font-size:13px;background:var(--surface);transition:all .15s}
-.wh-chip:hover{border-color:var(--accent);background:rgba(0,27,184,.04)}
-.wh-chip.sel{border:2px solid var(--accent);background:rgba(0,27,184,.07)}
-.wh-dot{width:9px;height:9px;border-radius:50%;background:#4A154B;flex-shrink:0}
-.wh-cn{font-weight:600;color:var(--text)}
-.wh-cc{font-size:11px;color:var(--tmuted);margin-top:1px}
-.wh-ck{color:var(--accent);display:none;font-size:15px}
-.wh-chip.sel .wh-ck{display:block}
-.wh-empty{font-size:13px;color:var(--thint)}
+/* ═══ TAGS ═══ */
+.tag { font-size:11px; font-weight:700; padding:2px 9px; border-radius:10px; }
+.tag-ferias  { background:rgba(0,174,151,.2);  color:var(--cobli-green);  border:1px solid rgba(0,174,151,.35); }
+.tag-licenca { background:rgba(50,72,198,.2);  color:#7F8DDB; border:1px solid rgba(127,141,219,.35); }
+.tag-aviso   { background:rgba(255,70,51,.15); color:var(--cobli-red);    border:1px solid rgba(255,70,51,.35); }
+.tag-retorno { background:rgba(15,253,201,.12);color:var(--cobli-green2); border:1px solid rgba(15,253,201,.3); }
 
-/* ── EXTRAS ──────────────────────────────────────── */
-.extras{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rmd);padding:14px 16px;display:flex;flex-direction:column;gap:12px}
-.trow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tgl{width:38px;height:22px;border-radius:11px;background:var(--border2);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;padding:0}
-.tgl.on{background:var(--teal)}
-.tgl::after{content:'';width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.tgl.on::after{left:19px}
-.tgl-lbl{font-size:13px;font-weight:500}
-.subrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-left:48px}
-.divh{height:1px;background:var(--border)}
-.sched-inp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sched-inp input[type=date],.sched-inp input[type=time]{font-size:13px;padding:6px 10px;height:34px;border:1px solid var(--border);border-radius:var(--rmd);background:var(--surface);color:var(--text);font-family:var(--font)}
-.sched-inp input:disabled{opacity:.4;cursor:not-allowed}
-.sbadge{font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(0,174,151,.12);color:var(--teal);border:1px solid rgba(0,174,151,.25);font-weight:600;display:none}
-.sbadge.on{display:inline-block}
+/* ═══ SCENARIO TABS ═══ */
+.tabs { display:flex; gap:8px; flex-wrap:wrap; }
+.tab-btn { font-size:12px; padding:7px 16px; border-radius:20px; background:var(--bg-input); color:var(--text-muted); border:1px solid var(--border); cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .15s; font-weight:500; }
+.tab-btn:hover { color:var(--text); border-color:var(--cobli-blue-chart); }
+.tab-btn.active { background:var(--cobli-blue); color:#fff; border-color:var(--cobli-blue); }
 
-/* ── SUGGESTIONS ─────────────────────────────────── */
-.sgg{display:grid;gap:8px}
-.sc{border:1px solid var(--border);border-radius:var(--rmd);padding:12px 14px;cursor:pointer;transition:all .15s;background:var(--surface)}
-.sc:hover{border-color:var(--accent);background:rgba(0,27,184,.03)}
-.sc.sel{border:2px solid var(--accent);background:rgba(0,27,184,.05)}
-.sc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.ct{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px}
-.ct-f{background:rgba(0,174,151,.15);color:var(--teal)}
-.ct-l{background:rgba(0,27,184,.12);color:var(--blue)}
-.ct-a{background:rgba(255,70,51,.12);color:var(--danger)}
-.ct-r{background:rgba(15,253,201,.2);color:#009A85}
-.sc-lbl{font-size:12px;color:var(--tmuted)}
-.seldot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);margin-left:auto;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.seldot.on{background:var(--accent);border-color:var(--accent)}
-.seldot.on::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
-.sc-prev{font-size:13px;line-height:1.8;color:var(--text)}
-.no-sugg{font-size:13px;color:var(--thint);text-align:center;padding:28px 0}
+/* ═══ COMPOSER ═══ */
+.msg-wrap { position:relative; }
+textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12px 14px; }
+.hint-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.hint-pill { font-size:11px; padding:3px 10px; border-radius:12px; border:1px solid var(--border); color:var(--text-hint); cursor:pointer; transition:all .15s; }
+.hint-pill:hover { background:rgba(50,72,198,.2); color:var(--cobli-blue-chart); border-color:var(--cobli-blue-chart); }
 
-/* ── PREVIEW ─────────────────────────────────────── */
-.prev-shell{background:#11112a;border-radius:var(--rmd);padding:14px 16px}
-.prev-top{display:flex;align-items:center;gap:8px;font-size:11px;color:#3a3a60;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.05)}
-.prev-msg{display:none}
-.prev-msg.on{display:flex;gap:10px}
-.prev-av{width:36px;height:36px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,#4A154B,var(--blue));display:flex;align-items:center;justify-content:center;font-size:16px}
-.prev-name{font-size:13px;font-weight:700;color:#fff}
-.prev-time{font-size:11px;color:#3a3a60;margin-left:7px}
-.prev-text{font-size:14px;color:#C5C6D2;line-height:1.8;margin-top:3px}
-.prev-sched{font-size:11px;color:#7CB9E8;margin-top:6px;display:none;align-items:center;gap:5px}
-.prev-sched.on{display:flex}
-.prev-empty{font-size:13px;color:#20205a;text-align:center;padding:18px 0}
+/* ═══ AUTOCOMPLETE ═══ */
+.autocomplete-dropdown { position:absolute; z-index:200; background:#0d0d60; border:1px solid var(--cobli-blue-light); border-radius:var(--radius-md); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.5); min-width:240px; max-height:220px; overflow-y:auto; display:none; top:calc(100% + 4px); left:0; }
+.autocomplete-dropdown.open { display:block; }
+.ac-header { font-size:10px; font-weight:700; color:var(--text-hint); padding:8px 12px 4px; letter-spacing:.06em; text-transform:uppercase; }
+.ac-item { display:flex; align-items:center; gap:10px; padding:8px 12px; cursor:pointer; transition:background .1s; font-size:13px; }
+.ac-item:hover,.ac-item.focused { background:var(--bg-hover); }
+.ac-avatar { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; font-weight:700; }
+.ac-avatar.person  { background:rgba(50,72,198,.35); color:#7F8DDB; }
+.ac-avatar.group   { background:rgba(0,174,151,.25); color:var(--cobli-green); }
+.ac-avatar.channel { background:rgba(15,253,201,.15); color:var(--cobli-green2); }
+.ac-name { font-weight:600; }
+.ac-sub  { font-size:11px; color:var(--text-hint); }
 
-/* ── ACTIONS ─────────────────────────────────────── */
-.actbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.ss{font-size:13px;display:flex;align-items:center;gap:6px}
-.ss.ok{color:var(--teal)}.ss.err{color:var(--danger)}.ss.warn{color:var(--warn)}
+/* ═══ SUGGESTIONS ═══ */
+.sugg-grid { display:grid; gap:8px; }
+.sugg-card { border:1px solid var(--border); border-radius:var(--radius-lg); padding:12px 14px; cursor:pointer; transition:all .15s; background:var(--bg-card); }
+.sugg-card:hover { border-color:var(--cobli-blue-light); background:var(--bg-input); }
+.sugg-card.selected { border:1.5px solid var(--cobli-green); background:var(--bg-input); }
+.sugg-card-hdr { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.sugg-name { font-size:12px; color:var(--text-muted); }
+.sel-dot { width:16px; height:16px; border-radius:50%; border:2px solid var(--border); margin-left:auto; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .15s; }
+.sel-dot.on { background:var(--cobli-green); border-color:var(--cobli-green); }
+.sel-dot.on::after { content:''; width:6px; height:6px; border-radius:50%; background:#07074E; }
+.sugg-preview { font-size:13px; line-height:1.75; color:var(--text); }
+.no-sugg { font-size:13px; color:var(--text-hint); text-align:center; padding:2.5rem; }
 
-/* ── QUEUE ───────────────────────────────────────── */
-.q-list{display:flex;flex-direction:column;gap:8px}
-.q-item{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:var(--rmd);background:var(--surface)}
-.q-time{font-size:11px;font-weight:700;color:var(--accent);white-space:nowrap;min-width:88px}
-.q-info{flex:1;min-width:0}
-.q-txt{font-size:12px;color:var(--tmuted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.q-wh{font-size:11px;color:var(--thint);margin-top:2px}
-.q-cancel{font-size:11px;color:var(--thint);cursor:pointer;padding:3px 8px;border-radius:var(--rsm);border:1px solid var(--border)}
-.q-cancel:hover{color:var(--danger);border-color:var(--danger)}
-.q-empty{font-size:13px;color:var(--thint);text-align:center;padding:22px 0}
+/* ═══ WEBHOOK SELECT ═══ */
+.webhook-select-wrap { position:relative; }
+.webhook-select-btn { width:100%; display:flex; align-items:center; gap:10px; padding:9px 14px; border-radius:var(--radius-md); background:var(--bg-input); border:1px solid var(--border); color:var(--text); cursor:pointer; transition:all .15s; }
+.webhook-select-btn:hover { border-color:var(--cobli-blue-chart); }
+.wh-dot { width:8px; height:8px; border-radius:50%; background:var(--error); flex-shrink:0; }
+.wh-dot.ok { background:var(--success); }
+.wh-name { font-size:13px; font-weight:500; flex:1; text-align:left; }
+.wh-dropdown { display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; background:#0d0d60; border:1px solid var(--cobli-blue-light); border-radius:var(--radius-md); overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.5); z-index:200; }
+.wh-dropdown.open { display:block; }
+.wh-opt { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; transition:background .1s; font-size:13px; }
+.wh-opt:hover,.wh-opt.active { background:var(--bg-hover); }
+.wh-opt.active .wh-name { color:var(--cobli-green2); }
+.wh-check { margin-left:auto; color:var(--cobli-green); font-size:14px; display:none; }
+.wh-opt.active .wh-check { display:block; }
 
-/* ── LOADING ─────────────────────────────────────── */
-.loading{display:flex;align-items:center;justify-content:center;padding:32px;color:var(--thint);font-size:13px;gap:8px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin{animation:spin .8s linear infinite;display:inline-block}
+/* ═══ PREVIEW ═══ */
+.preview-card { background:#111; border:1px solid #2a2a2a; border-radius:var(--radius-lg); padding:1rem 1.25rem; }
+.preview-hdr { font-size:11px; color:#555; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.preview-msg { display:none; }
+.preview-msg.visible { display:flex; gap:10px; }
+.preview-avatar-wrap { width:36px; height:36px; border-radius:8px; background:var(--cobli-blue); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.preview-name { font-size:13px; font-weight:700; color:#fff; }
+.preview-time { font-size:11px; color:#555; margin-left:6px; }
+.preview-text { font-size:14px; color:#CCC; line-height:1.75; margin-top:3px; }
+.preview-sched { font-size:11px; color:var(--cobli-green2); margin-top:6px; display:none; }
+.preview-sched.visible { display:block; }
+.preview-empty { font-size:13px; color:#444; }
 
-/* ── TOAST ───────────────────────────────────────── */
-#toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
-.toast-item{padding:12px 16px;border-radius:var(--rmd);font-size:13px;font-weight:500;box-shadow:var(--shd);display:flex;align-items:center;gap:8px;animation:slideIn .2s ease;max-width:320px}
-@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-.toast-ok{background:var(--teal);color:var(--navy)}
-.toast-err{background:var(--danger);color:#fff}
-.toast-info{background:var(--accent);color:#fff}
+/* ═══ OPTIONS PANEL ═══ */
+.options-card { background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1rem 1.25rem; display:flex; flex-direction:column; gap:12px; }
+.sub-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-left:50px; }
+.sched-inputs { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.sched-inputs input[type=date],.sched-inputs input[type=time] { width:auto; }
+.sched-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; background:rgba(0,174,151,.2); color:var(--cobli-green); border:1px solid rgba(0,174,151,.35); display:none; }
+.sched-badge.visible { display:inline-block; }
+.divider-h { height:1px; background:var(--border); }
+
+/* ═══ STATUS BAR ═══ */
+.status-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.status-msg { font-size:13px; display:flex; align-items:center; gap:6px; }
+.status-msg.success { color:var(--cobli-green); }
+.status-msg.error   { color:var(--error); }
+.status-msg.warn    { color:var(--warn); }
+
+/* ═══ QUEUE ═══ */
+.queue-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px; background:var(--bg-card); }
+.queue-time { font-size:11px; font-weight:700; color:var(--cobli-green2); white-space:nowrap; min-width:90px; padding-top:2px; }
+.queue-text { font-size:12px; color:var(--text-muted); flex:1; line-height:1.5; }
+
+/* ═══ SETTINGS ═══ */
+.list-item { display:flex; align-items:center; gap:12px; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--bg-card); margin-bottom:6px; }
+.list-item-avatar { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; font-weight:700; }
+.list-item-name { font-size:13px; font-weight:600; }
+.list-item-sub  { font-size:11px; color:var(--text-muted); margin-top:2px; font-family:monospace; }
+.list-item-actions { margin-left:auto; display:flex; gap:6px; }
+.add-form { border:1px dashed rgba(50,72,198,.4); border-radius:var(--radius-md); padding:14px; margin-top:8px; display:none; flex-direction:column; gap:10px; }
+.add-form.open { display:flex; }
+.form-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
+.form-row > div { flex:1; min-width:120px; }
+.slack-id-tip { font-size:11px; color:var(--cobli-blue-chart); background:rgba(50,72,198,.12); padding:8px 12px; border-radius:var(--radius-sm); border-left:2px solid var(--cobli-blue-light); line-height:1.6; }
+
+/* ═══ LOADING ═══ */
+.loading { display:flex; align-items:center; justify-content:center; padding:24px; color:var(--text-hint); font-size:13px; gap:8px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.spin { animation:spin .8s linear infinite; display:inline-block; }
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════ AUTH SCREEN ═══════════ -->
-<div id="auth-screen" style="display:none">
+<!-- ═══ AUTH SCREEN ═══ -->
+<div id="auth-screen" style="display:flex">
   <div class="auth-card">
-    <div class="auth-logo">
-      <div class="logo-mark" style="width:38px;height:38px;border-radius:10px">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L3 7v10l9 5 9-5V7L12 2z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
-          <path d="M12 12l9-5M12 12v10M12 12L3 7" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
-        </svg>
-      </div>
-      <div>
-        <div class="logo-txt" style="color:var(--navy);font-size:18px">Cobli Slack</div>
-        <div class="logo-sub" style="color:var(--tmuted)">Notificações inteligentes</div>
-      </div>
+    <div class="sidebar-logo" style="padding:0;border:none;margin-bottom:4px;">
+      <div class="logo-mark">Co</div>
+      <div><div class="logo-text" style="font-size:18px">Cobli Slack</div><div class="logo-sub">Notificações inteligentes</div></div>
     </div>
-
     <div class="auth-tabs">
-      <button class="auth-tab on" onclick="switchAuth('login',this)">Entrar</button>
-      <button class="auth-tab" onclick="switchAuth('signup',this)">Criar conta</button>
-    </div>
-
-    <div>
-      <label class="field-lbl">E-mail</label>
-      <input type="email" class="field" id="auth-email" placeholder="seu@email.com"/>
+      <button class="auth-tab active" onclick="switchAuthMode('login',this)">Entrar</button>
+      <button class="auth-tab" onclick="switchAuthMode('signup',this)">Criar conta</button>
     </div>
     <div>
-      <label class="field-lbl">Senha</label>
-      <input type="password" class="field" id="auth-pw" placeholder="••••••••"
-        onkeydown="if(event.key==='Enter')doAuth()"/>
+      <label class="form-label">E-mail</label>
+      <input type="email" id="auth-email" placeholder="seu@cobli.co" />
     </div>
-    <div id="auth-err" style="display:none" class="auth-err"></div>
-
-    <button class="btn btn-p" style="width:100%;height:40px;justify-content:center;font-size:14px" onclick="doAuth()" id="auth-btn">
+    <div>
+      <label class="form-label">Senha</label>
+      <input type="password" id="auth-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()" />
+    </div>
+    <div id="auth-err" class="auth-err"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;height:40px" onclick="doAuth()" id="auth-btn">
       <i class="ti ti-login"></i> Entrar
     </button>
   </div>
 </div>
 
-<!-- ═══════════ APP SHELL ═══════════ -->
-<div class="shell" id="app-shell" style="display:none">
+<!-- ═══ APP ═══ -->
+<div class="layout" id="app" style="display:none">
 
-  <!-- SIDEBAR -->
-  <aside class="sb">
-    <div class="sb-logo">
-      <div class="logo-mark">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L3 7v10l9 5 9-5V7L12 2z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
-          <path d="M12 12l9-5M12 12v10M12 12L3 7" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
-        </svg>
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">Co</div>
+    <div><div class="logo-text">Cobli</div><div class="logo-sub">Notificações Slack</div></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Composer</div>
+    <button class="nav-item active" onclick="showPanel('compose',this)"><i class="ti ti-send"></i> Enviar mensagem</button>
+    <button class="nav-item" onclick="showPanel('queue',this)"><i class="ti ti-clock"></i> Agendamentos <span class="nav-badge" id="nb" style="display:none">0</span></button>
+    <div class="nav-label" style="margin-top:8px">Configurações</div>
+    <button class="nav-item" onclick="showPanel('webhooks',this)"><i class="ti ti-plug"></i> Webhooks / Canais</button>
+    <button class="nav-item" onclick="showPanel('people',this)"><i class="ti ti-users"></i> Pessoas &amp; Grupos (@)</button>
+    <button class="nav-item" onclick="showPanel('channels',this)"><i class="ti ti-hash"></i> Canais Slack (#)</button>
+  </nav>
+  <div class="sb-user">
+    <i class="ti ti-user-circle"></i>
+    <span id="sb-email" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px"></span>
+    <button class="btn-logout" onclick="doLogout()">Sair</button>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">Compositor de Mensagens</div>
+      <div class="topbar-sub" id="topbar-sub">Digite, escolha uma variação e envie para o Slack</div>
+    </div>
+    <div class="topbar-right">
+      <span class="status-connected"><span class="status-dot"></span> Conectado</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══ COMPOSE ═══ -->
+    <div class="panel active" id="panel-compose">
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-plug"></i> Canal de destino</div>
+        <div class="webhook-select-wrap" id="wh-wrap">
+          <button class="webhook-select-btn" onclick="toggleWhDrop()" id="wh-btn">
+            <span class="wh-dot" id="wh-dot"></span>
+            <span class="wh-name" id="wh-name">— Selecione um canal —</span>
+            <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-muted)"></i>
+          </button>
+          <div class="wh-dropdown" id="wh-dropdown">
+            <div id="wh-list"></div>
+            <div style="padding:8px 10px;border-top:1px solid var(--border)">
+              <button class="btn btn-ghost btn-sm" style="width:100%" onclick="showPanel('webhooks',document.querySelectorAll('.nav-item')[2])"><i class="ti ti-plus"></i> Gerenciar canais</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div><div class="logo-txt">Cobli</div><div class="logo-sub">Slack Notificações</div></div>
-    </div>
 
-    <div class="sb-sec">
-      <div class="sb-lbl">Mensagens</div>
-      <button class="nav on" onclick="goPage('composer',this)"><i class="ti ti-send"></i> Compositor</button>
-      <button class="nav" onclick="goPage('queue',this)"><i class="ti ti-clock"></i> Agendados <span class="nbadge" id="nb">0</span></button>
-    </div>
-    <div class="sb-sec">
-      <div class="sb-lbl">Configurações</div>
-      <button class="nav" onclick="goPage('config',this)"><i class="ti ti-users"></i> Pessoas &amp; Grupos</button>
-      <button class="nav" onclick="goPage('webhooks',this)"><i class="ti ti-plug"></i> Canais Slack</button>
-    </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="setScenario('ferias',this)"><i class="ti ti-beach"></i> Férias</button>
+        <button class="tab-btn" onclick="setScenario('licenca',this)"><i class="ti ti-heart-plus"></i> Licença/Atestado</button>
+        <button class="tab-btn" onclick="setScenario('aviso',this)"><i class="ti ti-alert-triangle"></i> Aviso/Incidente</button>
+        <button class="tab-btn" onclick="setScenario('retorno',this)"><i class="ti ti-player-play"></i> Retorno</button>
+      </div>
 
-    <div class="sb-user">
-      <i class="ti ti-user-circle"></i>
-      <span id="sb-email" style="font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-      <button class="btn-logout" onclick="logout()">Sair</button>
-    </div>
-    <div class="sb-footer">v2.0 · Cobli © 2025</div>
-  </aside>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-pencil"></i> Mensagem — use @ para pessoas/grupos · # para canais</div>
+        <div class="msg-wrap">
+          <textarea id="msg-input" placeholder="Ex: O @leonardo estará de férias a partir de 12/06 retornando em 20/06" oninput="onMsgInput(this)" onkeydown="onMsgKeydown(event)"></textarea>
+          <div class="autocomplete-dropdown" id="ac-dropdown">
+            <div class="ac-header" id="ac-header">Pessoas &amp; Grupos</div>
+            <div id="ac-list"></div>
+          </div>
+        </div>
+        <div class="hint-pills" id="hint-pills"></div>
+      </div>
 
-  <!-- MAIN -->
-  <main class="main">
-    <div class="topbar">
+      <div class="options-card">
+        <div class="toggle-row">
+          <button class="toggle" id="tgl-contact" onclick="toggleContact()" aria-label="Contato de suporte"></button>
+          <span class="toggle-label">Incluir contato de suporte/emergência</span>
+        </div>
+        <div class="sub-row" id="contact-row" style="display:none">
+          <i class="ti ti-users" style="font-size:15px;color:var(--text-muted)"></i>
+          <input type="text" id="contact-input" placeholder="@grupo-suporte, @pessoa ou #canal" oninput="refreshSuggs()" style="max-width:320px" />
+          <span style="font-size:11px;color:var(--text-hint)">Aparece no final de todas as variações</span>
+        </div>
+        <div class="divider-h"></div>
+        <div class="toggle-row">
+          <button class="toggle" id="tgl-sched" onclick="toggleSchedule()" aria-label="Agendar envio"></button>
+          <span class="toggle-label">Agendar envio</span>
+          <span class="sched-badge" id="sched-badge">⏰ Agendado</span>
+        </div>
+        <div class="sub-row" id="sched-row" style="display:none">
+          <i class="ti ti-calendar-time" style="font-size:15px;color:var(--text-muted)"></i>
+          <div class="sched-inputs">
+            <input type="date" id="sched-date" disabled />
+            <input type="time" id="sched-time" value="09:00" disabled />
+          </div>
+          <span style="font-size:11px;color:var(--text-hint)" id="sched-hint"></span>
+        </div>
+      </div>
+
       <div>
-        <div class="ptitle" id="ptitle">Compositor de Mensagens</div>
-        <div class="psub"   id="psub">Digite, escolha uma variação e envie para o Slack</div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-sparkles" style="font-size:14px"></i>
+          <span id="sugg-label">Variações de mensagem</span>
+        </div>
+        <div class="sugg-grid" id="sugg-grid"><div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div></div>
       </div>
-      <span class="spill ok" id="global-status"><span class="sdot"></span> Conectado</span>
+
+      <div class="preview-card">
+        <div class="preview-hdr"><i class="ti ti-brand-slack" style="font-size:14px"></i> Pré-visualização no Slack</div>
+        <div class="preview-msg" id="preview-msg">
+          <div class="preview-avatar-wrap">🤖</div>
+          <div style="flex:1">
+            <div><span class="preview-name">Cobli Bot</span><span class="preview-time" id="preview-time"></span></div>
+            <div class="preview-text" id="preview-text"></div>
+            <div class="preview-sched" id="preview-sched"><i class="ti ti-clock"></i> <span id="preview-sched-txt"></span></div>
+          </div>
+        </div>
+        <div class="preview-empty" id="preview-empty">Selecione uma sugestão para pré-visualizar</div>
+      </div>
+
+      <div class="status-bar">
+        <button class="btn btn-primary" id="btn-send" disabled onclick="sendMessage()">
+          <i class="ti ti-send"></i><span id="btn-send-label">Enviar para o Slack</span>
+        </button>
+        <button class="btn btn-ghost" onclick="clearCompose()"><i class="ti ti-trash" style="font-size:14px"></i> Limpar</button>
+        <div class="status-msg" id="send-status"></div>
+      </div>
     </div>
 
-    <div class="content">
+    <!-- ═══ QUEUE ═══ -->
+    <div class="panel" id="panel-queue">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
+        <div id="queue-list-full"><div class="loading"><i class="ti ti-loader-2 spin"></i> Carregando...</div></div>
+      </div>
+      <div class="card" style="border-color:rgba(0,174,151,.3);background:rgba(0,174,151,.05)">
+        <div class="card-title" style="color:var(--cobli-green)"><i class="ti ti-brand-supabase"></i> Agendamento via Supabase</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7">
+          As mensagens agendadas ficam salvas no <strong style="color:var(--text)">Supabase</strong> e são enviadas automaticamente pela <strong style="color:var(--cobli-green2)">Edge Function</strong> via <strong style="color:var(--cobli-green2)">pg_cron</strong> — mesmo com o navegador fechado.
+        </p>
+      </div>
+    </div>
 
-      <!-- ══ COMPOSITOR ══ -->
-      <div class="page on" id="page-composer">
-
-        <div class="panel">
-          <div class="ph"><div class="ph-t"><i class="ti ti-layout-grid"></i> Cenário</div></div>
-          <div class="pb">
-            <div class="tabs">
-              <button class="tab on" onclick="setScenario('ferias',this)"><i class="ti ti-beach"></i> Férias</button>
-              <button class="tab" onclick="setScenario('licenca',this)"><i class="ti ti-heart-plus"></i> Licença</button>
-              <button class="tab" onclick="setScenario('aviso',this)"><i class="ti ti-alert-triangle"></i> Aviso / Incidente</button>
-              <button class="tab" onclick="setScenario('retorno',this)"><i class="ti ti-player-play"></i> Retorno</button>
-            </div>
+    <!-- ═══ WEBHOOKS ═══ -->
+    <div class="panel" id="panel-webhooks">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
+        <div id="wh-settings-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('wh-form')"><i class="ti ti-plus"></i> Adicionar canal</button>
+        <div class="add-form" id="wh-form">
+          <div><label class="form-label">Nome do canal</label><input type="text" id="wh-add-name" placeholder="Ex: #alertas-ti" /></div>
+          <div><label class="form-label">Webhook URL</label><input type="text" id="wh-add-url" placeholder="https://hooks.slack.com/services/..." /></div>
+          <div><label class="form-label">Emoji (opcional)</label><input type="text" id="wh-add-emoji" placeholder="📢" style="max-width:100px" /></div>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="saveWebhook()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleForm('wh-form')">Cancelar</button>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="panel">
-          <div class="ph">
-            <div class="ph-t"><i class="ti ti-plug"></i> Enviar para</div>
-            <button class="btn btn-o btn-sm" onclick="goPage('webhooks',document.querySelectorAll('.nav')[2])">+ Adicionar canal</button>
+    <!-- ═══ PEOPLE ═══ -->
+    <div class="panel" id="panel-people">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-user"></i> Pessoas cadastradas</div>
+        <div id="people-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('person-form')"><i class="ti ti-plus"></i> Adicionar pessoa</button>
+        <div class="add-form" id="person-form">
+          <div class="slack-id-tip">
+            <strong>💡 Como pegar o Slack User ID:</strong><br>
+            No Slack, clique no perfil da pessoa → <em>Ver perfil</em> → menu <strong>⋯</strong> → <em>Copiar ID do membro</em>.<br>
+            O ID tem o formato <code>U07EADY4SGN</code>. Com ele a marcação <strong>@pessoa</strong> funciona de verdade na mensagem.
           </div>
-          <div class="pb">
-            <div class="wh-chips" id="wh-chips"><div class="wh-empty">Nenhum canal. Vá em <b>Canais Slack</b> para adicionar.</div></div>
+          <div class="form-row">
+            <div><label class="form-label">Nome de exibição</label><input type="text" id="p-name" placeholder="Leonardo Silva" /></div>
+            <div><label class="form-label">Slack User ID</label><input type="text" id="p-slack-id" placeholder="U07EADY4SGN" /></div>
           </div>
-        </div>
-
-        <div class="panel">
-          <div class="ph"><div class="ph-t"><i class="ti ti-pencil"></i> Mensagem</div></div>
-          <div class="pb" style="display:flex;flex-direction:column;gap:14px">
-            <div>
-              <div class="ta-wrap">
-                <textarea id="msg-input" class="compose-ta"
-                  placeholder="Digite aqui... @ para mencionar pessoas · # para grupos do Slack"
-                  oninput="onInput(event)" onkeydown="onKD(event)"></textarea>
-                <div class="ac-drop" id="ac-drop"></div>
-              </div>
-              <div class="hints" id="hints"></div>
-            </div>
-
-            <div class="extras">
-              <div class="trow">
-                <button class="tgl" id="tgl-c" onclick="tglContact()" aria-label="Incluir contato"></button>
-                <span class="tgl-lbl">Incluir contato de suporte / emergência</span>
-              </div>
-              <div class="subrow" id="crow" style="display:none">
-                <i class="ti ti-users" style="font-size:15px;color:var(--tmuted)"></i>
-                <input type="text" class="fi" id="c-input" placeholder="@grupo-ti ou @pessoa" style="max-width:280px"
-                  oninput="processInput(document.getElementById('msg-input').value)"/>
-                <span style="font-size:11px;color:var(--thint)">Aparece no final de todas as variações</span>
-              </div>
-              <div class="divh"></div>
-              <div class="trow">
-                <button class="tgl" id="tgl-s" onclick="tglSched()" aria-label="Agendar envio"></button>
-                <span class="tgl-lbl">Agendar envio</span>
-                <span class="sbadge" id="sbadge">⏰ Agendado</span>
-              </div>
-              <div class="subrow" id="srow" style="display:none">
-                <i class="ti ti-calendar-time" style="font-size:15px;color:var(--tmuted)"></i>
-                <div class="sched-inp">
-                  <input type="date" id="sdate" disabled/>
-                  <input type="time" id="stime" value="09:00" disabled/>
-                </div>
-                <span style="font-size:11px;color:var(--thint)" id="shint"></span>
-              </div>
-            </div>
+          <div class="form-row">
+            <div><label class="form-label">Handle (@) — opcional</label><input type="text" id="p-handle" placeholder="leonardo.silva" /></div>
+            <div><label class="form-label">Cargo / área</label><input type="text" id="p-role" placeholder="Tech Lead · Engenharia" /></div>
           </div>
-        </div>
-
-        <div class="panel">
-          <div class="ph"><div class="ph-t"><i class="ti ti-sparkles"></i><span id="slbl">Sugestões de mensagem</span></div></div>
-          <div class="pb"><div class="sgg" id="sgg"><div class="no-sugg">Comece a digitar para ver sugestões ✨</div></div></div>
-        </div>
-
-        <div class="panel">
-          <div class="ph"><div class="ph-t"><i class="ti ti-brand-slack"></i> Pré-visualização</div></div>
-          <div class="pb">
-            <div class="prev-shell">
-              <div class="prev-top"><i class="ti ti-hash"></i><span id="pch">canal</span><span style="margin-left:auto;color:#3a3a60;font-size:11px">Cobli Bot</span></div>
-              <div class="prev-msg" id="prev-msg">
-                <div class="prev-av">🤖</div>
-                <div>
-                  <div><span class="prev-name">Bot Notificações</span><span class="prev-time" id="ptime"></span></div>
-                  <div class="prev-text" id="ptext"></div>
-                  <div class="prev-sched" id="psched"><i class="ti ti-clock"></i><span id="pschedtxt"></span></div>
-                </div>
-              </div>
-              <div class="prev-empty" id="prev-empty">Selecione uma sugestão para ver a pré-visualização</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="pb">
-            <div class="actbar">
-              <button class="btn btn-p" id="btn-send" disabled onclick="doSend()">
-                <i class="ti ti-send"></i><span id="blbl">Enviar para o Slack</span>
-              </button>
-              <button class="btn btn-o" onclick="clearC()"><i class="ti ti-trash" style="font-size:14px"></i> Limpar</button>
-              <div class="ss" id="sstatus"></div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /compositor -->
-
-      <!-- ══ QUEUE ══ -->
-      <div class="page" id="page-queue">
-        <div class="panel">
-          <div class="ph"><div class="ph-t"><i class="ti ti-clock"></i> Mensagens Agendadas</div><span style="font-size:12px;color:var(--tmuted)" id="qcnt">0 agendadas</span></div>
-          <div class="pb"><div class="q-list" id="qlist"><div class="loading"><i class="ti ti-loader-2 spin"></i> Carregando...</div></div></div>
-        </div>
-        <div class="panel">
-          <div class="ph"><div class="ph-t"><i class="ti ti-brand-supabase"></i> Agendamento via Supabase</div></div>
-          <div class="pb" style="font-size:13px;color:var(--tmuted);line-height:1.9">
-            <p>As mensagens agendadas ficam salvas no <strong>Supabase</strong> e são enviadas automaticamente pela <strong>Edge Function</strong> via <strong>pg_cron</strong> — mesmo com o navegador fechado.</p>
-            <p style="margin-top:8px">Para configurar o cron, veja o arquivo <code>schema.sql</code> incluído no projeto.</p>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="savePerson()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleForm('person-form')">Cancelar</button>
           </div>
         </div>
       </div>
 
-      <!-- ══ CONFIG ══ -->
-      <div class="page" id="page-config">
-        <div class="cfg-grid">
-          <div class="panel">
-            <div class="ph"><div class="ph-t"><i class="ti ti-user"></i> Pessoas (@)</div></div>
-            <div class="pb">
-              <div class="cfg-list" id="ppl-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-              <div class="add-row">
-                <input type="text" class="fi" id="pname" placeholder="Nome" style="max-width:130px"/>
-                <input type="text" class="fi" id="phandle" placeholder="@handle" style="max-width:130px"/>
-                <button class="btn btn-p btn-sm" onclick="addPerson()"><i class="ti ti-plus"></i> Adicionar</button>
-              </div>
-            </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-users"></i> Grupos de pessoas (@)</div>
+        <div id="groups-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('group-form')"><i class="ti ti-plus"></i> Adicionar grupo</button>
+        <div class="add-form" id="group-form">
+          <div class="slack-id-tip">
+            <strong>💡 Como pegar o Slack Group ID:</strong><br>
+            No Slack, vá em <em>Configurações do espaço de trabalho → Grupos de usuários</em>. O ID do grupo tem formato <code>S0614TZR7</code>.<br>
+            Ou use o handle do grupo (ex: <code>@time-ti</code>) — funciona para grupos de usuários existentes.
           </div>
-          <div class="panel">
-            <div class="ph"><div class="ph-t"><i class="ti ti-hash"></i> Grupos Slack (#)</div></div>
-            <div class="pb">
-              <div class="cfg-list" id="grp-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-              <div class="add-row">
-                <input type="text" class="fi" id="gname" placeholder="Nome do grupo" style="max-width:130px"/>
-                <input type="text" class="fi" id="gchannel" placeholder="#canal" style="max-width:130px"/>
-                <button class="btn btn-p btn-sm" onclick="addGroup()"><i class="ti ti-plus"></i> Adicionar</button>
-              </div>
-            </div>
+          <div class="form-row">
+            <div><label class="form-label">Nome do grupo</label><input type="text" id="g-name" placeholder="Time de TI" /></div>
+            <div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="g-handle" placeholder="time-ti" /></div>
+          </div>
+          <div class="form-row">
+            <div><label class="form-label">Slack Group ID (opcional)</label><input type="text" id="g-slack-id" placeholder="S0614TZR7" /></div>
+            <div><label class="form-label">Emoji</label><input type="text" id="g-emoji" placeholder="👥" style="max-width:100px" /></div>
+          </div>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="saveGroup()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleForm('group-form')">Cancelar</button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- ══ WEBHOOKS ══ -->
-      <div class="page" id="page-webhooks">
-        <div class="panel">
-          <div class="ph"><div class="ph-t"><i class="ti ti-plug"></i> Canais Slack (Webhooks)</div></div>
-          <div class="pb">
-            <div class="cfg-list" id="wh-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-            <div class="add-row">
-              <input type="text" class="fi" id="wname" placeholder="Nome do canal" style="max-width:150px"/>
-              <input type="text" class="fi mono" id="wchannel" placeholder="#canal" style="max-width:110px"/>
-              <input type="text" class="fi mono" id="wurl" placeholder="https://hooks.slack.com/services/..." style="flex:2;min-width:220px"/>
-              <button class="btn btn-p btn-sm" onclick="addWebhook()"><i class="ti ti-plus"></i> Adicionar</button>
-            </div>
-            <p style="font-size:11px;color:var(--thint);margin-top:10px">
-              <i class="ti ti-info-circle"></i> Obtenha em <strong>slack.com/apps</strong> → Incoming Webhooks → Add to Slack.
-            </p>
+    <!-- ═══ CHANNELS ═══ -->
+    <div class="panel" id="panel-channels">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-hash"></i> Canais Slack (#)</div>
+        <div id="channels-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="toggleForm('channel-form')"><i class="ti ti-plus"></i> Adicionar canal</button>
+        <div class="add-form" id="channel-form">
+          <div class="form-row">
+            <div><label class="form-label">Nome do canal (sem #)</label><input type="text" id="ch-name" placeholder="suporte-geral" /></div>
+            <div><label class="form-label">Descrição</label><input type="text" id="ch-desc" placeholder="Canal de suporte ao cliente" /></div>
+          </div>
+          <div class="form-row">
+            <button class="btn btn-success btn-sm" onclick="saveChannel()"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleForm('channel-form')">Cancelar</button>
           </div>
         </div>
       </div>
+    </div>
 
-    </div><!-- /content -->
-  </main>
-</div><!-- /shell -->
-
-<div id="toast"></div>
+  </div>
+</div>
+</div>
 
 <script>
-/* ══════════════════════════════════════════════════
-   CONFIG — substitua com suas credenciais do Supabase
-══════════════════════════════════════════════════ */
-const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';
+/* ════════════════════════════════════════════════
+   CONFIG SUPABASE — substitua com suas credenciais
+════════════════════════════════════════════════ */
+const SUPABASE_URL  = 'https://SEU_PROJECT_REF.supabase.co';
+const SUPABASE_ANON = 'SUA_ANON_KEY';
+// Edge Function URL (gerada após deploy):
+const EDGE_SEND_URL = 'https://SEU_PROJECT_REF.supabase.co/functions/v1/send-slack';
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    INIT
-══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let user = null;
-let people = [], groups = [], webhooks = [];
-let scenario='ferias', selSugg=null, selWh=null, contactOn=false, schedOn=false;
-let acMode=null, acStart=-1, acFocus=0, acItems=[];
+let DB   = { webhooks:[], people:[], groups:[], channels:[] };
+let ST   = { scenario:'ferias', selWh:null, selSugg:null, contactOn:false, schedOn:false, acMode:null, acFocus:0 };
 let authMode = 'login';
+let whOpen = false;
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    AUTH
-══════════════════════════════════════════════════ */
-function switchAuth(mode, btn) {
-  authMode = mode;
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('on'));
-  btn.classList.add('on');
+════════════════════════════════════════════════ */
+function switchAuthMode(m, btn) {
+  authMode = m;
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
   document.getElementById('auth-btn').innerHTML =
-    mode === 'login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
-  document.getElementById('auth-err').style.display = 'none';
+    m==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+  document.getElementById('auth-err').style.display='none';
 }
 
 async function doAuth() {
   const email = document.getElementById('auth-email').value.trim();
   const pw    = document.getElementById('auth-pw').value;
   const errEl = document.getElementById('auth-err');
-  errEl.style.display = 'none';
-  if (!email || !pw) { showErr('Preencha e-mail e senha.'); return; }
-
+  errEl.style.display='none';
+  if (!email||!pw) { showAuthErr('Preencha e-mail e senha.'); return; }
   const btn = document.getElementById('auth-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2 spin"></i> Aguarde...';
-
-  const fn = authMode === 'login'
-    ? sb.auth.signInWithPassword({ email, password: pw })
-    : sb.auth.signUp({ email, password: pw });
-
-  const { error } = await fn;
-  btn.disabled = false;
-  btn.innerHTML = authMode === 'login'
-    ? '<i class="ti ti-login"></i> Entrar'
-    : '<i class="ti ti-user-plus"></i> Criar conta';
-
-  if (error) { showErr(error.message); return; }
-  if (authMode === 'signup') { showErr('Conta criada! Verifique seu e-mail se necessário e entre.'); }
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2 spin"></i> Aguarde...';
+  const { error } = authMode==='login'
+    ? await sb.auth.signInWithPassword({email,password:pw})
+    : await sb.auth.signUp({email,password:pw});
+  btn.disabled=false;
+  btn.innerHTML = authMode==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+  if (error) { showAuthErr(error.message); return; }
+  if (authMode==='signup') showAuthErr('Conta criada! Verifique seu e-mail e entre.');
 }
+function showAuthErr(m) { const e=document.getElementById('auth-err'); e.textContent=m; e.style.display='block'; }
 
-function showErr(msg) {
-  const el = document.getElementById('auth-err');
-  el.textContent = msg; el.style.display = 'block';
-}
+async function doLogout() { await sb.auth.signOut(); }
 
-async function logout() {
-  await sb.auth.signOut();
-}
-
-/* ══════════════════════════════════════════════════
-   SESSION
-══════════════════════════════════════════════════ */
-sb.auth.onAuthStateChange(async (event, session) => {
+sb.auth.onAuthStateChange(async (_ev, session) => {
   user = session?.user ?? null;
   if (user) {
-    document.getElementById('auth-screen').style.display  = 'none';
-    document.getElementById('app-shell').style.display    = 'grid';
-    document.getElementById('sb-email').textContent       = user.email;
+    document.getElementById('auth-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('sb-email').textContent=user.email;
     await loadAll();
   } else {
-    document.getElementById('auth-screen').style.display  = 'flex';
-    document.getElementById('app-shell').style.display    = 'none';
+    document.getElementById('auth-screen').style.display='flex';
+    document.getElementById('app').style.display='none';
   }
 });
 
-/* ══════════════════════════════════════════════════
-   LOAD ALL DATA
-══════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   LOAD
+════════════════════════════════════════════════ */
 async function loadAll() {
-  const [p, g, w] = await Promise.all([
+  const [p,g,c,w] = await Promise.all([
     sb.from('people').select('*').order('name'),
     sb.from('groups').select('*').order('name'),
+    sb.from('channels').select('*').order('name'),
     sb.from('webhooks').select('*').order('name'),
   ]);
-  people   = p.data || [];
-  groups   = g.data || [];
-  webhooks = w.data || [];
-  renderWhChips();
-  renderHints();
-  renderPeople();
-  renderGroups();
-  renderWhList();
-  loadQueue();
+  DB.people   = p.data||[];
+  DB.groups   = g.data||[];
+  DB.channels = c.data||[];
+  DB.webhooks = w.data||[];
+  renderAll();
 }
 
-/* ══════════════════════════════════════════════════
-   NAVIGATION
-══════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   NAV
+════════════════════════════════════════════════ */
 const PMETA = {
-  composer: { t:'Compositor de Mensagens',    s:'Digite, escolha uma variação e envie para o Slack' },
-  queue:    { t:'Mensagens Agendadas',         s:'Gerenciadas pelo Supabase — envio automático garantido' },
-  config:   { t:'Pessoas & Grupos',            s:'Cadastre para autocomplete com @ e #' },
-  webhooks: { t:'Canais Slack (Webhooks)',     s:'Destinos para envio de notificações' },
+  compose:  {t:'Compositor de Mensagens',    s:'Digite, escolha uma variação e envie para o Slack'},
+  queue:    {t:'Agendamentos',               s:'Mensagens programadas no Supabase'},
+  webhooks: {t:'Webhooks / Canais',          s:'Gerencie os canais de destino'},
+  people:   {t:'Pessoas & Grupos (@)',       s:'Autocomplete de menções'},
+  channels: {t:'Canais Slack (#)',           s:'Autocomplete de canais'},
 };
-function goPage(id, btn) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.nav').forEach(b=>b.classList.remove('on'));
-  document.getElementById('page-'+id).classList.add('on');
-  if (btn) btn.classList.add('on');
-  const m = PMETA[id]||{};
-  document.getElementById('ptitle').textContent = m.t||'';
-  document.getElementById('psub').textContent   = m.s||'';
-  if (id==='config')   { renderPeople(); renderGroups(); }
-  if (id==='webhooks') { renderWhList(); }
-  if (id==='queue')    { loadQueue(); }
-  if (id==='composer') { renderWhChips(); renderHints(); processInput(document.getElementById('msg-input').value); }
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const m=PMETA[id]||{};
+  document.getElementById('topbar-title').textContent=m.t||'';
+  document.getElementById('topbar-sub').textContent=m.s||'';
+  if (id==='webhooks') renderWhSettings();
+  if (id==='people')   { renderPeopleList(); renderGroupsList(); }
+  if (id==='channels') renderChannelsList();
+  if (id==='queue')    loadQueue();
+  if (id==='compose')  renderWhDrop();
 }
 
-/* ══════════════════════════════════════════════════
-   PEOPLE
-══════════════════════════════════════════════════ */
-async function addPerson() {
-  const name   = document.getElementById('pname').value.trim();
-  const handle = document.getElementById('phandle').value.trim().replace(/^@/,'');
-  if (!name || !handle) return;
-  const { data, error } = await sb.from('people').insert({ user_id: user.id, name, handle }).select().single();
-  if (error) { toast(error.message,'err'); return; }
-  people.push(data);
-  document.getElementById('pname').value = '';
-  document.getElementById('phandle').value = '';
-  renderPeople();
-  toast(`${name} adicionado(a)`, 'ok');
+/* ════════════════════════════════════════════════
+   WEBHOOKS (Supabase)
+════════════════════════════════════════════════ */
+async function saveWebhook() {
+  const name  = v('wh-add-name');
+  const url   = v('wh-add-url');
+  const emoji = v('wh-add-emoji')||'📢';
+  if (!name||!url) { alert('Preencha nome e URL.'); return; }
+  if (!url.startsWith('https://hooks.slack.com/')) { alert('URL inválida. Use uma Incoming Webhook do Slack.'); return; }
+  const {data,error} = await sb.from('webhooks').insert({user_id:user.id,name,url,emoji}).select().single();
+  if (error) { showStatus(error.message,'error'); return; }
+  DB.webhooks.push(data);
+  ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
+  toggleForm('wh-form'); renderWhSettings(); renderWhDrop();
+  showStatus('Canal adicionado!','success');
 }
-async function delPerson(id) {
-  await sb.from('people').delete().eq('id', id);
-  people = people.filter(p => p.id !== id);
-  renderPeople();
+async function deleteWebhook(id) {
+  await sb.from('webhooks').delete().eq('id',id);
+  DB.webhooks = DB.webhooks.filter(w=>w.id!==id);
+  if (ST.selWh&&ST.selWh.id===id) { ST.selWh=null; renderWhBtn(); }
+  renderWhSettings(); renderWhDrop(); updateSendBtn();
 }
-function renderPeople() {
-  const el = document.getElementById('ppl-list');
-  if (!people.length) { el.innerHTML='<div style="font-size:13px;color:var(--thint);padding:8px 0">Nenhuma pessoa cadastrada.</div>'; return; }
-  el.innerHTML = people.map(p=>`
-    <div class="cfg-item">
-      <div class="cav cav-p">${p.name[0].toUpperCase()}</div>
-      <div style="flex:1;min-width:0"><div class="cname">${p.name}</div><div class="csub">@${p.handle}</div></div>
-      <button class="ibtn" onclick="delPerson('${p.id}')"><i class="ti ti-trash"></i></button>
+function renderWhSettings() {
+  const el=document.getElementById('wh-settings-list');
+  if (!DB.webhooks.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML = DB.webhooks.map(w=>`
+    <div class="list-item">
+      <div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji||'📢'}</div>
+      <div><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,50))}…</div></div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deleteWebhook('${w.id}')"><i class="ti ti-trash"></i></button></div>
+    </div>`).join('');
+}
+function renderWhDrop() {
+  const el=document.getElementById('wh-list');
+  if (!DB.webhooks.length) { el.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML = DB.webhooks.map(w=>`
+    <div class="wh-opt ${ST.selWh&&ST.selWh.id===w.id?'active':''}" onclick="selectWh('${w.id}')">
+      <span style="font-size:18px">${w.emoji||'📢'}</span>
+      <div><div class="wh-name">${esc(w.name)}</div></div>
+      <i class="ti ti-check wh-check"></i>
+    </div>`).join('');
+}
+function selectWh(id) {
+  ST.selWh=DB.webhooks.find(w=>w.id===id)||null;
+  toggleWhDrop(true); renderWhBtn(); updateSendBtn();
+}
+function renderWhBtn() {
+  const dot=document.getElementById('wh-dot'), nm=document.getElementById('wh-name');
+  if (!ST.selWh) { dot.className='wh-dot'; nm.textContent='— Selecione um canal —'; }
+  else { dot.className='wh-dot ok'; nm.textContent=(ST.selWh.emoji||'📢')+' '+ST.selWh.name; }
+  renderWhDrop();
+}
+function toggleWhDrop(forceClose) {
+  whOpen = forceClose ? false : !whOpen;
+  document.getElementById('wh-dropdown').classList.toggle('open',whOpen);
+}
+document.addEventListener('click',e=>{ if (!document.getElementById('wh-wrap').contains(e.target)) { whOpen=false; document.getElementById('wh-dropdown').classList.remove('open'); } });
+
+/* ════════════════════════════════════════════════
+   PEOPLE (Supabase)
+   slack_id = User ID real do Slack (U07EADY4SGN)
+   Na mensagem final vira <@U07EADY4SGN> = marcação real
+════════════════════════════════════════════════ */
+async function savePerson() {
+  const name     = v('p-name');
+  const slack_id = v('p-slack-id').trim().replace(/[<@>]/g,'');
+  const handle   = v('p-handle').replace('@','');
+  const role     = v('p-role');
+  if (!name) { alert('Preencha o nome.'); return; }
+  const {data,error} = await sb.from('people').insert({user_id:user.id,name,slack_id,handle,role}).select().single();
+  if (error) { showStatus(error.message,'error'); return; }
+  DB.people.push(data);
+  ['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{ document.getElementById(i).value=''; });
+  toggleForm('person-form'); renderPeopleList();
+  showStatus(`${name} adicionado(a)!`,'success');
+}
+async function deletePerson(id) {
+  await sb.from('people').delete().eq('id',id);
+  DB.people=DB.people.filter(p=>p.id!==id); renderPeopleList();
+}
+function renderPeopleList() {
+  const el=document.getElementById('people-list');
+  if (!DB.people.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>'; return; }
+  el.innerHTML=DB.people.map(p=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar person">${initials(p.name)}</div>
+      <div>
+        <div class="list-item-name">${esc(p.name)}</div>
+        <div class="list-item-sub">${p.slack_id?'ID: '+esc(p.slack_id):''}${p.handle?' · @'+esc(p.handle):''}${p.role?' · '+esc(p.role):''}</div>
+      </div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deletePerson('${p.id}')"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
 }
 
-/* ══════════════════════════════════════════════════
-   GROUPS
-══════════════════════════════════════════════════ */
-async function addGroup() {
-  const name    = document.getElementById('gname').value.trim();
-  const channel = document.getElementById('gchannel').value.trim().replace(/^#/,'');
-  if (!name || !channel) return;
-  const { data, error } = await sb.from('groups').insert({ user_id: user.id, name, channel }).select().single();
-  if (error) { toast(error.message,'err'); return; }
-  groups.push(data);
-  document.getElementById('gname').value = '';
-  document.getElementById('gchannel').value = '';
-  renderGroups();
-  toast(`#${channel} adicionado`, 'ok');
+/* ════════════════════════════════════════════════
+   GROUPS (Supabase)
+════════════════════════════════════════════════ */
+async function saveGroup() {
+  const name     = v('g-name');
+  const handle   = v('g-handle').replace('@','');
+  const slack_id = v('g-slack-id').trim();
+  const emoji    = v('g-emoji')||'👥';
+  if (!name||!handle) { alert('Preencha nome e handle.'); return; }
+  const {data,error} = await sb.from('groups').insert({user_id:user.id,name,handle,slack_id,emoji}).select().single();
+  if (error) { showStatus(error.message,'error'); return; }
+  DB.groups.push(data);
+  ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
+  toggleForm('group-form'); renderGroupsList();
+  showStatus(`Grupo ${name} adicionado!`,'success');
 }
-async function delGroup(id) {
-  await sb.from('groups').delete().eq('id', id);
-  groups = groups.filter(g => g.id !== id);
-  renderGroups();
+async function deleteGroup(id) {
+  await sb.from('groups').delete().eq('id',id);
+  DB.groups=DB.groups.filter(g=>g.id!==id); renderGroupsList();
 }
-function renderGroups() {
-  const el = document.getElementById('grp-list');
-  if (!groups.length) { el.innerHTML='<div style="font-size:13px;color:var(--thint);padding:8px 0">Nenhum grupo cadastrado.</div>'; return; }
-  el.innerHTML = groups.map(g=>`
-    <div class="cfg-item">
-      <div class="cav cav-g"><i class="ti ti-hash" style="font-size:13px"></i></div>
-      <div style="flex:1;min-width:0"><div class="cname">${g.name}</div><div class="csub">#${g.channel}</div></div>
-      <button class="ibtn" onclick="delGroup('${g.id}')"><i class="ti ti-trash"></i></button>
+function renderGroupsList() {
+  const el=document.getElementById('groups-list');
+  if (!DB.groups.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>'; return; }
+  el.innerHTML=DB.groups.map(g=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji||'👥'}</div>
+      <div>
+        <div class="list-item-name">${esc(g.name)}</div>
+        <div class="list-item-sub">@${esc(g.handle)}${g.slack_id?' · ID: '+esc(g.slack_id):''}</div>
+      </div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deleteGroup('${g.id}')"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
 }
 
-/* ══════════════════════════════════════════════════
-   WEBHOOKS
-══════════════════════════════════════════════════ */
-async function addWebhook() {
-  const name    = document.getElementById('wname').value.trim();
-  const channel = document.getElementById('wchannel').value.trim().replace(/^#/,'');
-  const url     = document.getElementById('wurl').value.trim();
-  if (!name || !url) return;
-  if (!url.startsWith('https://hooks.slack.com/')) { toast('URL inválida — deve começar com https://hooks.slack.com/', 'err'); return; }
-  const { data, error } = await sb.from('webhooks').insert({ user_id: user.id, name, channel, url }).select().single();
-  if (error) { toast(error.message,'err'); return; }
-  webhooks.push(data);
-  document.getElementById('wname').value = '';
-  document.getElementById('wchannel').value = '';
-  document.getElementById('wurl').value = '';
-  renderWhList(); renderWhChips();
-  toast(`Canal "${name}" adicionado`, 'ok');
+/* ════════════════════════════════════════════════
+   CHANNELS (Supabase)
+════════════════════════════════════════════════ */
+async function saveChannel() {
+  const name = v('ch-name').replace('#','');
+  const desc = v('ch-desc');
+  if (!name) { alert('Preencha o nome do canal.'); return; }
+  const {data,error} = await sb.from('channels').insert({user_id:user.id,name,desc}).select().single();
+  if (error) { showStatus(error.message,'error'); return; }
+  DB.channels.push(data);
+  ['ch-name','ch-desc'].forEach(i=>{ document.getElementById(i).value=''; });
+  toggleForm('channel-form'); renderChannelsList();
+  showStatus(`#${name} adicionado!`,'success');
 }
-async function delWebhook(id) {
-  await sb.from('webhooks').delete().eq('id', id);
-  webhooks = webhooks.filter(w => w.id !== id);
-  if (selWh && selWh.id === id) { selWh = null; updPrevCh(); }
-  renderWhList(); renderWhChips(); updSendBtn();
+async function deleteChannel(id) {
+  await sb.from('channels').delete().eq('id',id);
+  DB.channels=DB.channels.filter(c=>c.id!==id); renderChannelsList();
 }
-function renderWhList() {
-  const el = document.getElementById('wh-list');
-  if (!webhooks.length) { el.innerHTML='<div style="font-size:13px;color:var(--thint);padding:8px 0">Nenhum canal cadastrado.</div>'; return; }
-  el.innerHTML = webhooks.map(w=>`
-    <div class="cfg-item">
-      <div class="cav cav-w"><i class="ti ti-brand-slack" style="font-size:14px"></i></div>
-      <div style="flex:1;min-width:0"><div class="cname">${w.name}</div><div class="csub">${w.channel?'#'+w.channel+' · ':''}${w.url.slice(0,42)}...</div></div>
-      <button class="ibtn" onclick="delWebhook('${w.id}')"><i class="ti ti-trash"></i></button>
+function renderChannelsList() {
+  const el=document.getElementById('channels-list');
+  if (!DB.channels.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
+  el.innerHTML=DB.channels.map(c=>`
+    <div class="list-item">
+      <div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div>
+      <div>
+        <div class="list-item-name">#${esc(c.name)}</div>
+        ${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}
+      </div>
+      <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deleteChannel('${c.id}')"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
-}
-function renderWhChips() {
-  const el = document.getElementById('wh-chips');
-  if (!webhooks.length) { el.innerHTML='<div class="wh-empty">Nenhum canal. Vá em <b>Canais Slack</b> para adicionar.</div>'; return; }
-  el.innerHTML = webhooks.map(w=>`
-    <div class="wh-chip${selWh&&selWh.id===w.id?' sel':''}" onclick="selWebhook('${w.id}')">
-      <span class="wh-dot"></span>
-      <div><div class="wh-cn">${w.name}</div>${w.channel?`<div class="wh-cc">#${w.channel}</div>`:''}</div>
-      <i class="ti ti-check wh-ck"></i>
-    </div>`).join('');
-  updPrevCh();
-}
-function selWebhook(id) {
-  selWh = webhooks.find(w=>w.id===id) || null;
-  renderWhChips(); updPrevCh(); updSendBtn();
-}
-function updPrevCh() {
-  document.getElementById('pch').textContent = selWh ? (selWh.channel || selWh.name) : 'canal';
 }
 
-/* ══════════════════════════════════════════════════
-   QUEUE
-══════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   QUEUE (Supabase)
+════════════════════════════════════════════════ */
 async function loadQueue() {
-  const { data } = await sb.from('scheduled_messages')
-    .select('*, webhooks(name,channel)')
-    .eq('sent', false)
-    .order('scheduled_at');
-  renderQueue(data || []);
+  const {data} = await sb.from('scheduled_messages').select('*,webhooks(name,emoji)').eq('sent',false).order('scheduled_at');
+  const msgs = data||[];
+  const el   = document.getElementById('queue-list-full');
+  const ct   = document.getElementById('queue-count-display');
+  const nb   = document.getElementById('nb');
+  ct.textContent = msgs.length;
+  nb.textContent = msgs.length; nb.style.display = msgs.length?'inline-block':'none';
+  if (!msgs.length) { el.innerHTML='<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
+  el.innerHTML = msgs.map(m=>`
+    <div class="queue-item">
+      <div style="font-size:18px;flex-shrink:0">${m.webhooks?.emoji||'📢'}</div>
+      <div style="flex:1">
+        <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${m.webhooks?.name||'—'}</div>
+        <div class="queue-text">${esc(m.preview_text||'')}</div>
+      </div>
+      <button class="btn btn-danger-ghost btn-sm" onclick="cancelScheduled('${m.id}')"><i class="ti ti-x"></i> Cancelar</button>
+    </div>`).join('');
 }
 async function cancelScheduled(id) {
-  await sb.from('scheduled_messages').delete().eq('id', id);
+  await sb.from('scheduled_messages').delete().eq('id',id);
   loadQueue();
-  toast('Agendamento cancelado', 'info');
-}
-function renderQueue(msgs) {
-  const el  = document.getElementById('qlist');
-  const cnt = document.getElementById('qcnt');
-  const nb  = document.getElementById('nb');
-  const n   = msgs.length;
-  cnt.textContent = n + ' agendada' + (n!==1?'s':'');
-  nb.textContent  = n;
-  if (!n) { el.innerHTML='<div class="q-empty">Nenhuma mensagem agendada.</div>'; return; }
-  el.innerHTML = msgs.map(m=>`
-    <div class="q-item">
-      <div class="q-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
-      <div class="q-info">
-        <div class="q-txt">${m.preview_text||m.slack_text.split('\n')[0].replace(/\*/g,'')}</div>
-        <div class="q-wh"><i class="ti ti-brand-slack" style="font-size:11px"></i> ${m.webhook_name||m.webhooks?.name||'—'}</div>
-      </div>
-      <span class="q-cancel" onclick="cancelScheduled('${m.id}')">Cancelar</span>
-    </div>`).join('');
 }
 
-/* ══════════════════════════════════════════════════
-   SCENARIO / HINTS
-══════════════════════════════════════════════════ */
-const HINTS = {
-  ferias:  ['@nome','férias','a partir de DD/MM','retornando em DD/MM'],
-  licenca: ['@nome','atestado','licença médica','retorna em DD/MM'],
-  aviso:   ['#grupo','instabilidade','falha em','manutenção','resolvido'],
-  retorno: ['@nome','retornou','disponível','de volta']
+/* ════════════════════════════════════════════════
+   AUTOCOMPLETE — @ busca pessoas/grupos, # busca canais
+════════════════════════════════════════════════ */
+function onMsgInput(ta) { detectAC(ta); processInput(ta.value); }
+
+function detectAC(ta) {
+  const val=ta.value, pos=ta.selectionStart, before=val.substring(0,pos);
+  const atIdx=before.lastIndexOf('@'), hashIdx=before.lastIndexOf('#');
+  const lastIdx=Math.max(atIdx,hashIdx);
+  if (lastIdx===-1) { closeAC(); return; }
+  const sym=val[lastIdx], query=before.substring(lastIdx+1);
+  if (/\s/.test(query)) { closeAC(); return; }
+  ST.acMode=sym;
+  const q=query.toLowerCase();
+  let items=[];
+  if (sym==='@') {
+    document.getElementById('ac-header').textContent='Pessoas & Grupos';
+    const ppl = DB.people.filter(p=>p.name.toLowerCase().includes(q)||((p.handle||'').toLowerCase().includes(q)));
+    const grp = DB.groups.filter(g=>g.name.toLowerCase().includes(q)||g.handle.toLowerCase().includes(q));
+    items=[
+      ...ppl.map(p=>({type:'person', label:p.name, insert: p.slack_id?`<@${p.slack_id}>`:`@${p.handle||p.name}`, sub:p.slack_id?'ID: '+p.slack_id:(p.handle?'@'+p.handle:''), avatar:initials(p.name)})),
+      ...grp.map(g=>({type:'group',  label:g.name, insert: g.slack_id?`<!subteam^${g.slack_id}>`:`@${g.handle}`,  sub:g.slack_id?'ID: '+g.slack_id:'@'+g.handle, avatar:g.emoji||'👥'}))
+    ];
+  } else {
+    document.getElementById('ac-header').textContent='Canais Slack';
+    items=DB.channels.filter(c=>c.name.toLowerCase().includes(q)).map(c=>({type:'channel',label:'#'+c.name,insert:'#'+c.name,sub:c.desc||'',avatar:'#'}));
+  }
+  if (!items.length) { closeAC(); return; }
+  window._acItems=items; ST.acFocus=0;
+  document.getElementById('ac-list').innerHTML=items.map((it,i)=>`
+    <div class="ac-item ${i===0?'focused':''}" onclick="insertAC('${esc(it.insert)}',${lastIdx})">
+      <div class="ac-avatar ${it.type}">${it.avatar}</div>
+      <div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div>
+    </div>`).join('');
+  document.getElementById('ac-dropdown').classList.add('open');
+}
+
+function closeAC() { document.getElementById('ac-dropdown').classList.remove('open'); ST.acMode=null; }
+
+function insertAC(insert, symIdx) {
+  const ta=document.getElementById('msg-input');
+  const val=ta.value, pos=ta.selectionStart;
+  const before=val.substring(0,pos), lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'));
+  ta.value=val.substring(0,lastIdx)+insert+' '+val.substring(pos);
+  ta.focus(); const np=lastIdx+insert.length+1; ta.setSelectionRange(np,np);
+  closeAC(); processInput(ta.value);
+}
+
+function onMsgKeydown(e) {
+  const dd=document.getElementById('ac-dropdown');
+  if (!dd.classList.contains('open')) return;
+  const items=window._acItems||[];
+  if (e.key==='ArrowDown') { e.preventDefault(); ST.acFocus=Math.min(ST.acFocus+1,items.length-1); refreshACFocus(); }
+  if (e.key==='ArrowUp')   { e.preventDefault(); ST.acFocus=Math.max(ST.acFocus-1,0); refreshACFocus(); }
+  if (e.key==='Enter'||e.key==='Tab') {
+    const it=items[ST.acFocus];
+    if (it) { e.preventDefault(); const ta=document.getElementById('msg-input'); insertAC(it.insert,0); }
+  }
+  if (e.key==='Escape') closeAC();
+}
+function refreshACFocus() { document.querySelectorAll('.ac-item').forEach((el,i)=>el.classList.toggle('focused',i===ST.acFocus)); }
+
+/* ════════════════════════════════════════════════
+   SCENARIOS
+════════════════════════════════════════════════ */
+const HINTS={
+  ferias: ['@nome','férias','a partir de DD/MM','retornando em DD/MM'],
+  licenca:['@nome','atestado','licença médica','retorna em DD/MM'],
+  aviso:  ['instabilidade em','falha no','indisponível','manutenção'],
+  retorno:['@nome','retornou','disponível','de volta em DD/MM']
 };
-function setScenario(sc, btn) {
-  scenario = sc;
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  renderHints(); processInput(document.getElementById('msg-input').value);
+function setScenario(sc,btn) {
+  ST.scenario=sc;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); renderHints(); processInput(document.getElementById('msg-input').value);
 }
 function renderHints() {
-  document.getElementById('hints').innerHTML = (HINTS[scenario]||[]).map(h=>
-    `<span class="hp" onclick="insHint('${h}')">${h}</span>`).join('');
+  document.getElementById('hint-pills').innerHTML=(HINTS[ST.scenario]||[]).map(h=>`<span class="hint-pill" onclick="insertHint('${h}')">${h}</span>`).join('');
 }
-function insHint(h) {
-  const ta=document.getElementById('msg-input'), v=ta.value;
-  ta.value = v+(v&&!v.endsWith(' ')?' ':'')+h+' ';
+function insertHint(h) {
+  const ta=document.getElementById('msg-input'),vl=ta.value;
+  ta.value=vl+(vl&&!vl.endsWith(' ')?' ':'')+h+' ';
   ta.focus(); processInput(ta.value);
 }
 
-/* ══════════════════════════════════════════════════
-   AUTOCOMPLETE
-══════════════════════════════════════════════════ */
-function onInput(e) { processInput(e.target.value); handleAC(e.target); }
-function handleAC(ta) {
-  const v=ta.value, pos=ta.selectionStart, before=v.slice(0,pos);
-  const am=before.match(/@([\w]*)$/), hm=before.match(/#([\w\-]*)$/);
-  if (am) {
-    acMode='@'; acStart=pos-am[0].length;
-    const q=am[1].toLowerCase();
-    acItems = people.filter(p=>p.name.toLowerCase().includes(q)||p.handle.toLowerCase().includes(q));
-    renderAC();
-  } else if (hm) {
-    acMode='#'; acStart=pos-hm[0].length;
-    const q=hm[1].toLowerCase();
-    acItems = groups.filter(g=>g.name.toLowerCase().includes(q)||g.channel.toLowerCase().includes(q));
-    renderAC();
-  } else closeAC();
+/* ════════════════════════════════════════════════
+   OPTIONS
+════════════════════════════════════════════════ */
+function toggleContact() {
+  ST.contactOn=!ST.contactOn;
+  document.getElementById('tgl-contact').classList.toggle('on',ST.contactOn);
+  document.getElementById('contact-row').style.display=ST.contactOn?'flex':'none';
+  if (ST.contactOn) document.getElementById('contact-input').focus();
+  refreshSuggs();
 }
-function renderAC() {
-  const dd=document.getElementById('ac-drop'); acFocus=0;
-  if (!acItems.length) { dd.innerHTML='<div class="ac-empty">Nenhum resultado</div>'; dd.classList.add('open'); return; }
-  dd.innerHTML = acItems.map((it,i)=>{
-    const isG='channel' in it, lbl=isG?'#'+it.channel:'@'+it.handle;
-    return `<div class="ac-i${i===0?' hi':''}" onclick="insAC(${i})" onmouseover="setACF(${i})">
-      <div class="ac-av${isG?' g':''}">${isG?'<i class="ti ti-hash" style="font-size:11px"></i>':it.name[0].toUpperCase()}</div>
-      <div><div class="ac-nm">${it.name}</div><div class="ac-hd">${lbl}</div></div>
-    </div>`;
-  }).join('');
-  dd.classList.add('open');
+function toggleSchedule() {
+  ST.schedOn=!ST.schedOn;
+  document.getElementById('tgl-sched').classList.toggle('on',ST.schedOn);
+  document.getElementById('sched-row').style.display=ST.schedOn?'flex':'none';
+  const di=document.getElementById('sched-date'),ti=document.getElementById('sched-time');
+  di.disabled=!ST.schedOn; ti.disabled=!ST.schedOn;
+  if (ST.schedOn) { di.value=new Date().toISOString().split('T')[0]; di.min=di.value; di.onchange=ti.onchange=updateSchedHint; updateSchedHint(); }
+  else { document.getElementById('sched-badge').classList.remove('visible'); document.getElementById('sched-hint').textContent=''; document.getElementById('preview-sched').classList.remove('visible'); }
+  updateSendBtn();
 }
-function closeAC() { document.getElementById('ac-drop').classList.remove('open'); acMode=null; acStart=-1; acItems=[]; }
-function setACF(i) { acFocus=i; document.querySelectorAll('.ac-i').forEach((el,j)=>el.classList.toggle('hi',j===i)); }
-function insAC(i) {
-  if (i<0||i>=acItems.length) return;
-  const ta=document.getElementById('msg-input'), it=acItems[i], isG='channel' in it;
-  const ins=isG?'#'+it.channel:'@'+it.handle;
-  const v=ta.value, pos=ta.selectionStart;
-  ta.value=v.slice(0,acStart)+ins+' '+v.slice(pos);
-  ta.selectionStart=ta.selectionEnd=acStart+ins.length+1;
-  closeAC(); processInput(ta.value); ta.focus();
+function updateSchedHint() {
+  const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
+  if (d&&t) { document.getElementById('sched-hint').textContent=new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); document.getElementById('sched-badge').classList.add('visible'); }
+  updatePreview(ST.selSugg);
 }
-function onKD(e) {
-  const dd=document.getElementById('ac-drop');
-  if (!dd.classList.contains('open')) return;
-  if (e.key==='ArrowDown') { e.preventDefault(); setACF(Math.min(acFocus+1,acItems.length-1)); }
-  else if (e.key==='ArrowUp') { e.preventDefault(); setACF(Math.max(acFocus-1,0)); }
-  else if (e.key==='Enter'||e.key==='Tab') { e.preventDefault(); insAC(acFocus); }
-  else if (e.key==='Escape') closeAC();
-}
+function refreshSuggs() { processInput(document.getElementById('msg-input').value); }
 
-/* ══════════════════════════════════════════════════
-   EXTRAS
-══════════════════════════════════════════════════ */
-function tglContact() {
-  contactOn=!contactOn;
-  document.getElementById('tgl-c').classList.toggle('on',contactOn);
-  document.getElementById('crow').style.display=contactOn?'flex':'none';
-  if (contactOn) document.getElementById('c-input').focus();
-  processInput(document.getElementById('msg-input').value);
-}
-function tglSched() {
-  schedOn=!schedOn;
-  document.getElementById('tgl-s').classList.toggle('on',schedOn);
-  document.getElementById('srow').style.display=schedOn?'flex':'none';
-  const di=document.getElementById('sdate'), ti=document.getElementById('stime');
-  di.disabled=!schedOn; ti.disabled=!schedOn;
-  if (schedOn) { di.value=new Date().toISOString().split('T')[0]; di.min=di.value; di.onchange=ti.onchange=updSchedHint; updSchedHint(); }
-  else { document.getElementById('sbadge').classList.remove('on'); document.getElementById('shint').textContent=''; }
-  updSendBtn(); updPrev(selSugg);
-}
-function updSchedHint() {
-  const d=document.getElementById('sdate').value, t=document.getElementById('stime').value;
-  if (d&&t) { document.getElementById('shint').textContent=new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); document.getElementById('sbadge').classList.add('on'); }
-  updPrev(selSugg);
-}
+/* ════════════════════════════════════════════════
+   SUGGESTIONS
+   Marcação Slack real: <@USERID> para pessoas,
+   <!subteam^GROUPID> para grupos de usuários
+════════════════════════════════════════════════ */
 function cSlack() {
-  if (!contactOn) return '';
-  const c=(document.getElementById('c-input').value||'').trim();
-  return c ? `\n\n📞 _Contatos urgentes: ${c}_` : '\n\n📞 _Contatos urgentes: acione o responsável da área._';
+  if (!ST.contactOn) return '';
+  const c=(document.getElementById('contact-input').value||'').trim();
+  return c?`\n\n📞 _Contatos urgentes: ${c}_`:'\n\n📞 _Contatos urgentes: acione o responsável da área._';
 }
 function cHtml() {
-  if (!contactOn) return '';
-  const c=(document.getElementById('c-input').value||'').trim();
-  return c ? `<br><small style="color:#7CB9E8">📞 Contatos urgentes: ${c}</small>` : `<br><small style="color:#888">📞 Contatos urgentes: acione o responsável da área.</small>`;
+  if (!ST.contactOn) return '';
+  const c=(document.getElementById('contact-input').value||'').trim();
+  return c?`<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${c}</small>`:`<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
 }
-
-/* ══════════════════════════════════════════════════
-   PARSE + SUGGESTIONS
-══════════════════════════════════════════════════ */
-function parse(text) {
-  return { users:[...text.matchAll(/@([\w.\-]+)/g)].map(m=>m[0]), dates:[...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m=>m[1]) };
+function parseMsg(text) {
+  return { users:[...text.matchAll(/[@<][@]?([\w.]+)[>]?/g)].map(m=>m[0]), dates:[...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m=>m[1]) };
 }
 function buildSuggs(text,sc) {
-  const {users,dates}=parse(text);
+  const {users,dates}=parseMsg(text);
   const u=users[0]||'@colaborador', d1=dates[0]||'DD/MM', d2=dates[1]||'DD/MM';
   const cs=cSlack(), ch=cHtml();
   if (!text.trim()||text.trim().length<5) return [];
   const T={
     ferias:[
-      {tag:'f',lbl:'Formal com ícones',slack:`🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`,html:`🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}`},
-      {tag:'f',lbl:'Informal e direto',slack:`🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`,html:`🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#aaa">Qualquer dúvida, falar com o time!</small>${ch}`},
-      {tag:'r',lbl:'Aviso de retorno',slack:`✅ *Retorno de Férias*\n\n${u} retorna em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`,html:`✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small style="color:#aaa">Bem-vindo(a) de volta!</small>${ch}`},
-      {tag:'a',lbl:'Canal de recados',slack:`📢 Informamos que ${u} estará de férias 🏖️ de *${d1}* a *${d2}*.${cs}`,html:`📢 Informamos que ${u} estará de férias 🏖️ de <b>${d1}</b> a <b>${d2}</b>.${ch}`}
+      {tag:'ferias', label:'Formal com ícones',   slack:`🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`, html:`🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}`},
+      {tag:'ferias', label:'Informal e direto',    slack:`🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`, html:`🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>${ch}`},
+      {tag:'retorno',label:'Aviso de retorno',     slack:`✅ *Retorno de Férias*\n\n${u} retorna às atividades em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`, html:`✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small style="color:#888">Bem-vindo(a) de volta!</small>${ch}`},
+      {tag:'aviso',  label:'Comunicado de RH',     slack:`📢 Informamos que ${u} estará de férias 🏖️ no período de *${d1}* a *${d2}*.${cs}`, html:`📢 Informamos que ${u} estará de férias 🏖️ no período de <b>${d1}</b> a <b>${d2}</b>.${ch}`}
     ],
     licenca:[
-      {tag:'l',lbl:'Aviso discreto',slack:`🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`,html:`🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small style="color:#aaa">Desejamos uma pronta recuperação! 💙</small>${ch}`},
-      {tag:'l',lbl:'Formal',slack:`⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`,html:`⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}`},
-      {tag:'l',lbl:'Simples',slack:`${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`,html:`${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small style="color:#aaa">Contamos com a compreensão de todos! 🤝</small>${ch}`}
+      {tag:'licenca',label:'Aviso discreto',       slack:`🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`, html:`🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>${ch}`},
+      {tag:'licenca',label:'Formal com contato',   slack:`⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`, html:`⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}`},
+      {tag:'licenca',label:'Simples e respeitoso', slack:`${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`, html:`${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>${ch}`}
     ],
     aviso:[
-      {tag:'a',lbl:'Incidente crítico',slack:`🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`,html:`🚨 <b>[INCIDENTE]</b> — Instabilidade identificada!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise${ch}`},
-      {tag:'a',lbl:'Manutenção programada',slack:`🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas: a informar\n\n_Agradecemos a compreensão!_${cs}`,html:`🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir<br>🖥️ Sistemas: a informar${ch}`},
-      {tag:'a',lbl:'Incidente resolvido',slack:`✅ *Incidente Resolvido*\n\nSistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`,html:`✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}`},
-      {tag:'a',lbl:'Comunicado geral',slack:`📢 *Comunicado Importante*\n\n${text.trim()||'Descreva o conteúdo aqui.'}\n\n_— Equipe de TI_${cs}`,html:`📢 <b>Comunicado Importante</b><br><br>${text.trim()||'Descreva o conteúdo.'}<br><small style="color:#aaa">— Equipe de TI</small>${ch}`}
+      {tag:'aviso',label:'Incidente crítico',      slack:`🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`, html:`🚨 <b>[INCIDENTE]</b> — Instabilidade no sistema!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise${ch}`},
+      {tag:'aviso',label:'Manutenção programada',  slack:`🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas impactados: a informar\n\n_Agradecemos a compreensão!_${cs}`, html:`🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir<br>🖥️ Sistemas: a informar${ch}`},
+      {tag:'aviso',label:'Incidente resolvido',    slack:`✅ *Incidente Resolvido*\n\nO sistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`, html:`✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}`},
+      {tag:'aviso',label:'Comunicado geral',       slack:`📢 *Comunicado Importante*\n\n${text.trim()||'Descreva o aviso aqui.'}\n\n_— Equipe de TI_${cs}`, html:`📢 <b>Comunicado Importante</b><br><br>${text.trim()||'Descreva o aviso aqui.'}<br><small style="color:#888">— Equipe de TI</small>${ch}`}
     ],
     retorno:[
-      {tag:'r',lbl:'Celebrativo',slack:`🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`,html:`🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}`},
-      {tag:'r',lbl:'Objetivo',slack:`✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`,html:`✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}`}
+      {tag:'retorno',label:'Retorno celebrativo',  slack:`🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`, html:`🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}`},
+      {tag:'retorno',label:'Simples e objetivo',   slack:`✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`, html:`✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}`}
     ]
   };
   return (T[sc]||T.ferias).slice(0,4);
 }
-const TL={f:'Férias',l:'Licença',a:'Aviso',r:'Retorno'};
-const TC={f:'ct-f',l:'ct-l',a:'ct-a',r:'ct-r'};
+const TL={ferias:'Férias',licenca:'Licença',aviso:'Aviso',retorno:'Retorno'};
+const TC={ferias:'tag-ferias',licenca:'tag-licenca',aviso:'tag-aviso',retorno:'tag-retorno'};
+
 function processInput(val) {
-  const suggs=buildSuggs(val,scenario);
-  const grid=document.getElementById('sgg'), lbl=document.getElementById('slbl');
-  if (!suggs.length) { grid.innerHTML='<div class="no-sugg">Comece a digitar para ver sugestões ✨</div>'; lbl.textContent='Sugestões de mensagem'; selSugg=null; updPrev(null); updSendBtn(); return; }
+  const suggs=buildSuggs(val,ST.scenario), grid=document.getElementById('sugg-grid'), lbl=document.getElementById('sugg-label');
+  if (!suggs.length) { grid.innerHTML='<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>'; lbl.textContent='Variações de mensagem'; ST.selSugg=null; updatePreview(null); updateSendBtn(); return; }
   lbl.textContent=suggs.length+' variações — escolha uma:';
   grid.innerHTML=suggs.map((s,i)=>`
-    <div class="sc" id="sc${i}" onclick="selS(${i})">
-      <div class="sc-head"><span class="ct ${TC[s.tag]}">${TL[s.tag]}</span><span class="sc-lbl">${s.lbl}</span><div class="seldot" id="sd${i}"></div></div>
-      <div class="sc-prev">${s.html}</div>
+    <div class="sugg-card" id="sc-${i}" onclick="selectSugg(${i})">
+      <div class="sugg-card-hdr"><span class="tag ${TC[s.tag]}">${TL[s.tag]}</span><span class="sugg-name">${s.label}</span><div class="sel-dot" id="dot-${i}"></div></div>
+      <div class="sugg-preview">${s.html}</div>
     </div>`).join('');
-  window._S=suggs;
-  if (selSugg) {
-    const idx=suggs.findIndex(s=>s.lbl===selSugg.lbl);
-    if (idx>=0) { hiCard(idx); selSugg=suggs[idx]; updPrev(selSugg); } else { selSugg=null; updPrev(null); }
-  }
-  updSendBtn();
+  window._suggs=suggs;
+  if (ST.selSugg) { const idx=suggs.findIndex(s=>s.label===ST.selSugg.label); if(idx>=0){hiCard(idx);ST.selSugg=suggs[idx];updatePreview(ST.selSugg);}else{ST.selSugg=null;updatePreview(null);} }
+  updateSendBtn();
 }
-function hiCard(i) { document.querySelectorAll('.sc').forEach((c,j)=>{c.classList.toggle('sel',j===i);document.getElementById('sd'+j).className='seldot'+(j===i?' on':'');}); }
-function selS(i) { hiCard(i); selSugg=window._S[i]; updPrev(selSugg); updSendBtn(); }
+function hiCard(i) { document.querySelectorAll('.sugg-card').forEach((c,j)=>{c.classList.toggle('selected',j===i);document.getElementById('dot-'+j).className='sel-dot'+(j===i?' on':'');}); }
+function selectSugg(i) { hiCard(i); ST.selSugg=window._suggs[i]; updatePreview(ST.selSugg); updateSendBtn(); }
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    PREVIEW
-══════════════════════════════════════════════════ */
-function updPrev(s) {
-  const msg=document.getElementById('prev-msg'), emp=document.getElementById('prev-empty'), sc=document.getElementById('psched');
-  if (!s) { msg.classList.remove('on'); emp.style.display=''; sc.classList.remove('on'); return; }
-  msg.classList.add('on'); emp.style.display='none';
-  document.getElementById('ptext').innerHTML=s.html;
-  const now=new Date(); document.getElementById('ptime').textContent=' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-  if (schedOn) { const d=document.getElementById('sdate').value,t=document.getElementById('stime').value; if(d&&t){document.getElementById('pschedtxt').textContent='Agendado para '+new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});sc.classList.add('on');}else sc.classList.remove('on');}
-  else sc.classList.remove('on');
+════════════════════════════════════════════════ */
+function updatePreview(s) {
+  const msg=document.getElementById('preview-msg'),emp=document.getElementById('preview-empty'),sc=document.getElementById('preview-sched');
+  if (!s) { msg.classList.remove('visible'); emp.style.display=''; sc.classList.remove('visible'); return; }
+  msg.classList.add('visible'); emp.style.display='none';
+  document.getElementById('preview-text').innerHTML=s.html;
+  const now=new Date(); document.getElementById('preview-time').textContent=' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  if (ST.schedOn) {
+    const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
+    if(d&&t){document.getElementById('preview-sched-txt').textContent='Agendado para '+new Date(d+'T'+t).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});sc.classList.add('visible');}
+    else sc.classList.remove('visible');
+  } else sc.classList.remove('visible');
 }
 
-/* ══════════════════════════════════════════════════
-   SEND BUTTON
-══════════════════════════════════════════════════ */
-function updSendBtn() {
-  const btn=document.getElementById('btn-send'), lbl=document.getElementById('blbl');
-  btn.disabled=!(selSugg&&selWh);
-  lbl.textContent=schedOn?'Agendar mensagem':'Enviar para o Slack';
-  const st=document.getElementById('sstatus');
-  if (selSugg&&!selWh) { st.className='ss warn'; st.textContent='⚠️ Selecione um canal de destino'; }
-  else { st.className='ss'; st.textContent=''; }
+/* ════════════════════════════════════════════════
+   SEND — via Edge Function (resolve CORS)
+════════════════════════════════════════════════ */
+function updateSendBtn() {
+  const btn=document.getElementById('btn-send'),lbl=document.getElementById('btn-send-label');
+  btn.disabled=!(ST.selSugg&&ST.selWh);
+  lbl.textContent=ST.schedOn?'Agendar mensagem':'Enviar para o Slack';
+  const st=document.getElementById('send-status');
+  if (ST.selSugg&&!ST.selWh) { st.className='status-msg warn'; st.innerHTML='<i class="ti ti-alert-triangle"></i> Selecione um canal de destino'; }
+  else if (st.className.includes('warn')) { st.textContent=''; st.className='status-msg'; }
 }
 
-/* ══════════════════════════════════════════════════
-   SEND / SCHEDULE
-══════════════════════════════════════════════════ */
-async function doSend() {
-  if (!selSugg||!selWh) return;
-  if (schedOn) { await schedMsg(); return; }
-  const btn=document.getElementById('btn-send'), st=document.getElementById('sstatus');
-  btn.disabled=true; document.getElementById('blbl').textContent='Enviando...';
-  try {
-    const r=await fetch(selWh.url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:selSugg.slack})});
-    if (r.ok) { toast('Mensagem enviada!','ok'); document.getElementById('blbl').textContent='Enviado!'; setTimeout(()=>{document.getElementById('blbl').textContent='Enviar para o Slack';btn.disabled=false;},2500); }
-    else throw new Error('HTTP '+r.status);
-  } catch(e) { toast('Erro ao enviar. Verifique o webhook.','err'); document.getElementById('blbl').textContent='Enviar para o Slack'; btn.disabled=false; }
-}
+async function sendMessage() {
+  if (!ST.selSugg||!ST.selWh) return;
+  if (ST.schedOn) { await scheduleMsg(); return; }
 
-async function schedMsg() {
-  const d=document.getElementById('sdate').value, t=document.getElementById('stime').value;
-  if (!d||!t) { toast('Selecione data e hora.','err'); return; }
-  const dt=new Date(d+'T'+t);
-  if (dt<=new Date()) { toast('Selecione um horário futuro.','err'); return; }
   const btn=document.getElementById('btn-send');
-  btn.disabled=true; document.getElementById('blbl').textContent='Agendando...';
-  const { error } = await sb.from('scheduled_messages').insert({
+  btn.disabled=true; document.getElementById('btn-send-label').textContent='Enviando...';
+
+  try {
+    // ✅ Chama a Edge Function do Supabase — sem CORS, sem token manual
+    const { data: { session } } = await sb.auth.getSession();
+    const res = await fetch(EDGE_SEND_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({
+        webhook_url:  ST.selWh.url,
+        message_text: ST.selSugg.slack
+      })
+    });
+    const result = await res.json();
+    if (res.ok && result.ok) {
+      showStatus('Mensagem enviada com sucesso!','success');
+      document.getElementById('btn-send-label').textContent='Enviado!';
+      setTimeout(()=>{ document.getElementById('btn-send-label').textContent='Enviar para o Slack'; btn.disabled=false; updateSendBtn(); },2500);
+    } else { throw new Error(result.error||'Erro desconhecido'); }
+  } catch(e) {
+    showStatus('Erro ao enviar: '+e.message,'error');
+    document.getElementById('btn-send-label').textContent='Enviar para o Slack';
+    btn.disabled=false;
+  }
+}
+
+async function scheduleMsg() {
+  const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
+  if (!d||!t) { alert('Selecione data e hora.'); return; }
+  const dt=new Date(d+'T'+t);
+  if (dt<=new Date()) { alert('Selecione um horário futuro.'); return; }
+  const btn=document.getElementById('btn-send');
+  btn.disabled=true; document.getElementById('btn-send-label').textContent='Agendando...';
+  const {error}=await sb.from('scheduled_messages').insert({
     user_id:      user.id,
-    webhook_id:   selWh.id,
-    webhook_name: selWh.name,
-    slack_text:   selSugg.slack,
-    preview_text: selSugg.slack.split('\n')[0].replace(/\*/g,''),
+    webhook_id:   ST.selWh.id,
+    webhook_name: ST.selWh.name,
+    slack_text:   ST.selSugg.slack,
+    preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g,''),
     scheduled_at: dt.toISOString(),
   });
-  if (error) { toast(error.message,'err'); btn.disabled=false; document.getElementById('blbl').textContent='Agendar mensagem'; return; }
-  toast('Mensagem agendada no Supabase ✓','ok');
-  document.getElementById('blbl').textContent='Agendado!';
-  setTimeout(()=>{document.getElementById('blbl').textContent='Agendar mensagem';btn.disabled=false;},2500);
+  if (error) { showStatus(error.message,'error'); btn.disabled=false; document.getElementById('btn-send-label').textContent='Agendar mensagem'; return; }
+  showStatus('Mensagem agendada no Supabase ✓','success');
+  document.getElementById('btn-send-label').textContent='Agendado!';
+  setTimeout(()=>{ document.getElementById('btn-send-label').textContent='Agendar mensagem'; btn.disabled=false; updateSendBtn(); },2500);
   loadQueue();
 }
 
-function clearC() {
+/* ════════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════════ */
+function showStatus(msg,type) {
+  const el=document.getElementById('send-status'); el.className='status-msg '+(type||'');
+  const icon=type==='success'?'ti-circle-check':type==='error'?'ti-alert-circle':'ti-info-circle';
+  el.innerHTML=`<i class="ti ${icon}"></i> ${msg}`;
+  if (type!=='warn') setTimeout(()=>{ el.textContent=''; el.className='status-msg'; },4000);
+}
+function clearCompose() {
   document.getElementById('msg-input').value='';
-  document.getElementById('sgg').innerHTML='<div class="no-sugg">Comece a digitar para ver sugestões ✨</div>';
-  document.getElementById('slbl').textContent='Sugestões de mensagem';
-  selSugg=null; updPrev(null); updSendBtn();
-  document.getElementById('sstatus').textContent='';
-  closeAC();
+  document.getElementById('sugg-grid').innerHTML='<div class="no-sugg">Digite sua mensagem para ver as sugestões ✨</div>';
+  document.getElementById('sugg-label').textContent='Variações de mensagem';
+  ST.selSugg=null; updatePreview(null); updateSendBtn();
+  const st=document.getElementById('send-status'); st.textContent=''; st.className='status-msg';
 }
-
-/* ══════════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════════ */
-function toast(msg, type='info') {
-  const el=document.createElement('div');
-  el.className=`toast-item toast-${type}`;
-  const icons={ok:'ti-circle-check',err:'ti-alert-circle',info:'ti-info-circle'};
-  el.innerHTML=`<i class="ti ${icons[type]||'ti-info-circle'}"></i>${msg}`;
-  document.getElementById('toast').appendChild(el);
-  setTimeout(()=>el.remove(),3500);
-}
-
-/* ══════════════════════════════════════════════════
-   CLOSE AC ON OUTSIDE CLICK
-══════════════════════════════════════════════════ */
-document.addEventListener('click',e=>{if(!e.target.closest('.ta-wrap'))closeAC();});
+function toggleForm(id) { document.getElementById(id).classList.toggle('open'); }
+function renderAll() { renderWhDrop(); renderWhBtn(); renderPeopleList(); renderGroupsList(); renderChannelsList(); renderWhSettings(); }
+function v(id) { return document.getElementById(id).value.trim(); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function initials(n) { return (n||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
 </script>
 </body>
 </html>
