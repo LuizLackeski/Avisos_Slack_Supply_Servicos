@@ -245,7 +245,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 </head>
 <body>
 
-<!-- ═══ AUTH SCREEN ═══ -->
 <div id="auth-screen" style="display:flex">
   <div class="auth-card">
     <div class="sidebar-logo" style="padding:0;border:none;margin-bottom:4px;">
@@ -271,7 +270,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
   </div>
 </div>
 
-<!-- ═══ APP ═══ -->
 <div class="layout" id="app" style="display:none">
 
 <aside class="sidebar">
@@ -308,7 +306,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 
   <div class="content">
 
-    <!-- ═══ COMPOSE ═══ -->
     <div class="panel active" id="panel-compose">
 
       <div class="card">
@@ -403,7 +400,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
-    <!-- ═══ QUEUE ═══ -->
     <div class="panel" id="panel-queue">
       <div class="card">
         <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
@@ -417,7 +413,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
-    <!-- ═══ WEBHOOKS ═══ -->
     <div class="panel" id="panel-webhooks">
       <div class="card">
         <div class="card-title"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
@@ -435,7 +430,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
-    <!-- ═══ PEOPLE ═══ -->
     <div class="panel" id="panel-people">
       <div class="card">
         <div class="card-title"><i class="ti ti-user"></i> Pessoas cadastradas</div>
@@ -488,7 +482,6 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       </div>
     </div>
 
-    <!-- ═══ CHANNELS ═══ -->
     <div class="panel" id="panel-channels">
       <div class="card">
         <div class="card-title"><i class="ti ti-hash"></i> Canais Slack (#)</div>
@@ -497,7 +490,10 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
         <div class="add-form" id="channel-form">
           <div class="form-row">
             <div><label class="form-label">Nome do canal (sem #)</label><input type="text" id="ch-name" placeholder="suporte-geral" /></div>
-            <div><label class="form-label">Descrição</label><input type="text" id="ch-desc" placeholder="Canal de suporte ao cliente" /></div>
+            <div><label class="form-label">ID do Canal (Channel ID)</label><input type="text" id="ch-slack-id" placeholder="C01234567" /></div>
+          </div>
+          <div>
+            <label class="form-label">Descrição (opcional)</label><input type="text" id="ch-desc" placeholder="Canal de suporte ao cliente" />
           </div>
           <div class="form-row">
             <button class="btn btn-success btn-sm" onclick="saveChannel()"><i class="ti ti-check"></i> Salvar</button>
@@ -513,12 +509,11 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 
 <script>
 /* ════════════════════════════════════════════════
-   CONFIG SUPABASE — substitua com suas credenciais
+   ATENÇÃO: COLOQUE SUAS CHAVES DO SUPABASE ABAIXO!
 ════════════════════════════════════════════════ */
-const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';
-// Edge Function URL (gerada após deploy):
-const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled';
+const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co'; // <--- Troque pela sua URL
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';                        // <--- Troque pela sua Anon Key
+const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled'; // <--- Troque a URL aqui também
 
 /* ════════════════════════════════════════════════
    INIT
@@ -677,8 +672,6 @@ document.addEventListener('click',e=>{ if (!document.getElementById('wh-wrap').c
 
 /* ════════════════════════════════════════════════
    PEOPLE (Supabase)
-   slack_id = User ID real do Slack (U07EADY4SGN)
-   Na mensagem final vira <@U07EADY4SGN> = marcação real
 ════════════════════════════════════════════════ */
 async function savePerson() {
   const name     = v('p-name');
@@ -751,11 +744,13 @@ function renderGroupsList() {
 async function saveChannel() {
   const name = v('ch-name').replace('#','');
   const desc = v('ch-desc');
+  const slack_id = v('ch-slack-id').trim(); // Campo ID adicionado novamente
+  
   if (!name) { alert('Preencha o nome do canal.'); return; }
-  const {data,error} = await sb.from('channels').insert({user_id:user.id,name,desc}).select().single();
+  const {data,error} = await sb.from('channels').insert({user_id:user.id,name,desc,slack_id}).select().single();
   if (error) { showStatus(error.message,'error'); return; }
   DB.channels.push(data);
-  ['ch-name','ch-desc'].forEach(i=>{ document.getElementById(i).value=''; });
+  ['ch-name','ch-desc','ch-slack-id'].forEach(i=>{ document.getElementById(i).value=''; });
   toggleForm('channel-form'); renderChannelsList();
   showStatus(`#${name} adicionado!`,'success');
 }
@@ -772,6 +767,7 @@ function renderChannelsList() {
       <div>
         <div class="list-item-name">#${esc(c.name)}</div>
         ${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}
+        ${c.slack_id?`<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>`:''}
       </div>
       <div class="list-item-actions"><button class="btn btn-danger-ghost btn-sm" onclick="deleteChannel('${c.id}')"><i class="ti ti-trash"></i></button></div>
     </div>`).join('');
@@ -805,7 +801,7 @@ async function cancelScheduled(id) {
 }
 
 /* ════════════════════════════════════════════════
-   AUTOCOMPLETE — @ busca pessoas/grupos, # busca canais
+   AUTOCOMPLETE — MANTÉM OS NOMES LIMPOS NA TELA
 ════════════════════════════════════════════════ */
 function onMsgInput(ta) { detectAC(ta); processInput(ta.value); }
 
@@ -823,9 +819,11 @@ function detectAC(ta) {
     document.getElementById('ac-header').textContent='Pessoas & Grupos';
     const ppl = DB.people.filter(p=>p.name.toLowerCase().includes(q)||((p.handle||'').toLowerCase().includes(q)));
     const grp = DB.groups.filter(g=>g.name.toLowerCase().includes(q)||g.handle.toLowerCase().includes(q));
+    
+    // O grande segredo: O 'insert' é APENAS O HANDLE, nada de ID feio na tela!
     items=[
-      ...ppl.map(p=>({type:'person', label:p.name, insert: p.slack_id?`<@${p.slack_id}>`:`@${p.handle||p.name}`, sub:p.slack_id?'ID: '+p.slack_id:(p.handle?'@'+p.handle:''), avatar:initials(p.name)})),
-      ...grp.map(g=>({type:'group',  label:g.name, insert: g.slack_id?`<!subteam^${g.slack_id}>`:`@${g.handle}`,  sub:g.slack_id?'ID: '+g.slack_id:'@'+g.handle, avatar:g.emoji||'👥'}))
+      ...ppl.map(p=>({type:'person', label:p.name, insert: `@${p.handle||p.name}`, sub:p.slack_id?'ID: '+p.slack_id:(p.handle?'@'+p.handle:''), avatar:initials(p.name)})),
+      ...grp.map(g=>({type:'group',  label:g.name, insert: `@${g.handle}`,  sub:g.slack_id?'ID: '+g.slack_id:'@'+g.handle, avatar:g.emoji||'👥'}))
     ];
   } else {
     document.getElementById('ac-header').textContent='Canais Slack';
@@ -917,9 +915,37 @@ function updateSchedHint() {
 function refreshSuggs() { processInput(document.getElementById('msg-input').value); }
 
 /* ════════════════════════════════════════════════
+   FORMATTER: Substitui nomes da tela pelos IDs do Slack só no envio
+════════════════════════════════════════════════ */
+function formatSlackTags(text) {
+  let txt = text;
+  
+  DB.people.forEach(p => {
+    if(p.slack_id && p.handle) {
+      const regex = new RegExp(`@${p.handle}\\b`, 'gi');
+      txt = txt.replace(regex, `<@${p.slack_id}>`);
+    }
+  });
+  
+  DB.groups.forEach(g => {
+    if(g.slack_id && g.handle) {
+      const regex = new RegExp(`@${g.handle}\\b`, 'gi');
+      txt = txt.replace(regex, `<!subteam^${g.slack_id}>`);
+    }
+  });
+  
+  DB.channels.forEach(c => {
+    if(c.slack_id && c.name) {
+      const regex = new RegExp(`#${c.name}\\b`, 'gi');
+      txt = txt.replace(regex, `<#${c.slack_id}>`);
+    }
+  });
+  
+  return txt;
+}
+
+/* ════════════════════════════════════════════════
    SUGGESTIONS
-   Marcação Slack real: <@USERID> para pessoas,
-   <!subteam^GROUPID> para grupos de usuários
 ════════════════════════════════════════════════ */
 function cSlack() {
   if (!ST.contactOn) return '';
@@ -941,25 +967,25 @@ function buildSuggs(text,sc) {
   if (!text.trim()||text.trim().length<5) return [];
   const T={
     ferias:[
-      {tag:'ferias', label:'Formal com ícones',   slack:`🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`, html:`🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}`},
-      {tag:'ferias', label:'Informal e direto',    slack:`🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`, html:`🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>${ch}`},
-      {tag:'retorno',label:'Aviso de retorno',     slack:`✅ *Retorno de Férias*\n\n${u} retorna às atividades em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`, html:`✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small style="color:#888">Bem-vindo(a) de volta!</small>${ch}`},
-      {tag:'aviso',  label:'Comunicado de RH',     slack:`📢 Informamos que ${u} estará de férias 🏖️ no período de *${d1}* a *${d2}*.${cs}`, html:`📢 Informamos que ${u} estará de férias 🏖️ no período de <b>${d1}</b> a <b>${d2}</b>.${ch}`}
+      {tag:'ferias', label:'Formal com ícones',   slack:formatSlackTags(`🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`), html:`🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}`},
+      {tag:'ferias', label:'Informal e direto',   slack:formatSlackTags(`🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`), html:`🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>${ch}`},
+      {tag:'retorno',label:'Aviso de retorno',    slack:formatSlackTags(`✅ *Retorno de Férias*\n\n${u} retorna às atividades em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`), html:`✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small style="color:#888">Bem-vindo(a) de volta!</small>${ch}`},
+      {tag:'aviso',  label:'Comunicado de RH',    slack:formatSlackTags(`📢 Informamos que ${u} estará de férias 🏖️ no período de *${d1}* a *${d2}*.${cs}`), html:`📢 Informamos que ${u} estará de férias 🏖️ no período de <b>${d1}</b> a <b>${d2}</b>.${ch}`}
     ],
     licenca:[
-      {tag:'licenca',label:'Aviso discreto',       slack:`🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`, html:`🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>${ch}`},
-      {tag:'licenca',label:'Formal com contato',   slack:`⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`, html:`⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}`},
-      {tag:'licenca',label:'Simples e respeitoso', slack:`${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`, html:`${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>${ch}`}
+      {tag:'licenca',label:'Aviso discreto',      slack:formatSlackTags(`🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`), html:`🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>${ch}`},
+      {tag:'licenca',label:'Formal com contato',  slack:formatSlackTags(`⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`), html:`⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}`},
+      {tag:'licenca',label:'Simples e respeitoso', slack:formatSlackTags(`${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`), html:`${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>${ch}`}
     ],
     aviso:[
-      {tag:'aviso',label:'Incidente crítico',      slack:`🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`, html:`🚨 <b>[INCIDENTE]</b> — Instabilidade no sistema!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise${ch}`},
-      {tag:'aviso',label:'Manutenção programada',  slack:`🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas impactados: a informar\n\n_Agradecemos a compreensão!_${cs}`, html:`🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir<br>🖥️ Sistemas: a informar${ch}`},
-      {tag:'aviso',label:'Incidente resolvido',    slack:`✅ *Incidente Resolvido*\n\nO sistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`, html:`✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}`},
-      {tag:'aviso',label:'Comunicado geral',       slack:`📢 *Comunicado Importante*\n\n${text.trim()||'Descreva o aviso aqui.'}\n\n_— Equipe de TI_${cs}`, html:`📢 <b>Comunicado Importante</b><br><br>${text.trim()||'Descreva o aviso aqui.'}<br><small style="color:#888">— Equipe de TI</small>${ch}`}
+      {tag:'aviso',label:'Incidente crítico',     slack:formatSlackTags(`🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`), html:`🚨 <b>[INCIDENTE]</b> — Instabilidade no sistema!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise${ch}`},
+      {tag:'aviso',label:'Manutenção programada', slack:formatSlackTags(`🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas impactados: a informar\n\n_Agradecemos a compreensão!_${cs}`), html:`🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir<br>🖥️ Sistemas: a informar${ch}`},
+      {tag:'aviso',label:'Incidente resolvido',   slack:formatSlackTags(`✅ *Incidente Resolvido*\n\nO sistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`), html:`✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}`},
+      {tag:'aviso',label:'Comunicado geral',      slack:formatSlackTags(`📢 *Comunicado Importante*\n\n${text.trim()||'Descreva o aviso aqui.'}\n\n_— Equipe de TI_${cs}`), html:`📢 <b>Comunicado Importante</b><br><br>${text.trim()||'Descreva o aviso aqui.'}<br><small style="color:#888">— Equipe de TI</small>${ch}`}
     ],
     retorno:[
-      {tag:'retorno',label:'Retorno celebrativo',  slack:`🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`, html:`🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}`},
-      {tag:'retorno',label:'Simples e objetivo',   slack:`✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`, html:`✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}`}
+      {tag:'retorno',label:'Retorno celebrativo', slack:formatSlackTags(`🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`), html:`🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}`},
+      {tag:'retorno',label:'Simples e objetivo',  slack:formatSlackTags(`✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`), html:`✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}`}
     ]
   };
   return (T[sc]||T.ferias).slice(0,4);
@@ -1019,7 +1045,6 @@ async function sendMessage() {
   btn.disabled=true; document.getElementById('btn-send-label').textContent='Enviando...';
 
   try {
-    // ✅ Chama a Edge Function do Supabase — sem CORS, sem token manual
     const { data: { session } } = await sb.auth.getSession();
     const res = await fetch(EDGE_SEND_URL, {
       method: 'POST',
