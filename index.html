@@ -1284,10 +1284,24 @@ function cSlack() {
 }
 function cHtml() {
   if (!ST.contactOn) return '';
-  const c = (document.getElementById('contact-input').value || '').trim();
-  return c
-    ? `<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${c}</small>`
-    : `<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
+  const raw = (document.getElementById('contact-input').value || '').trim();
+  if (!raw) return `<br><small style="color:#666">📞 Contatos urgentes: acione o responsável da área.</small>`;
+  // Converte as tags reais do Slack (<@U...>, <!subteam^...>, <#C...>)
+  // para versão legível no preview HTML
+  const display = raw
+    .replace(/<@(U[A-Z0-9]+)>/g, (_, id) => {
+      const p = DB.people.find(p => p.slack_id === id);
+      return `<span style="color:var(--cobli-green2)">@${p ? p.name : id}</span>`;
+    })
+    .replace(/<!subteam\^([^|>]+)\|?([^>]*)>/g, (_, id, label) => {
+      const g = DB.groups.find(g => g.slack_id === id);
+      return `<span style="color:var(--cobli-green)">@${g ? g.name : (label || id)}</span>`;
+    })
+    .replace(/<#(C[A-Z0-9]+)>/g, (_, id) => {
+      const c = DB.channels.find(c => c.slack_id === id);
+      return `<span style="color:var(--cobli-blue-chart)">#${c ? c.name : id}</span>`;
+    });
+  return `<br><small style="color:var(--cobli-green2)">📞 Contatos urgentes: ${display}</small>`;
 }
 
 function parseMsg(text) {
@@ -1320,6 +1334,8 @@ function buildSuggs(text, sc) {
   const fullSlack = formatSlackTags(text.trim());
   // Texto completo para preview HTML (mantém @ e # visíveis)
   const fullHtml  = esc(text.trim()).replace(/@([\w.]+(?:\s+[\w.]+)*)/g, '<span style="color:var(--cobli-green2)">@$1</span>').replace(/#([\w-]+)/g, '<span style="color:var(--cobli-blue-chart)">#$1</span>');
+  // ADICIONA esta linha nova logo abaixo das duas
+const uFormatted = users[0] ? formatSlackTags(users[0]) : '@colaborador';
 
   // Helper: gera bloco Slack com barra colorida lateral (attachment)
   // Slack suporta "attachments" com color — usamos JSON no payload
@@ -1356,18 +1372,18 @@ function buildSuggs(text, sc) {
         slack: `📢 Informamos que ${fullSlack}.\n\n📅 Período: *${d1}* a *${d2}*${cs}`,
         html:  htmlBlock('📢','Comunicado', `${fullHtml}<br>📅 Período: <b>${d1}</b> a <b>${d2}</b>`, '#7F8DDB') },
     ],
-    licenca: [
+  licenca: [
       { tag:'licenca', label:'Aviso discreto',
-        slack: slackBlock('🩺','Aviso de Ausência 🏥', `${fullSlack}\n\nRetorno previsto: *${d1}*\n_Desejamos uma pronta recuperação! 💙_`),
-        html:  htmlBlock('🩺','Aviso de Ausência 🏥', `${fullHtml}<br>Retorno previsto: <b>${d1}</b><br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>`, '#3248C6') },
+        slack: slackBlock('🩺','Aviso de Ausência 🏥', `${uFormatted} está de licença médica e retorna em *${d1}*.\n_Desejamos uma pronta recuperação! 💙_`),
+        html:  htmlBlock('🩺','Aviso de Ausência 🏥', `${uFormatted} está de licença médica e retorna em <b>${d1}</b>.<br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>`, '#3248C6') },
 
       { tag:'licenca', label:'Formal',
-        slack: `⚕️ ${fullSlack}\n\n📅 Previsão de retorno: *${d1}*${cs}`,
-        html:  htmlBlock('⚕️','', `${fullHtml}<br>📅 Previsão de retorno: <b>${d1}</b>`, '#7F8DDB') },
+        slack: `⚕️ ${uFormatted} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`,
+        html:  htmlBlock('⚕️','', `${uFormatted} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>`, '#7F8DDB') },
 
       { tag:'licenca', label:'Simples',
-        slack: `${fullSlack} — ausente até *${d1}*. 🩺\n_Contamos com a compreensão de todos! 🤝_${cs}`,
-        html:  htmlBlock('🩺','', `${fullHtml} — ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>`, 'var(--cobli-green)') },
+        slack: `${uFormatted} ficará ausente até *${d1}*. 🩺\n_Contamos com a compreensão de todos! 🤝_${cs}`,
+        html:  htmlBlock('🩺','', `${uFormatted} ficará ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>`, 'var(--cobli-green)') },
     ],
     aviso: [
       { tag:'aviso', label:'Incidente crítico',
@@ -1386,14 +1402,14 @@ function buildSuggs(text, sc) {
         slack: slackBlock('📢','Comunicado Importante', `${fullSlack}\n\n_— Equipe de TI_`),
         html:  htmlBlock('📢','Comunicado Importante', `${fullHtml}<br><small style="color:#888">— Equipe de TI</small>`, '#7F8DDB') },
     ],
-    retorno: [
+  retorno: [
       { tag:'retorno', label:'Retorno celebrativo',
-        slack: slackBlock('🎉','Retorno às Atividades!', `${fullSlack} 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨`),
-        html:  htmlBlock('🎉','Retorno às Atividades!', `${fullHtml} 🙌<br>📅 Retornou em: <b>${d1}</b>`, 'var(--cobli-green2)') },
+        slack: slackBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨`),
+        html:  htmlBlock('🎉','Retorno às Atividades!', `${uFormatted} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>`, 'var(--cobli-green2)') },
 
       { tag:'retorno', label:'Simples e objetivo',
-        slack: `✅ ${fullSlack} — disponível a partir de *${d1}*. 🟢${cs}`,
-        html:  htmlBlock('✅','', `${fullHtml} — disponível a partir de <b>${d1}</b>. 🟢`, 'var(--cobli-green)') },
+        slack: `✅ ${uFormatted} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`,
+        html:  htmlBlock('✅','', `${uFormatted} retornou e já está disponível a partir de <b>${d1}</b>. 🟢`, 'var(--cobli-green)') },
     ],
   };
   return (T[sc] || T.ferias).slice(0, 4);
