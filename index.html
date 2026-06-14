@@ -571,20 +571,31 @@ sb.auth.onAuthStateChange(async (_ev, session) => {
 });
 
 /* ════════════════════════════════════════════════
-   LOAD
+   LOAD (Melhorado para não quebrar a tela)
 ════════════════════════════════════════════════ */
 async function loadAll() {
-  const [p,g,c,w] = await Promise.all([
-    sb.from('people').select('*').order('name'),
-    sb.from('groups').select('*').order('name'),
-    sb.from('channels').select('*').order('name'),
-    sb.from('webhooks').select('*').order('name'),
-  ]);
-  DB.people   = p.data||[];
-  DB.groups   = g.data||[];
-  DB.channels = c.data||[];
-  DB.webhooks = w.data||[];
-  renderAll();
+  try {
+    // Fazemos consultas individuais para evitar que uma tabela ausente quebre tudo
+    const p = await sb.from('people').select('*').order('name');
+    const g = await sb.from('groups').select('*').order('name');
+    const c = await sb.from('channels').select('*').order('name');
+    const w = await sb.from('webhooks').select('*').order('name');
+
+    if (p.error) console.error('Erro na tabela people:', p.error);
+    if (g.error) console.error('Erro na tabela groups:', g.error);
+    if (c.error) console.error('Erro na tabela channels:', c.error);
+    if (w.error) console.error('Erro na tabela webhooks:', w.error);
+
+    DB.people   = p.data || [];
+    DB.groups   = g.data || [];
+    DB.channels = c.data || [];
+    DB.webhooks = w.data || [];
+    
+    renderAll();
+  } catch(e) {
+    console.error("Erro crítico ao carregar dados do banco:", e);
+    alert("Falha de conexão com o banco de dados. Verifique o console.");
+  }
 }
 
 /* ════════════════════════════════════════════════
@@ -744,7 +755,7 @@ function renderGroupsList() {
 async function saveChannel() {
   const name = v('ch-name').replace('#','');
   const desc = v('ch-desc');
-  const slack_id = v('ch-slack-id').trim(); // Campo ID adicionado novamente
+  const slack_id = v('ch-slack-id').trim();
   
   if (!name) { alert('Preencha o nome do canal.'); return; }
   const {data,error} = await sb.from('channels').insert({user_id:user.id,name,desc,slack_id}).select().single();
@@ -820,7 +831,6 @@ function detectAC(ta) {
     const ppl = DB.people.filter(p=>p.name.toLowerCase().includes(q)||((p.handle||'').toLowerCase().includes(q)));
     const grp = DB.groups.filter(g=>g.name.toLowerCase().includes(q)||g.handle.toLowerCase().includes(q));
     
-    // O grande segredo: O 'insert' é APENAS O HANDLE, nada de ID feio na tela!
     items=[
       ...ppl.map(p=>({type:'person', label:p.name, insert: `@${p.handle||p.name}`, sub:p.slack_id?'ID: '+p.slack_id:(p.handle?'@'+p.handle:''), avatar:initials(p.name)})),
       ...grp.map(g=>({type:'group',  label:g.name, insert: `@${g.handle}`,  sub:g.slack_id?'ID: '+g.slack_id:'@'+g.handle, avatar:g.emoji||'👥'}))
