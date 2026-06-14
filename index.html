@@ -508,12 +508,13 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
 </div>
 
 <script>
+
 /* ════════════════════════════════════════════════
    ATENÇÃO: COLOQUE SUAS CHAVES DO SUPABASE ABAIXO!
 ════════════════════════════════════════════════ */
-const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co'; // <--- Troque pela sua URL
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';                        // <--- Troque pela sua Anon Key
-const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled'; // <--- Troque a URL aqui também
+const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co'; 
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';                        
+const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled'; 
 
 /* ════════════════════════════════════════════════
    INIT
@@ -532,8 +533,7 @@ function switchAuthMode(m, btn) {
   authMode = m;
   document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('auth-btn').innerHTML =
-    m==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+  document.getElementById('auth-btn').innerHTML = m==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
   document.getElementById('auth-err').style.display='none';
 }
 
@@ -543,19 +543,39 @@ async function doAuth() {
   const errEl = document.getElementById('auth-err');
   errEl.style.display='none';
   if (!email||!pw) { showAuthErr('Preencha e-mail e senha.'); return; }
+  
   const btn = document.getElementById('auth-btn');
   btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2 spin"></i> Aguarde...';
-  const { error } = authMode==='login'
-    ? await sb.auth.signInWithPassword({email,password:pw})
-    : await sb.auth.signUp({email,password:pw});
-  btn.disabled=false;
-  btn.innerHTML = authMode==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
-  if (error) { showAuthErr(error.message); return; }
-  if (authMode==='signup') showAuthErr('Conta criada! Verifique seu e-mail e entre.');
+  
+  try {
+    const { data, error } = authMode==='login'
+      ? await sb.auth.signInWithPassword({email,password:pw})
+      : await sb.auth.signUp({email,password:pw});
+      
+    if (error) throw error;
+    
+    if (authMode==='signup') {
+      showAuthErr('Conta criada! Faça login para entrar.');
+      switchAuthMode('login', document.querySelectorAll('.auth-tab')[0]);
+    }
+  } catch (e) {
+    showAuthErr(e.message);
+  } finally {
+    btn.disabled=false;
+    btn.innerHTML = authMode==='login' ? '<i class="ti ti-login"></i> Entrar' : '<i class="ti ti-user-plus"></i> Criar conta';
+  }
 }
+
 function showAuthErr(m) { const e=document.getElementById('auth-err'); e.textContent=m; e.style.display='block'; }
 
-async function doLogout() { await sb.auth.signOut(); }
+async function doLogout() { 
+  try {
+    await sb.auth.signOut(); 
+    window.location.reload(); // Força o recarregamento da tela
+  } catch(e) {
+    alert("Erro ao deslogar: " + e.message);
+  }
+}
 
 sb.auth.onAuthStateChange(async (_ev, session) => {
   user = session?.user ?? null;
@@ -571,20 +591,21 @@ sb.auth.onAuthStateChange(async (_ev, session) => {
 });
 
 /* ════════════════════════════════════════════════
-   LOAD (Melhorado para não quebrar a tela)
+   LOAD
 ════════════════════════════════════════════════ */
 async function loadAll() {
   try {
-    // Fazemos consultas individuais para evitar que uma tabela ausente quebre tudo
-    const p = await sb.from('people').select('*').order('name');
-    const g = await sb.from('groups').select('*').order('name');
-    const c = await sb.from('channels').select('*').order('name');
-    const w = await sb.from('webhooks').select('*').order('name');
+    const [p, g, c, w] = await Promise.all([
+      sb.from('people').select('*').order('name'),
+      sb.from('groups').select('*').order('name'),
+      sb.from('channels').select('*').order('name'),
+      sb.from('webhooks').select('*').order('name')
+    ]);
 
-    if (p.error) console.error('Erro na tabela people:', p.error);
-    if (g.error) console.error('Erro na tabela groups:', g.error);
-    if (c.error) console.error('Erro na tabela channels:', c.error);
-    if (w.error) console.error('Erro na tabela webhooks:', w.error);
+    if (p.error) throw new Error("Tabela People: " + p.error.message);
+    if (g.error) throw new Error("Tabela Groups: " + g.error.message);
+    if (c.error) throw new Error("Tabela Channels: " + c.error.message);
+    if (w.error) throw new Error("Tabela Webhooks: " + w.error.message);
 
     DB.people   = p.data || [];
     DB.groups   = g.data || [];
@@ -593,8 +614,8 @@ async function loadAll() {
     
     renderAll();
   } catch(e) {
-    console.error("Erro crítico ao carregar dados do banco:", e);
-    alert("Falha de conexão com o banco de dados. Verifique o console.");
+    alert("Erro crítico ao carregar dados do banco:\n" + e.message);
+    console.error(e);
   }
 }
 
@@ -627,24 +648,38 @@ function showPanel(id, btn) {
    WEBHOOKS (Supabase)
 ════════════════════════════════════════════════ */
 async function saveWebhook() {
-  const name  = v('wh-add-name');
-  const url   = v('wh-add-url');
-  const emoji = v('wh-add-emoji')||'📢';
-  if (!name||!url) { alert('Preencha nome e URL.'); return; }
-  if (!url.startsWith('https://hooks.slack.com/')) { alert('URL inválida. Use uma Incoming Webhook do Slack.'); return; }
-  const {data,error} = await sb.from('webhooks').insert({user_id:user.id,name,url,emoji}).select().single();
-  if (error) { showStatus(error.message,'error'); return; }
-  DB.webhooks.push(data);
-  ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
-  toggleForm('wh-form'); renderWhSettings(); renderWhDrop();
-  showStatus('Canal adicionado!','success');
+  try {
+    const name  = v('wh-add-name');
+    const url   = v('wh-add-url');
+    const emoji = v('wh-add-emoji')||'📢';
+    
+    if (!name||!url) { alert('Preencha nome e URL.'); return; }
+    if (!url.startsWith('https://hooks.slack.com/')) { alert('URL inválida. Use uma Incoming Webhook do Slack.'); return; }
+    
+    const {data,error} = await sb.from('webhooks').insert({user_id:user.id, name, url, emoji, channel: ''}).select().single();
+    if (error) throw error;
+
+    DB.webhooks.push(data);
+    ['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
+    toggleForm('wh-form'); renderWhSettings(); renderWhDrop();
+    alert('Canal adicionado com sucesso!');
+  } catch(e) {
+    alert('Erro ao salvar Webhook:\n' + e.message);
+  }
 }
+
 async function deleteWebhook(id) {
-  await sb.from('webhooks').delete().eq('id',id);
-  DB.webhooks = DB.webhooks.filter(w=>w.id!==id);
-  if (ST.selWh&&ST.selWh.id===id) { ST.selWh=null; renderWhBtn(); }
-  renderWhSettings(); renderWhDrop(); updateSendBtn();
+  try {
+    const {error} = await sb.from('webhooks').delete().eq('id',id);
+    if (error) throw error;
+    DB.webhooks = DB.webhooks.filter(w=>w.id!==id);
+    if (ST.selWh&&ST.selWh.id===id) { ST.selWh=null; renderWhBtn(); }
+    renderWhSettings(); renderWhDrop(); updateSendBtn();
+  } catch(e) {
+    alert('Erro ao deletar:\n' + e.message);
+  }
 }
+
 function renderWhSettings() {
   const el=document.getElementById('wh-settings-list');
   if (!DB.webhooks.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
@@ -685,22 +720,36 @@ document.addEventListener('click',e=>{ if (!document.getElementById('wh-wrap').c
    PEOPLE (Supabase)
 ════════════════════════════════════════════════ */
 async function savePerson() {
-  const name     = v('p-name');
-  const slack_id = v('p-slack-id').trim().replace(/[<@>]/g,'');
-  const handle   = v('p-handle').replace('@','');
-  const role     = v('p-role');
-  if (!name) { alert('Preencha o nome.'); return; }
-  const {data,error} = await sb.from('people').insert({user_id:user.id,name,slack_id,handle,role}).select().single();
-  if (error) { showStatus(error.message,'error'); return; }
-  DB.people.push(data);
-  ['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{ document.getElementById(i).value=''; });
-  toggleForm('person-form'); renderPeopleList();
-  showStatus(`${name} adicionado(a)!`,'success');
+  try {
+    const name     = v('p-name');
+    const slack_id = v('p-slack-id').trim().replace(/[<@>]/g,'');
+    const handle   = v('p-handle').replace('@','');
+    const role     = v('p-role');
+    
+    if (!name) { alert('Preencha o nome.'); return; }
+    
+    const {data,error} = await sb.from('people').insert({user_id:user.id, name, slack_id, handle, role}).select().single();
+    if (error) throw error;
+    
+    DB.people.push(data);
+    ['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{ document.getElementById(i).value=''; });
+    toggleForm('person-form'); renderPeopleList();
+    alert(`${name} salvo com sucesso!`);
+  } catch(e) {
+    alert('Erro ao salvar pessoa:\n' + e.message);
+  }
 }
+
 async function deletePerson(id) {
-  await sb.from('people').delete().eq('id',id);
-  DB.people=DB.people.filter(p=>p.id!==id); renderPeopleList();
+  try {
+    const {error} = await sb.from('people').delete().eq('id',id);
+    if (error) throw error;
+    DB.people=DB.people.filter(p=>p.id!==id); renderPeopleList();
+  } catch(e) {
+    alert('Erro ao deletar:\n' + e.message);
+  }
 }
+
 function renderPeopleList() {
   const el=document.getElementById('people-list');
   if (!DB.people.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>'; return; }
@@ -719,22 +768,36 @@ function renderPeopleList() {
    GROUPS (Supabase)
 ════════════════════════════════════════════════ */
 async function saveGroup() {
-  const name     = v('g-name');
-  const handle   = v('g-handle').replace('@','');
-  const slack_id = v('g-slack-id').trim();
-  const emoji    = v('g-emoji')||'👥';
-  if (!name||!handle) { alert('Preencha nome e handle.'); return; }
-  const {data,error} = await sb.from('groups').insert({user_id:user.id,name,handle,slack_id,emoji}).select().single();
-  if (error) { showStatus(error.message,'error'); return; }
-  DB.groups.push(data);
-  ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
-  toggleForm('group-form'); renderGroupsList();
-  showStatus(`Grupo ${name} adicionado!`,'success');
+  try {
+    const name     = v('g-name');
+    const handle   = v('g-handle').replace('@','');
+    const slack_id = v('g-slack-id').trim();
+    const emoji    = v('g-emoji')||'👥';
+    
+    if (!name||!handle) { alert('Preencha nome e handle.'); return; }
+    
+    const {data,error} = await sb.from('groups').insert({user_id:user.id, name, handle, slack_id, emoji}).select().single();
+    if (error) throw error;
+    
+    DB.groups.push(data);
+    ['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{ document.getElementById(i).value=''; });
+    toggleForm('group-form'); renderGroupsList();
+    alert(`Grupo ${name} salvo!`);
+  } catch (e) {
+    alert('Erro ao salvar grupo:\n' + e.message);
+  }
 }
+
 async function deleteGroup(id) {
-  await sb.from('groups').delete().eq('id',id);
-  DB.groups=DB.groups.filter(g=>g.id!==id); renderGroupsList();
+  try {
+    const {error} = await sb.from('groups').delete().eq('id',id);
+    if(error) throw error;
+    DB.groups=DB.groups.filter(g=>g.id!==id); renderGroupsList();
+  } catch(e) {
+    alert('Erro ao deletar:\n' + e.message);
+  }
 }
+
 function renderGroupsList() {
   const el=document.getElementById('groups-list');
   if (!DB.groups.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>'; return; }
@@ -753,22 +816,35 @@ function renderGroupsList() {
    CHANNELS (Supabase)
 ════════════════════════════════════════════════ */
 async function saveChannel() {
-  const name = v('ch-name').replace('#','');
-  const desc = v('ch-desc');
-  const slack_id = v('ch-slack-id').trim();
-  
-  if (!name) { alert('Preencha o nome do canal.'); return; }
-  const {data,error} = await sb.from('channels').insert({user_id:user.id,name,desc,slack_id}).select().single();
-  if (error) { showStatus(error.message,'error'); return; }
-  DB.channels.push(data);
-  ['ch-name','ch-desc','ch-slack-id'].forEach(i=>{ document.getElementById(i).value=''; });
-  toggleForm('channel-form'); renderChannelsList();
-  showStatus(`#${name} adicionado!`,'success');
+  try {
+    const name = v('ch-name').replace('#','');
+    const desc = v('ch-desc');
+    const slack_id = v('ch-slack-id').trim();
+    
+    if (!name) { alert('Preencha o nome do canal.'); return; }
+    
+    const {data,error} = await sb.from('channels').insert({user_id:user.id, name, desc, slack_id}).select().single();
+    if (error) throw error;
+    
+    DB.channels.push(data);
+    ['ch-name','ch-desc','ch-slack-id'].forEach(i=>{ document.getElementById(i).value=''; });
+    toggleForm('channel-form'); renderChannelsList();
+    alert(`Canal #${name} salvo!`);
+  } catch(e) {
+    alert('Erro ao salvar canal:\n' + e.message);
+  }
 }
+
 async function deleteChannel(id) {
-  await sb.from('channels').delete().eq('id',id);
-  DB.channels=DB.channels.filter(c=>c.id!==id); renderChannelsList();
+  try {
+    const {error} = await sb.from('channels').delete().eq('id',id);
+    if(error) throw error;
+    DB.channels=DB.channels.filter(c=>c.id!==id); renderChannelsList();
+  } catch(e) {
+    alert('Erro ao deletar:\n' + e.message);
+  }
 }
+
 function renderChannelsList() {
   const el=document.getElementById('channels-list');
   if (!DB.channels.length) { el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>'; return; }
@@ -788,27 +864,39 @@ function renderChannelsList() {
    QUEUE (Supabase)
 ════════════════════════════════════════════════ */
 async function loadQueue() {
-  const {data} = await sb.from('scheduled_messages').select('*,webhooks(name,emoji)').eq('sent',false).order('scheduled_at');
-  const msgs = data||[];
-  const el   = document.getElementById('queue-list-full');
-  const ct   = document.getElementById('queue-count-display');
-  const nb   = document.getElementById('nb');
-  ct.textContent = msgs.length;
-  nb.textContent = msgs.length; nb.style.display = msgs.length?'inline-block':'none';
-  if (!msgs.length) { el.innerHTML='<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
-  el.innerHTML = msgs.map(m=>`
-    <div class="queue-item">
-      <div style="font-size:18px;flex-shrink:0">${m.webhooks?.emoji||'📢'}</div>
-      <div style="flex:1">
-        <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${m.webhooks?.name||'—'}</div>
-        <div class="queue-text">${esc(m.preview_text||'')}</div>
-      </div>
-      <button class="btn btn-danger-ghost btn-sm" onclick="cancelScheduled('${m.id}')"><i class="ti ti-x"></i> Cancelar</button>
-    </div>`).join('');
+  try {
+    const {data, error} = await sb.from('scheduled_messages').select('*,webhooks(name,emoji)').eq('sent',false).order('scheduled_at');
+    if (error) throw error;
+    
+    const msgs = data||[];
+    const el   = document.getElementById('queue-list-full');
+    const ct   = document.getElementById('queue-count-display');
+    const nb   = document.getElementById('nb');
+    ct.textContent = msgs.length;
+    nb.textContent = msgs.length; nb.style.display = msgs.length?'inline-block':'none';
+    
+    if (!msgs.length) { el.innerHTML='<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>'; return; }
+    el.innerHTML = msgs.map(m=>`
+      <div class="queue-item">
+        <div style="font-size:18px;flex-shrink:0">${m.webhooks?.emoji||'📢'}</div>
+        <div style="flex:1">
+          <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${m.webhooks?.name||'—'}</div>
+          <div class="queue-text">${esc(m.preview_text||'')}</div>
+        </div>
+        <button class="btn btn-danger-ghost btn-sm" onclick="cancelScheduled('${m.id}')"><i class="ti ti-x"></i> Cancelar</button>
+      </div>`).join('');
+  } catch(e) {
+    console.error(e);
+  }
 }
+
 async function cancelScheduled(id) {
-  await sb.from('scheduled_messages').delete().eq('id',id);
-  loadQueue();
+  try {
+    await sb.from('scheduled_messages').delete().eq('id',id);
+    loadQueue();
+  } catch(e) {
+    alert("Erro ao cancelar: " + e.message);
+  }
 }
 
 /* ════════════════════════════════════════════════
@@ -1067,39 +1155,54 @@ async function sendMessage() {
         message_text: ST.selSugg.slack
       })
     });
-    const result = await res.json();
+    
+    // Testa se a resposta for texto HTML (caso de página 404 da Edge Function)
+    const textResult = await res.text();
+    let result = {};
+    try { result = JSON.parse(textResult); } catch(e) { throw new Error(textResult); }
+    
     if (res.ok && result.ok) {
       showStatus('Mensagem enviada com sucesso!','success');
       document.getElementById('btn-send-label').textContent='Enviado!';
       setTimeout(()=>{ document.getElementById('btn-send-label').textContent='Enviar para o Slack'; btn.disabled=false; updateSendBtn(); },2500);
-    } else { throw new Error(result.error||'Erro desconhecido'); }
+    } else { throw new Error(result.error||'Erro na resposta da Edge Function'); }
   } catch(e) {
-    showStatus('Erro ao enviar: '+e.message,'error');
+    showStatus('Erro ao enviar. Verifique console (F12) e a URL da Edge Function.','error');
+    console.error(e);
     document.getElementById('btn-send-label').textContent='Enviar para o Slack';
     btn.disabled=false;
   }
 }
 
 async function scheduleMsg() {
-  const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
-  if (!d||!t) { alert('Selecione data e hora.'); return; }
-  const dt=new Date(d+'T'+t);
-  if (dt<=new Date()) { alert('Selecione um horário futuro.'); return; }
-  const btn=document.getElementById('btn-send');
-  btn.disabled=true; document.getElementById('btn-send-label').textContent='Agendando...';
-  const {error}=await sb.from('scheduled_messages').insert({
-    user_id:      user.id,
-    webhook_id:   ST.selWh.id,
-    webhook_name: ST.selWh.name,
-    slack_text:   ST.selSugg.slack,
-    preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g,''),
-    scheduled_at: dt.toISOString(),
-  });
-  if (error) { showStatus(error.message,'error'); btn.disabled=false; document.getElementById('btn-send-label').textContent='Agendar mensagem'; return; }
-  showStatus('Mensagem agendada no Supabase ✓','success');
-  document.getElementById('btn-send-label').textContent='Agendado!';
-  setTimeout(()=>{ document.getElementById('btn-send-label').textContent='Agendar mensagem'; btn.disabled=false; updateSendBtn(); },2500);
-  loadQueue();
+  try {
+    const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
+    if (!d||!t) { alert('Selecione data e hora.'); return; }
+    const dt=new Date(d+'T'+t);
+    if (dt<=new Date()) { alert('Selecione um horário futuro.'); return; }
+    const btn=document.getElementById('btn-send');
+    btn.disabled=true; document.getElementById('btn-send-label').textContent='Agendando...';
+    
+    const {error}=await sb.from('scheduled_messages').insert({
+      user_id:      user.id,
+      webhook_id:   ST.selWh.id,
+      webhook_name: ST.selWh.name,
+      slack_text:   ST.selSugg.slack,
+      preview_text: ST.selSugg.slack.split('\n')[0].replace(/\*/g,''),
+      scheduled_at: dt.toISOString(),
+    });
+    
+    if (error) throw error;
+    
+    showStatus('Mensagem agendada no Supabase ✓','success');
+    document.getElementById('btn-send-label').textContent='Agendado!';
+    setTimeout(()=>{ document.getElementById('btn-send-label').textContent='Agendar mensagem'; btn.disabled=false; updateSendBtn(); },2500);
+    loadQueue();
+  } catch(e) {
+    alert("Erro ao agendar:\n" + e.message);
+    document.getElementById('btn-send-label').textContent='Agendar mensagem';
+    document.getElementById('btn-send').disabled=false;
+  }
 }
 
 /* ════════════════════════════════════════════════
