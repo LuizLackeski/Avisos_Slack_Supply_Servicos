@@ -955,24 +955,58 @@ function detectAC(ta) {
   const atIdx = before.lastIndexOf('@'), hashIdx = before.lastIndexOf('#');
   const lastIdx = Math.max(atIdx, hashIdx);
   if (lastIdx === -1) { closeAC(); return; }
-  const sym = val[lastIdx], query = before.substring(lastIdx + 1);
-  if (/\s/.test(query)) { closeAC(); return; }
+  const sym = val[lastIdx];
+
+  // FIX: permite query com espaços (nomes compostos) — só fecha se tiver 2+ espaços
+  // ou se o caractere antes do @ for letra/número (evita falso positivo)
+  const query = before.substring(lastIdx + 1);
+  const spaceCount = (query.match(/ /g) || []).length;
+  if (spaceCount >= 2) { closeAC(); return; }
+
   ST.acMode = sym;
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
   let items = [];
+
   if (sym === '@') {
     document.getElementById('ac-header').textContent = 'Pessoas & Grupos';
-    const ppl = DB.people.filter(p => p.name.toLowerCase().includes(q) || ((p.handle || '').toLowerCase().includes(q)));
-    const grp = DB.groups.filter(g => g.name.toLowerCase().includes(q) || g.handle.toLowerCase().includes(q));
+    const ppl = DB.people.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      (p.handle || '').toLowerCase().includes(q)
+    );
+    const grp = DB.groups.filter(g =>
+      g.name.toLowerCase().includes(q) ||
+      (g.handle || '').toLowerCase().includes(q)
+    );
     items = [
-      ...ppl.map(p => ({ type:'person', label:p.name, insert:`@${p.handle||p.name}`, sub:p.slack_id?'ID: '+p.slack_id:(p.handle?'@'+p.handle:''), avatar:initials(p.name) })),
-      ...grp.map(g => ({ type:'group',  label:g.name, insert:`@${g.handle}`, sub:g.slack_id?'ID: '+g.slack_id:'@'+g.handle, avatar:g.emoji||'👥' }))
+      // FIX: insert usa __pid:ID__ como marcador interno — resolvido no formatSlackTags
+      // Se não tem handle, usa o nome como rótulo mas o ID como chave real
+      ...ppl.map(p => ({
+        type:   'person',
+        label:  p.name,
+        insert: p.slack_id ? `__pid:${p.slack_id}:${p.name}__` : `@${p.handle || p.name}`,
+        sub:    p.slack_id ? 'ID: ' + p.slack_id : (p.handle ? '@' + p.handle : 'sem ID'),
+        avatar: initials(p.name)
+      })),
+      ...grp.map(g => ({
+        type:   'group',
+        label:  g.name,
+        insert: g.slack_id ? `__gid:${g.slack_id}:${g.name}__` : `@${g.handle}`,
+        sub:    g.slack_id ? 'ID: ' + g.slack_id + ' · @' + g.handle : '@' + g.handle,
+        avatar: g.emoji || '👥'
+      }))
     ];
   } else {
     document.getElementById('ac-header').textContent = 'Canais Slack';
     items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
-      .map(c => ({ type:'channel', label:'#'+c.name, insert:'#'+c.name, sub:c.desc||'', avatar:'#' }));
+      .map(c => ({
+        type:   'channel',
+        label:  '#' + c.name,
+        insert: c.slack_id ? `__cid:${c.slack_id}:${c.name}__` : '#' + c.name,
+        sub:    c.desc || (c.slack_id ? 'ID: ' + c.slack_id : ''),
+        avatar: '#'
+      }));
   }
+
   if (!items.length) { closeAC(); return; }
   window._acItems = items; ST.acFocus = 0;
   document.getElementById('ac-list').innerHTML = items.map((it, i) => `
@@ -990,9 +1024,20 @@ function insertAC(insert) {
   const val = ta.value, pos = ta.selectionStart;
   const before = val.substring(0, pos);
   const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
-  ta.value = val.substring(0, lastIdx) + insert + ' ' + val.substring(pos);
+
+  // Extrai o nome de exibição do marcador interno se for __pid/gid/cid:ID:Nome__
+  // Na tela mostramos o nome bonito; na hora do envio formatSlackTags resolve o ID
+  let display = insert;
+  const pidMatch = insert.match(/^__pid:([^:]+):(.+)__$/);
+  const gidMatch = insert.match(/^__gid:([^:]+):(.+)__$/);
+  const cidMatch = insert.match(/^__cid:([^:]+):(.+)__$/);
+  if (pidMatch) display = '@' + pidMatch[2];
+  if (gidMatch) display = '@' + gidMatch[2];
+  if (cidMatch) display = '#' + cidMatch[2];
+
+  ta.value = val.substring(0, lastIdx) + display + ' ' + val.substring(pos);
   ta.focus();
-  const np = lastIdx + insert.length + 1;
+  const np = lastIdx + display.length + 1;
   ta.setSelectionRange(np, np);
   closeAC(); processInput(ta.value);
 }
@@ -1088,22 +1133,76 @@ function refreshSuggs() { processInput(document.getElementById('msg-input').valu
 ══════════════════════════════ */
 function formatSlackTags(text) {
   let txt = text;
-  DB.people.forEach(p => {
-    if (p.slack_id && p.handle) {
-      txt = txt.replace(new RegExp('@' + p.handle + '\\b', 'gi'), `<@${p.slack_id}>`);
+
+  // ── PESSOAS ──
+  // Estratégia: tenta pelo nome de exibição (com ou sem espaço), depois pelo handle
+  // Ordena do nome mais longo para o mais curto para evitar substituição parcial
+  const peopleSorted = [...DB.people].sort((a, b) => b.name.length - a.name.length);
+
+  peopleSorted.forEach(p => {
+    if (!p.slack_id) return; // sem ID não há como marcar
+
+    // 1. Tenta pelo handle (sem espaço) — ex: @luiz.lackeski
+    if (p.handle) {
+      const reHandle = new RegExp('@' + escapeRegex(p.handle) + '(?=[\\s,;.!?]|$)', 'gi');
+      txt = txt.replace(reHandle, `<@${p.slack_id}>`);
+    }
+
+    // 2. Tenta pelo nome completo — ex: @Luiz Lackeski
+    const reNome = new RegExp('@' + escapeRegex(p.name) + '(?=[\\s,;.!?]|$)', 'gi');
+    txt = txt.replace(reNome, `<@${p.slack_id}>`);
+
+    // 3. Tenta pelo primeiro nome — ex: @Luiz  (só se nome tiver mais de uma palavra)
+    const firstName = p.name.split(' ')[0];
+    if (firstName && p.name.includes(' ')) {
+      const reFirst = new RegExp('@' + escapeRegex(firstName) + '(?=[\\s,;.!?]|$)', 'gi');
+      // Só substitui se ainda não foi substituído (não tem <@ já no lugar)
+      txt = txt.replace(reFirst, (match, offset) => {
+        // Verifica que não é parte de uma tag já substituída
+        const before = txt.substring(Math.max(0, offset - 2), offset);
+        return before.includes('<') ? match : `<@${p.slack_id}>`;
+      });
     }
   });
-  DB.groups.forEach(g => {
-    if (g.slack_id && g.handle) {
-      txt = txt.replace(new RegExp('@' + g.handle + '\\b', 'gi'), `<!subteam^${g.slack_id}>`);
+
+  // ── GRUPOS ──
+  const groupsSorted = [...DB.groups].sort((a, b) => b.name.length - a.name.length);
+
+  groupsSorted.forEach(g => {
+    if (!g.handle) return;
+
+    const reHandle = new RegExp('@' + escapeRegex(g.handle) + '(?=[\\s,;.!?]|$)', 'gi');
+
+    if (g.slack_id) {
+      // Com ID: marca o subteam corretamente
+      txt = txt.replace(reHandle, `<!subteam^${g.slack_id}|@${g.handle}>`);
+    } else {
+      // Sem ID: usa @handle — o Slack reconhece grupos por handle também
+      txt = txt.replace(reHandle, `@${g.handle}`);
+    }
+
+    // Tenta pelo nome do grupo também — ex: @Time de TI
+    const reNome = new RegExp('@' + escapeRegex(g.name) + '(?=[\\s,;.!?]|$)', 'gi');
+    if (g.slack_id) {
+      txt = txt.replace(reNome, `<!subteam^${g.slack_id}|@${g.handle}>`);
     }
   });
-  DB.channels.forEach(c => {
-    if (c.slack_id && c.name) {
-      txt = txt.replace(new RegExp('#' + c.name + '\\b', 'gi'), `<#${c.slack_id}>`);
-    }
+
+  // ── CANAIS ──
+  const channelsSorted = [...DB.channels].sort((a, b) => b.name.length - a.name.length);
+
+  channelsSorted.forEach(c => {
+    if (!c.slack_id) return;
+    const re = new RegExp('#' + escapeRegex(c.name) + '(?=[\\s,;.!?]|$)', 'gi');
+    txt = txt.replace(re, `<#${c.slack_id}>`);
   });
+
   return txt;
+}
+
+// Escapa caracteres especiais de regex no nome/handle
+function escapeRegex(s) {
+  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /* ══════════════════════════════
@@ -1123,8 +1222,10 @@ function cHtml() {
 }
 
 function parseMsg(text) {
+  // Captura @Nome, @Nome Sobrenome (até 3 palavras), @handle.com.ponto
+  const userMatches = [...text.matchAll(/@([\w.]+(?:\s+[\w.]+){0,2})/g)].map(m => m[0]);
   return {
-    users: [...text.matchAll(/[@<][@]?([\w.]+)[>]?/g)].map(m => m[0]),
+    users: userMatches,
     dates: [...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m => m[1])
   };
 }
