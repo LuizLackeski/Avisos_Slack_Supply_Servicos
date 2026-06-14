@@ -302,13 +302,24 @@ textarea#msg-input { min-height:90px; resize:none; line-height:1.65; padding:12p
       <div class="options-card">
         <div class="toggle-row">
           <button class="toggle" id="tgl-contact" aria-label="Contato de suporte"></button>
-          <span class="toggle-label">Incluir contato de suporte/emergência</span>
+          <span class="toggle-label">📞 Contato para emergências</span>
         </div>
-        <div class="sub-row" id="contact-row" style="display:none">
-          <i class="ti ti-users" style="font-size:15px;color:var(--text-muted)"></i>
-          <input type="text" id="contact-input" placeholder="@grupo-suporte, @pessoa ou #canal" style="max-width:320px" />
-          <span style="font-size:11px;color:var(--text-hint)">Aparece no final de todas as variações</span>
-        </div>
+<!-- DEPOIS -->
+<div class="sub-row" id="contact-row" style="display:none">
+  <i class="ti ti-phone" style="font-size:15px;color:var(--text-muted)"></i>
+  <div style="position:relative;max-width:340px;flex:1">
+    <input type="text" id="contact-input"
+      placeholder="Digite @ para pessoas ou # para canais de contato"
+      style="width:100%"
+      oninput="onContactInput(this)"
+      onkeydown="onContactKeydown(event)" />
+    <div class="autocomplete-dropdown" id="ac-contact" style="min-width:260px">
+      <div class="ac-header" id="ac-contact-header">Pessoas &amp; Grupos</div>
+      <div id="ac-contact-list"></div>
+    </div>
+  </div>
+  <span style="font-size:11px;color:var(--text-hint)">Contato para emergências — aparece no rodapé</span>
+</div>
         <div class="divider-h"></div>
         <div class="toggle-row">
           <button class="toggle" id="tgl-sched" aria-label="Agendar envio"></button>
@@ -1019,6 +1030,64 @@ function detectAC(ta) {
 
 function closeAC() { document.getElementById('ac-dropdown').classList.remove('open'); ST.acMode = null; }
 
+  let contactAcItems = [], contactAcFocus = 0;
+
+function onContactInput(ta) {
+  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
+  const atIdx = before.lastIndexOf('@'), hashIdx = before.lastIndexOf('#');
+  const lastIdx = Math.max(atIdx, hashIdx);
+  if (lastIdx === -1) { closeContactAC(); refreshSuggs(); return; }
+  const sym = val[lastIdx], query = before.substring(lastIdx + 1);
+  if (/\s\s/.test(query)) { closeContactAC(); refreshSuggs(); return; }
+  const q = query.toLowerCase().trim();
+  let items = [];
+  if (sym === '@') {
+    document.getElementById('ac-contact-header').textContent = 'Pessoas & Grupos';
+    items = [
+      ...DB.people.filter(p => p.name.toLowerCase().includes(q) || (p.handle||'').toLowerCase().includes(q))
+        .map(p => ({ label: p.name, insert: p.slack_id ? `<@${p.slack_id}>` : `@${p.handle||p.name}`, sub: p.handle ? '@'+p.handle : '', avatar: initials(p.name), type:'person' })),
+      ...DB.groups.filter(g => g.name.toLowerCase().includes(q) || (g.handle||'').toLowerCase().includes(q))
+        .map(g => ({ label: g.name, insert: g.slack_id ? `<!subteam^${g.slack_id}|@${g.handle}>` : `@${g.handle}`, sub: '@'+g.handle, avatar: g.emoji||'👥', type:'group' }))
+    ];
+  } else {
+    document.getElementById('ac-contact-header').textContent = 'Canais Slack';
+    items = DB.channels.filter(c => c.name.toLowerCase().includes(q))
+      .map(c => ({ label: '#'+c.name, insert: c.slack_id ? `<#${c.slack_id}>` : '#'+c.name, sub: c.desc||'', avatar:'#', type:'channel' }));
+  }
+  contactAcItems = items; contactAcFocus = 0;
+  const dd = document.getElementById('ac-contact');
+  if (!items.length) { dd.classList.remove('open'); refreshSuggs(); return; }
+  document.getElementById('ac-contact-list').innerHTML = items.map((it, i) => `
+    <div class="ac-item ${i===0?'focused':''}" data-cac-idx="${i}">
+      <div class="ac-avatar ${it.type}">${it.avatar}</div>
+      <div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div>
+    </div>`).join('');
+  dd.classList.add('open');
+  refreshSuggs();
+}
+
+function closeContactAC() {
+  document.getElementById('ac-contact').classList.remove('open');
+}
+
+function insertContactAC(idx) {
+  const it = contactAcItems[idx]; if (!it) return;
+  const ta = document.getElementById('contact-input');
+  const val = ta.value, pos = ta.selectionStart, before = val.substring(0, pos);
+  const lastIdx = Math.max(before.lastIndexOf('@'), before.lastIndexOf('#'));
+  ta.value = val.substring(0, lastIdx) + it.insert + ' ' + val.substring(pos);
+  ta.focus(); closeContactAC(); refreshSuggs();
+}
+
+function onContactKeydown(e) {
+  const dd = document.getElementById('ac-contact');
+  if (!dd.classList.contains('open')) return;
+  if (e.key==='ArrowDown') { e.preventDefault(); contactAcFocus=Math.min(contactAcFocus+1,contactAcItems.length-1); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
+  if (e.key==='ArrowUp')   { e.preventDefault(); contactAcFocus=Math.max(contactAcFocus-1,0); document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===contactAcFocus)); }
+  if (e.key==='Enter'||e.key==='Tab') { e.preventDefault(); insertContactAC(contactAcFocus); }
+  if (e.key==='Escape') closeContactAC();
+}
+
 function insertAC(insert) {
   const ta  = document.getElementById('msg-input');
   const val = ta.value, pos = ta.selectionStart;
@@ -1222,8 +1291,16 @@ function cHtml() {
 }
 
 function parseMsg(text) {
-  // Captura @Nome, @Nome Sobrenome (até 3 palavras), @handle.com.ponto
-  const userMatches = [...text.matchAll(/@([\w.]+(?:\s+[\w.]+){0,2})/g)].map(m => m[0]);
+  // Captura @Nome ou @Nome Sobrenome — mas PARA antes de número/data (16/07, 12h, etc.)
+  // Regex: @ seguido de palavra(s), mas não captura tokens que parecem datas
+  const userMatches = [];
+  const re = /@([\w.]+(?:\s+[\w.]+)*)/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    // Pega só palavras que NÃO sejam puramente numéricas (evita capturar "16" de "16/07")
+    const parts = m[1].split(/\s+/).filter(p => !/^\d+$/.test(p));
+    if (parts.length) userMatches.push('@' + parts.join(' '));
+  }
   return {
     users: userMatches,
     dates: [...text.matchAll(/\b(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/g)].map(m => m[1])
@@ -1232,31 +1309,92 @@ function parseMsg(text) {
 
 function buildSuggs(text, sc) {
   const { users, dates } = parseMsg(text);
-  const u = users[0] || '@colaborador', d1 = dates[0] || 'DD/MM', d2 = dates[1] || 'DD/MM';
-  const cs = cSlack(), ch = cHtml();
+  const u  = users[0] || '@colaborador';
+  const d1 = dates[0] || 'DD/MM';
+  const d2 = dates[1] || 'DD/MM';
+  const cs = cSlack();
+  const ch = cHtml();
   if (!text.trim() || text.trim().length < 5) return [];
+
+  // Texto completo formatado para Slack (com todas as menções resolvidas)
+  const fullSlack = formatSlackTags(text.trim());
+  // Texto completo para preview HTML (mantém @ e # visíveis)
+  const fullHtml  = esc(text.trim()).replace(/@([\w.]+(?:\s+[\w.]+)*)/g, '<span style="color:var(--cobli-green2)">@$1</span>').replace(/#([\w-]+)/g, '<span style="color:var(--cobli-blue-chart)">#$1</span>');
+
+  // Helper: gera bloco Slack com barra colorida lateral (attachment)
+  // Slack suporta "attachments" com color — usamos JSON no payload
+  // Mas como o payload é texto simples aqui, simulamos com bloco de citação > 
+  // Para barra real, a Edge Function precisaria usar attachments — 
+  // então guardamos o texto normal e a Edge Function adiciona a barra.
+  // No preview HTML simulamos a barra com CSS.
+
+  function slackBlock(emoji, title, body) {
+    return `${emoji} *${title}*\n\n${body}${cs}`;
+  }
+  function htmlBlock(emoji, title, body, color) {
+    return `<div style="display:flex;gap:10px;align-items:stretch">
+      <div style="width:4px;border-radius:2px;background:${color || 'var(--cobli-green)'};flex-shrink:0"></div>
+      <div>${emoji} <b>${title}</b><br><br>${body}${ch}</div>
+    </div>`;
+  }
+
   const T = {
-    ferias:[
-      {tag:'ferias', label:'Formal com ícones',  slack:formatSlackTags(`🏖️ *Aviso de Férias* 🌴\n\n${u} estará de férias 📅 a partir de *${d1}* e retorna em *${d2}* 🔙${cs}`), html:`🏖️ <b>Aviso de Férias</b> 🌴<br><br>${u} estará de férias 📅 a partir de <b>${d1}</b> e retorna em <b>${d2}</b> 🔙${ch}`},
-      {tag:'ferias', label:'Informal e direto',  slack:formatSlackTags(`🌴 ${u} entra de férias em *${d1}* e volta em *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`), html:`🌴 ${u} entra de férias em <b>${d1}</b> e volta em <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>${ch}`},
-      {tag:'retorno',label:'Aviso de retorno',   slack:formatSlackTags(`✅ *Retorno de Férias*\n\n${u} retorna às atividades em *${d2}* 🎉\n_Bem-vindo(a) de volta!_${cs}`), html:`✅ <b>Retorno de Férias</b><br><br>${u} retorna em <b>${d2}</b> 🎉<br><small>Bem-vindo(a) de volta!</small>${ch}`},
-      {tag:'aviso',  label:'Comunicado de RH',   slack:formatSlackTags(`📢 Informamos que ${u} estará de férias 🏖️ no período de *${d1}* a *${d2}*.${cs}`), html:`📢 Informamos que ${u} estará de férias 🏖️ no período de <b>${d1}</b> a <b>${d2}</b>.${ch}`}
+    ferias: [
+      { tag:'ferias', label:'Formal — texto completo',
+        slack: slackBlock('🏖️','Aviso de Férias 🌴', `${fullSlack}\n\n📅 Férias de *${d1}* até *${d2}* 🔙`),
+        html:  htmlBlock('🏖️','Aviso de Férias 🌴', `${fullHtml}<br><br>📅 Férias de <b>${d1}</b> até <b>${d2}</b> 🔙`, 'var(--cobli-green)') },
+
+      { tag:'ferias', label:'Informal — texto completo',
+        slack: `🌴 ${fullSlack}\n\n📅 *${d1}* → *${d2}* 🏝️\n_Qualquer dúvida, falar com o time!_${cs}`,
+        html:  htmlBlock('🌴','', `${fullHtml}<br>📅 <b>${d1}</b> → <b>${d2}</b> 🏝️<br><small style="color:#888">Qualquer dúvida, falar com o time!</small>`, '#3248C6') },
+
+      { tag:'retorno', label:'Aviso de retorno',
+        slack: slackBlock('✅','Retorno de Férias 🎉', `${u} retorna às atividades em *${d2}*.\n_Bem-vindo(a) de volta!_ 🙌`),
+        html:  htmlBlock('✅','Retorno de Férias 🎉', `${u} retorna em <b>${d2}</b>.<br><small style="color:#888">Bem-vindo(a) de volta!</small>`, 'var(--cobli-green2)') },
+
+      { tag:'aviso', label:'Comunicado de RH',
+        slack: `📢 Informamos que ${fullSlack}.\n\n📅 Período: *${d1}* a *${d2}*${cs}`,
+        html:  htmlBlock('📢','Comunicado', `${fullHtml}<br>📅 Período: <b>${d1}</b> a <b>${d2}</b>`, '#7F8DDB') },
     ],
-    licenca:[
-      {tag:'licenca',label:'Aviso discreto',     slack:formatSlackTags(`🩺 *Aviso de Ausência*\n\n${u} está de licença médica 🏥 e retorna em *${d1}*.\n\n_Desejamos uma pronta recuperação! 💙_${cs}`), html:`🩺 <b>Aviso de Ausência</b><br><br>${u} está de licença médica 🏥 e retorna em <b>${d1}</b>.<br><small>Desejamos uma pronta recuperação! 💙</small>${ch}`},
-      {tag:'licenca',label:'Formal com contato', slack:formatSlackTags(`⚕️ Comunicamos que ${u} encontra-se de licença médica.\n📅 Previsão de retorno: *${d1}*${cs}`), html:`⚕️ Comunicamos que ${u} encontra-se de licença médica.<br>📅 Previsão de retorno: <b>${d1}</b>${ch}`},
-      {tag:'licenca',label:'Simples e respeitoso',slack:formatSlackTags(`${u} está com atestado médico 🩺 e ficará ausente até *${d1}*.\n_Contamos com a compreensão de todos! 🤝_${cs}`), html:`${u} está com atestado médico 🩺 e ficará ausente até <b>${d1}</b>.<br><small>Contamos com a compreensão de todos! 🤝</small>${ch}`}
+    licenca: [
+      { tag:'licenca', label:'Aviso discreto',
+        slack: slackBlock('🩺','Aviso de Ausência 🏥', `${fullSlack}\n\nRetorno previsto: *${d1}*\n_Desejamos uma pronta recuperação! 💙_`),
+        html:  htmlBlock('🩺','Aviso de Ausência 🏥', `${fullHtml}<br>Retorno previsto: <b>${d1}</b><br><small style="color:#888">Desejamos uma pronta recuperação! 💙</small>`, '#3248C6') },
+
+      { tag:'licenca', label:'Formal',
+        slack: `⚕️ ${fullSlack}\n\n📅 Previsão de retorno: *${d1}*${cs}`,
+        html:  htmlBlock('⚕️','', `${fullHtml}<br>📅 Previsão de retorno: <b>${d1}</b>`, '#7F8DDB') },
+
+      { tag:'licenca', label:'Simples',
+        slack: `${fullSlack} — ausente até *${d1}*. 🩺\n_Contamos com a compreensão de todos! 🤝_${cs}`,
+        html:  htmlBlock('🩺','', `${fullHtml} — ausente até <b>${d1}</b>.<br><small style="color:#888">Contamos com a compreensão de todos! 🤝</small>`, 'var(--cobli-green)') },
     ],
-    aviso:[
-      {tag:'aviso',label:'Incidente crítico',    slack:formatSlackTags(`🚨 *[INCIDENTE]* — Identificada instabilidade no sistema!\n\n📌 Equipe técnica *já está atuando* no problema.\n⏱️ Previsão de resolução: em análise\n\n_Atualizações serão postadas neste canal._${cs}`), html:`🚨 <b>[INCIDENTE]</b> — Instabilidade no sistema!<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise${ch}`},
-      {tag:'aviso',label:'Manutenção programada',slack:formatSlackTags(`🔧 *Manutenção Programada*\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n🖥️ Sistemas impactados: a informar\n\n_Agradecemos a compreensão!_${cs}`), html:`🔧 <b>Manutenção Programada</b><br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir${ch}`},
-      {tag:'aviso',label:'Incidente resolvido',  slack:formatSlackTags(`✅ *Incidente Resolvido*\n\nO sistema voltou a operar normalmente 🟢\n📅 Resolvido em: *${d1}*\n\n_Pedimos desculpas pelo transtorno._${cs}`), html:`✅ <b>Incidente Resolvido</b><br><br>Sistema operando normalmente 🟢<br>📅 Resolvido em: <b>${d1}</b>${ch}`},
-      {tag:'aviso',label:'Comunicado geral',     slack:formatSlackTags(`📢 *Comunicado Importante*\n\n${text.trim() || 'Descreva o aviso aqui.'}\n\n_— Equipe de TI_${cs}`), html:`📢 <b>Comunicado Importante</b><br><br>${text.trim() || 'Descreva o aviso aqui.'}<br><small>— Equipe de TI</small>${ch}`}
+    aviso: [
+      { tag:'aviso', label:'Incidente crítico',
+        slack: slackBlock('🚨','[INCIDENTE]', `${fullSlack}\n\n📌 Equipe técnica *já está atuando*.\n⏱️ Previsão: em análise\n\n_Atualizações serão postadas aqui._`),
+        html:  htmlBlock('🚨','[INCIDENTE]', `${fullHtml}<br><br>📌 Equipe técnica <b>já está atuando</b>.<br>⏱️ Previsão: em análise`, 'var(--cobli-red)') },
+
+      { tag:'aviso', label:'Manutenção programada',
+        slack: slackBlock('🔧','Manutenção Programada', `${fullSlack}\n\n📅 Data: *${d1}*\n⏰ Período: a definir\n\n_Agradecemos a compreensão!_`),
+        html:  htmlBlock('🔧','Manutenção Programada', `${fullHtml}<br><br>📅 Data: <b>${d1}</b><br>⏰ Período: a definir`, 'var(--warn)') },
+
+      { tag:'aviso', label:'Incidente resolvido',
+        slack: slackBlock('✅','Incidente Resolvido 🟢', `Sistema voltou a operar normalmente.\n📅 Resolvido em: *${d1}*\n\n${fullSlack}\n\n_Pedimos desculpas pelo transtorno._`),
+        html:  htmlBlock('✅','Incidente Resolvido 🟢', `Sistema operando normalmente.<br>📅 Resolvido em: <b>${d1}</b>`, 'var(--cobli-green)') },
+
+      { tag:'aviso', label:'Comunicado geral',
+        slack: slackBlock('📢','Comunicado Importante', `${fullSlack}\n\n_— Equipe de TI_`),
+        html:  htmlBlock('📢','Comunicado Importante', `${fullHtml}<br><small style="color:#888">— Equipe de TI</small>`, '#7F8DDB') },
     ],
-    retorno:[
-      {tag:'retorno',label:'Retorno celebrativo',slack:formatSlackTags(`🎉 *Retorno às Atividades!*\n\n${u} está de volta! 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨${cs}`), html:`🎉 <b>Retorno às Atividades!</b><br><br>${u} está de volta! 🙌<br>📅 Retornou em: <b>${d1}</b>${ch}`},
-      {tag:'retorno',label:'Simples e objetivo', slack:formatSlackTags(`✅ ${u} retornou e já está disponível a partir de *${d1}*. 🟢${cs}`), html:`✅ ${u} retornou e já está disponível a partir de <b>${d1}</b>. 🟢${ch}`}
-    ]
+    retorno: [
+      { tag:'retorno', label:'Retorno celebrativo',
+        slack: slackBlock('🎉','Retorno às Atividades!', `${fullSlack} 🙌\n📅 Retornou em: *${d1}*\n\n_Seja bem-vindo(a)!_ ✨`),
+        html:  htmlBlock('🎉','Retorno às Atividades!', `${fullHtml} 🙌<br>📅 Retornou em: <b>${d1}</b>`, 'var(--cobli-green2)') },
+
+      { tag:'retorno', label:'Simples e objetivo',
+        slack: `✅ ${fullSlack} — disponível a partir de *${d1}*. 🟢${cs}`,
+        html:  htmlBlock('✅','', `${fullHtml} — disponível a partir de <b>${d1}</b>. 🟢`, 'var(--cobli-green)') },
+    ],
   };
   return (T[sc] || T.ferias).slice(0, 4);
 }
@@ -1475,6 +1613,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', e => {
     if (!document.getElementById('wh-wrap').contains(e.target)) {
       whOpen = false; document.getElementById('wh-dropdown').classList.remove('open');
+
+      // Contact autocomplete — fecha ao clicar fora
+  document.addEventListener('click', e => {
+    if (!document.getElementById('contact-row').contains(e.target)) closeContactAC();
+  });
+
+  // Contact autocomplete — delegation para cliques nos itens
+  document.getElementById('contact-row').addEventListener('click', e => {
+    const item = e.target.closest('[data-cac-idx]');
+    if (item) insertContactAC(parseInt(item.dataset.cacIdx));
+  });
     }
   });
 
