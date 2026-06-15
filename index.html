@@ -6,182 +6,217 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-:root{--cobli-navy:#07074E;--cobli-blue:#001BB8;--cobli-blue-light:#3248C6;--cobli-blue-chart:#7F8DDB;--cobli-red:#FF4633;--cobli-green:#00AE97;--cobli-green2:#0FFDC9;--bg:#07074E;--bg-card:#0f0f6a;--bg-input:#1F1F5F;--bg-hover:#1a1a7a;--border:rgba(114,141,219,0.25);--border-focus:#3248C6;--text:#E6E6ED;--text-muted:rgba(230,230,237,0.55);--text-hint:rgba(230,230,237,0.35);--success:#00AE97;--error:#FF4633;--warn:#F59E0B;--radius-sm:6px;--radius-md:10px;--radius-lg:14px}
+/* TEMA CLARO ATUALIZADO */
+:root {
+  --cobli-navy: #07074E;
+  --cobli-blue: #001BB8;
+  --cobli-blue-light: #3248C6;
+  --cobli-blue-chart: #7F8DDB;
+  --cobli-red: #FF4633;
+  --cobli-green: #00AE97;
+  --cobli-green2: #0FFDC9;
+  
+  /* Fundos */
+  --bg: #F4F5F8; /* Cinza bem claro / gelo */
+  --bg-card: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --bg-hover: #F8FAFC;
+  
+  /* Bordas */
+  --border: #E2E8F0;
+  --border-focus: #3248C6;
+  
+  /* Textos */
+  --text: #1E293B; /* Chumbo escuro */
+  --text-muted: #64748B;
+  --text-hint: #94A3B8;
+  
+  /* Cores de status */
+  --success: #00AE97;
+  --error: #FF4633;
+  --warn: #F59E0B;
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
 .layout{display:flex;min-height:100vh}
-.sidebar{width:260px;flex-shrink:0;background:var(--cobli-navy);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
-.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+
+/* SIDEBAR MANTÉM AZUL ESCURO PARA CONTRASTE DA MARCA */
+.sidebar{width:260px;flex-shrink:0;background:var(--cobli-navy);border-right:1px solid #0f0f6a;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px}
 .logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#001BB8,#0FFDC9);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff}
-.logo-text{font-size:15px;font-weight:700;color:#E6E6ED}.logo-sub{font-size:11px;color:var(--text-muted)}
+.logo-text{font-size:15px;font-weight:700;color:#FFF}.logo-sub{font-size:11px;color:rgba(255,255,255,0.5)}
 .sidebar-nav{flex:1;padding:12px 10px;overflow-y:auto}
-.nav-label{font-size:10px;font-weight:700;color:var(--text-hint);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-md);font-size:13px;color:var(--text-muted);cursor:pointer;transition:all .15s;margin-bottom:2px;border:none;background:transparent;width:100%;text-align:left}
-.nav-item:hover{background:var(--bg-hover);color:var(--text)}.nav-item.active{background:var(--bg-input);color:var(--cobli-green2)}
+.nav-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-md);font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .15s;margin-bottom:2px;border:none;background:transparent;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:#FFF}.nav-item.active{background:rgba(255,255,255,0.1);color:var(--cobli-green2)}
 .nav-item i{font-size:16px;flex-shrink:0}
 .nav-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--cobli-blue-light);color:#fff;padding:2px 7px;border-radius:10px;display:none}
-.sb-user{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)}
+.sb-user{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.7)}
 .btn-logout{margin-left:auto;font-size:11px;background:rgba(255,70,51,.15);color:var(--cobli-red);border:none;padding:3px 9px;border-radius:4px;cursor:pointer}
 .btn-logout:hover{background:rgba(255,70,51,.28)}
-.main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:rgba(7,7,78,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.topbar-title{font-size:16px;font-weight:600}.topbar-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+
+.main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh; background:var(--bg);}
+.topbar{background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:16px;font-weight:600; color:var(--cobli-navy);}.topbar-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
-.status-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(0,174,151,.15);color:var(--cobli-green);border:1px solid rgba(0,174,151,.3);display:flex;align-items:center;gap:5px}
+.status-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(0,174,151,.15);color:#008c7a;border:1px solid rgba(0,174,151,.3);display:flex;align-items:center;gap:5px}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--cobli-green)}
-.content{padding:24px 28px;display:flex;flex-direction:column;gap:18px;max-width:900px}
+
+.content-wrapper { padding: 24px 28px; display: flex; justify-content: center; }
+.content{display:flex;flex-direction:column;gap:18px;width:100%;max-width:1200px;} /* Centralizado e mais largo */
+
 /* AUTH */
 #auth-screen{display:none;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)}
-.auth-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:18px}
+.auth-card{background:var(--bg-card);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.05);border-radius:var(--radius-lg);padding:36px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:18px}
 .auth-tabs{display:flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
 .auth-tab{flex:1;padding:8px;font-size:13px;font-weight:500;border:none;background:transparent;cursor:pointer;color:var(--text-muted);transition:all .15s}
 .auth-tab.active{background:var(--cobli-blue);color:#fff}
 .auth-err{font-size:12px;color:var(--cobli-red);background:rgba(255,70,51,.1);padding:8px 12px;border-radius:var(--radius-sm);display:none}
 .form-label{font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;display:block;letter-spacing:.04em}
+
 /* PANELS */
 .panel{display:none}.panel.active{display:flex;flex-direction:column;gap:18px}
-.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem}
-.card-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px 12px;transition:border .15s,box-shadow .15s;width:100%}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(50,72,198,.25)}
+
+/* GRID DUAS COLUNAS PARA O COMPOSER */
+.compose-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.compose-left, .compose-right { display: flex; flex-direction: column; gap: 18px; }
+@media(max-width: 950px) { .compose-grid { grid-template-columns: 1fr; } }
+
+.card{background:var(--bg-card);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.02);border-radius:var(--radius-lg);padding:1.25rem}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-light);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg-input);border:1px solid #CBD5E1;border-radius:var(--radius-md);padding:8px 12px;transition:border .15s,box-shadow .15s;width:100%}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(50,72,198,.15)}
 input::placeholder,textarea::placeholder{color:var(--text-hint)}
 textarea{resize:vertical;line-height:1.65}
-.toggle{width:40px;height:22px;border-radius:11px;background:var(--border);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;padding:0}
+
+.toggle{width:40px;height:22px;border-radius:11px;background:#CBD5E1;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;padding:0}
 .toggle.on{background:var(--cobli-green)}.toggle::after{content:'';width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}.toggle.on::after{left:21px}
-.toggle-row{display:flex;align-items:center;gap:10px}.toggle-label{font-size:13px;font-weight:500}
+.toggle-row{display:flex;align-items:center;gap:10px}.toggle-label{font-size:13px;font-weight:500; color:var(--text);}
+
 .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:var(--radius-md);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
-.btn-primary{background:var(--cobli-blue);color:#fff}.btn-primary:hover{background:var(--cobli-blue-light)}.btn-primary:disabled{opacity:.4;cursor:not-allowed}
-.btn-success{background:var(--cobli-green);color:#07074E}.btn-success:hover{background:var(--cobli-green2)}
-.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border)}.btn-ghost:hover{background:var(--bg-hover);color:var(--text)}
+.btn-primary{background:var(--cobli-blue);color:#fff; box-shadow:0 2px 6px rgba(0,27,184,0.3);}.btn-primary:hover{background:var(--cobli-blue-light); transform:translateY(-1px)}.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-success{background:var(--cobli-green);color:#fff; box-shadow:0 2px 6px rgba(0,174,151,0.3);}.btn-success:hover{background:#009985; transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid #CBD5E1}.btn-ghost:hover{background:var(--bg-hover);color:var(--text)}
 .btn-danger-ghost{background:transparent;color:var(--error);border:1px solid rgba(255,70,51,.3)}.btn-danger-ghost:hover{background:rgba(255,70,51,.1)}
-.btn-warn{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid rgba(245,158,11,.3)}.btn-warn:hover{background:rgba(245,158,11,.25)}
-.btn-edit{background:transparent;color:var(--cobli-blue-chart);border:1px solid rgba(127,141,219,.3);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
-.btn-edit:hover{background:rgba(50,72,198,.2);color:#a5b4fc;border-color:var(--cobli-blue-light)}
+.btn-warn{background:rgba(245,158,11,.15);color:#D97706;border:1px solid rgba(245,158,11,.3)}.btn-warn:hover{background:rgba(245,158,11,.25)}
+.btn-edit{background:transparent;color:var(--cobli-blue-light);border:1px solid rgba(50,72,198,.3);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
+.btn-edit:hover{background:rgba(50,72,198,.1);color:var(--cobli-blue);border-color:var(--cobli-blue)}
 .btn-sm{padding:5px 12px;font-size:12px}
+
 .tag{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px}
-.tag-ferias{background:rgba(0,174,151,.2);color:var(--cobli-green);border:1px solid rgba(0,174,151,.35)}
-.tag-novidades{background:rgba(15,253,201,.12);color:var(--cobli-green2);border:1px solid rgba(15,253,201,.3)}
-.tag-incidente{background:rgba(255,70,51,.15);color:var(--cobli-red);border:1px solid rgba(255,70,51,.35)}
-.tag-aviso-geral{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid rgba(245,158,11,.3)}
-.tag-retorno{background:rgba(15,253,201,.12);color:var(--cobli-green2);border:1px solid rgba(15,253,201,.3)}
+.tag-ferias{background:rgba(0,174,151,.15);color:#008c7a;border:1px solid rgba(0,174,151,.3)}
+.tag-novidades{background:#E0F2FE;color:#0284C7;border:1px solid #BAE6FD}
+.tag-incidente{background:rgba(255,70,51,.15);color:#D93025;border:1px solid rgba(255,70,51,.3)}
+.tag-aviso-geral{background:rgba(245,158,11,.15);color:#D97706;border:1px solid rgba(245,158,11,.3)}
+.tag-retorno{background:#E0F2FE;color:#0284C7;border:1px solid #BAE6FD}
+
 .tabs{display:flex;gap:8px;flex-wrap:wrap}
-.tab-btn{font-size:12px;padding:7px 16px;border-radius:20px;background:var(--bg-input);color:var(--text-muted);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;font-weight:500}
-.tab-btn:hover{color:var(--text);border-color:var(--cobli-blue-chart)}.tab-btn.active{background:var(--cobli-blue);color:#fff;border-color:var(--cobli-blue)}
+.tab-btn{font-size:12px;padding:7px 16px;border-radius:20px;background:#FFF;color:var(--text-muted);border:1px solid #CBD5E1;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;font-weight:500;box-shadow:0 1px 2px rgba(0,0,0,0.02)}
+.tab-btn:hover{color:var(--text);border-color:var(--cobli-blue-chart)}.tab-btn.active{background:var(--cobli-blue);color:#fff;border-color:var(--cobli-blue);box-shadow:0 2px 6px rgba(0,27,184,0.3)}
+
 .msg-wrap{position:relative}
 textarea.msg-ta{min-height:80px;padding:12px 14px}
 
-/* ====== ÍCONES (HINTS) MAIS VIVOS ====== */
 .hint-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.hint-pill{
-  font-size:13px;
-  padding:5px 12px;
-  border-radius:14px;
-  border:1px solid rgba(127,141,219,0.5);
-  background:rgba(50,72,198,0.25);
-  color:#FFF;
-  cursor:pointer;
-  transition:all 0.2s ease;
-  user-select:none;
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  box-shadow:0 2px 4px rgba(0,0,0,0.1);
-}
-.hint-pill:hover{
-  background:rgba(50,72,198,0.6);
-  color:var(--cobli-green2);
-  border-color:var(--cobli-green2);
-  transform:translateY(-2px);
-  box-shadow:0 4px 8px rgba(0,0,0,0.2);
-}
-/* ========================================= */
+.hint-pill{font-size:12px;padding:5px 12px;border-radius:14px;border:1px solid #BFDBFE;background:#EFF6FF;color:#1E40AF;cursor:pointer;transition:all 0.2s ease;user-select:none;display:inline-flex;align-items:center;gap:4px;box-shadow:0 1px 2px rgba(0,0,0,0.05);}
+.hint-pill:hover{background:#DBEAFE;color:#1E3A8A;border-color:#93C5FD;transform:translateY(-1px);box-shadow:0 3px 6px rgba(0,0,0,0.08);}
 
 .wh-multi-wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.wh-chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:20px;background:var(--bg-input);border:1px solid var(--cobli-green);font-size:12px;font-weight:600;color:var(--cobli-green2);cursor:default}
+.wh-chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:20px;background:#F0FDF4;border:1px solid #86EFAC;font-size:12px;font-weight:600;color:#166534;cursor:default}
 .wh-chip-remove{background:none;border:none;color:var(--cobli-red);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;opacity:.7}.wh-chip-remove:hover{opacity:1}
-.wh-add-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:transparent;border:1px dashed var(--border);font-size:12px;color:var(--text-muted);cursor:pointer;transition:all .15s}
+.wh-add-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:#FFF;border:1px dashed #94A3B8;font-size:12px;color:var(--text-muted);cursor:pointer;transition:all .15s}
 .wh-add-btn:hover{border-color:var(--cobli-blue-chart);color:var(--text)}
-.wh-picker-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:260px;background:#0d0d60;border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:200}
+
+.wh-picker-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:260px;background:#FFF;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.1);z-index:200}
 .wh-picker-dropdown.open{display:block}
-.wh-picker-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;font-size:13px}
-.wh-picker-item:hover{background:var(--bg-hover)}.wh-picker-item.selected{background:rgba(0,174,151,.1)}.wh-picker-item.selected .wh-name{color:var(--cobli-green2)}
+.wh-picker-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;font-size:13px; color:var(--text)}
+.wh-picker-item:hover{background:var(--bg-hover)}.wh-picker-item.selected{background:#F0FDF4}.wh-picker-item.selected .wh-name{color:#166534}
 .wh-check{margin-left:auto;color:var(--cobli-green);font-size:14px;display:none}.wh-picker-item.selected .wh-check{display:block}.wh-name{font-size:13px;font-weight:500}
-.autocomplete-dropdown{position:absolute;z-index:300;background:#0d0d60;border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);min-width:260px;max-height:220px;overflow-y:auto;display:none;top:calc(100% + 4px);left:0}
+
+.autocomplete-dropdown{position:absolute;z-index:300;background:#FFF;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.1);min-width:260px;max-height:220px;overflow-y:auto;display:none;top:calc(100% + 4px);left:0}
 .autocomplete-dropdown.open{display:block}
 .ac-header{font-size:10px;font-weight:700;color:var(--text-hint);padding:8px 12px 4px;letter-spacing:.06em;text-transform:uppercase}
-.ac-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .1s;font-size:13px}
+.ac-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .1s;font-size:13px; color:var(--text)}
 .ac-item:hover,.ac-item.focused{background:var(--bg-hover)}
 .ac-avatar{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700}
-.ac-avatar.person{background:rgba(50,72,198,.35);color:#7F8DDB}.ac-avatar.group{background:rgba(0,174,151,.25);color:var(--cobli-green)}.ac-avatar.channel{background:rgba(15,253,201,.15);color:var(--cobli-green2)}
+.ac-avatar.person{background:#E0E7FF;color:#3730A3}.ac-avatar.group{background:#D1FAE5;color:#166534}.ac-avatar.channel{background:#FEF3C7;color:#047857}
 .ac-name{font-weight:600}.ac-sub{font-size:11px;color:var(--text-hint)}
-.sugg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:700px){.sugg-grid{grid-template-columns:1fr}}
-.sugg-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;cursor:pointer;transition:all .15s;background:var(--bg-card);display:flex;flex-direction:column;gap:8px}
-.sugg-card:hover{border-color:var(--cobli-blue-light);background:var(--bg-input)}.sugg-card.selected{border:1.5px solid var(--cobli-green);background:var(--bg-input)}
-.sugg-card-hdr{display:flex;align-items:center;gap:8px}.sugg-name{font-size:11px;color:var(--text-muted);flex:1}
-.sel-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.sel-dot.on{background:var(--cobli-green);border-color:var(--cobli-green)}.sel-dot.on::after{content:'';width:5px;height:5px;border-radius:50%;background:#07074E}
+
+.sugg-grid{display:grid;grid-template-columns:1fr;gap:10px} /* Mudado para 1 coluna devido ao layout dividido */
+.sugg-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;cursor:pointer;transition:all .15s;background:#FFF;display:flex;flex-direction:column;gap:10px; box-shadow:0 2px 5px rgba(0,0,0,0.02)}
+.sugg-card:hover{border-color:var(--cobli-blue-chart);background:#F8FAFC; transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,0.05)}
+.sugg-card.selected{border:1.5px solid var(--cobli-green);background:#F0FDF4}
+.sugg-card-hdr{display:flex;align-items:center;gap:8px}.sugg-name{font-size:12px;font-weight:600;color:var(--text);flex:1}
+.sel-dot{width:16px;height:16px;border-radius:50%;border:2px solid #CBD5E1;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s; background:#FFF}
+.sel-dot.on{background:var(--cobli-green);border-color:var(--cobli-green)}.sel-dot.on::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
 .sugg-preview{font-size:12px;line-height:1.7;color:var(--text-muted)}
-.retorno-block{border:1px solid rgba(15,253,201,.2);border-radius:var(--radius-md);padding:12px 14px;background:rgba(15,253,201,.04);display:flex;flex-direction:column;gap:10px;margin-top:4px}
-.retorno-block-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-green2);display:flex;align-items:center;gap:6px}
-.retorno-edit{font-size:13px;line-height:1.7;color:var(--text);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;min-height:60px;resize:vertical}
-.retorno-edit:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(50,72,198,.25)}
-.options-card{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;display:flex;flex-direction:column;gap:14px}
+
+.retorno-block{border:1px solid #BAE6FD;border-radius:var(--radius-md);padding:14px;background:#F0F9FF;display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.retorno-block-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0284C7;display:flex;align-items:center;gap:6px}
+.retorno-edit{font-size:13px;line-height:1.7;color:var(--text);background:#FFF;border:1px solid #93C5FD;border-radius:var(--radius-md);padding:10px 12px;min-height:60px;resize:vertical}
+.retorno-edit:focus{outline:none;border-color:var(--cobli-blue-light);box-shadow:0 0 0 3px rgba(50,72,198,.15)}
+.options-card{background:#FFF;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;display:flex;flex-direction:column;gap:14px}
 .sub-row{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-left:50px}
 .divider-h{height:1px;background:var(--border)}
 .sched-inputs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .sched-inputs input[type=date],.sched-inputs input[type=time]{width:auto}
-.sched-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(0,174,151,.2);color:var(--cobli-green);border:1px solid rgba(0,174,151,.35);display:none}.sched-badge.visible{display:inline-block}
-.preview-card{background:#111;border:1px solid #2a2a2a;border-radius:var(--radius-lg);padding:1rem 1.25rem}
-.preview-hdr{font-size:11px;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.preview-msg{display:none}.preview-msg.visible{display:flex;gap:10px}
-.preview-avatar-wrap{width:36px;height:36px;border-radius:8px;background:var(--cobli-blue);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.preview-name{font-size:13px;font-weight:700;color:#fff}.preview-time{font-size:11px;color:#555;margin-left:6px}
-.preview-text{font-size:13px;color:#CCC;line-height:1.75;margin-top:4px}
-.preview-sched{font-size:11px;color:var(--cobli-green2);margin-top:6px;display:none}.preview-sched.visible{display:block}
-.preview-sender{font-size:10px;color:#444;margin-top:6px;font-style:italic}
-.preview-empty{font-size:13px;color:#444}
-.slack-block{display:flex;gap:0}.slack-bar{width:4px;border-radius:2px;flex-shrink:0;margin-right:10px}.slack-body{flex:1}
-.status-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.status-msg{font-size:13px;display:flex;align-items:center;gap:6px}
-.status-msg.success{color:var(--cobli-green)}.status-msg.error{color:var(--error)}.status-msg.warn{color:var(--warn)}
-.queue-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:6px;background:var(--bg-card)}
-.queue-time{font-size:11px;font-weight:700;color:var(--cobli-green2);white-space:nowrap;min-width:90px;padding-top:2px}
-.queue-text{font-size:12px;color:var(--text-muted);flex:1;line-height:1.5}
+.sched-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0;display:none}.sched-badge.visible{display:inline-block}
 
-/* ====== LAYOUT DE CARDS EM COLUNAS E CONTROLES ====== */
+/* Preview Card Slack Style Light */
+.preview-card{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem; box-shadow:0 4px 15px rgba(0,0,0,0.03)}
+.preview-hdr{font-size:11px;font-weight:600;color:var(--text-hint);margin-bottom:14px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:0.04em}
+.preview-msg{display:none}.preview-msg.visible{display:flex;gap:12px}
+.preview-avatar-wrap{width:38px;height:38px;border-radius:8px;background:var(--cobli-navy);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.preview-name{font-size:14px;font-weight:800;color:#1D1C1D} /* Cor original do nome no Slack claro */
+.preview-time{font-size:12px;color:#616061;margin-left:6px;font-weight:400}
+.preview-text{font-size:14px;color:#1D1C1D;line-height:1.5;margin-top:4px}
+.preview-sched{font-size:12px;color:#007a5a;margin-top:8px;display:none;font-weight:500}.preview-sched.visible{display:flex;align-items:center;gap:4px}
+.preview-sender{font-size:11px;color:#616061;margin-top:8px;}
+.preview-empty{font-size:13px;color:var(--text-hint);text-align:center;padding:1rem 0;}
+.slack-block{display:flex;gap:0}.slack-bar{width:4px;border-radius:4px;flex-shrink:0;margin-right:12px}.slack-body{flex:1}
+
+.status-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap; margin-top:8px; padding-top:18px; border-top:1px solid var(--border)}
+.status-msg{font-size:13px;display:flex;align-items:center;gap:6px; font-weight:500}
+.status-msg.success{color:#008c7a}.status-msg.error{color:var(--error)}.status-msg.warn{color:#D97706}
+
+/* LISTAS INTERNAS (Páginas de Configuração) */
 .cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
 @media(max-width: 950px) { .cards-row { grid-template-columns: 1fr; } }
-
 .list-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.search-input{padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg-input);color:var(--text);font-size:12px;outline:none;transition:border 0.2s;min-width:180px;flex:1;}
+.search-input{padding:6px 14px;border-radius:14px;border:1px solid #CBD5E1;background:#FFF;color:var(--text);font-size:12px;outline:none;transition:border 0.2s;min-width:180px;flex:1;}
 .search-input:focus{border-color:var(--cobli-blue-light);}
 .pagination{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);font-weight:600;}
-.page-btn{background:var(--bg-input);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:3px 6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
-.page-btn:hover:not(:disabled){background:rgba(50,72,198,0.2);border-color:var(--cobli-blue-light);color:var(--cobli-blue-chart);}
-.page-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.page-btn{background:#FFF;border:1px solid #CBD5E1;color:var(--text);border-radius:6px;padding:4px 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;box-shadow:0 1px 2px rgba(0,0,0,0.02)}
+.page-btn:hover:not(:disabled){background:#F8FAFC;border-color:var(--cobli-blue-chart);color:var(--cobli-blue);}
+.page-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.item-list-wrap { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
 
-.item-list-wrap { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-.item-list-wrap .list-item { margin-bottom: 0; }
-/* ==================================================== */
-
-.list-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);margin-bottom:6px}
-.list-item-avatar{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
-.list-item-name{font-size:13px;font-weight:600}.list-item-sub{font-size:11px;color:var(--text-muted);margin-top:2px;font-family:monospace}
+.queue-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius-md);background:#FFF; box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+.queue-time{font-size:11px;font-weight:700;color:#008c7a;white-space:nowrap;min-width:90px;padding-top:2px}
+.queue-text{font-size:13px;color:var(--text);flex:1;line-height:1.5}
+.list-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius-md);background:#FFF;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+.list-item-avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;font-weight:700}
+.list-item-name{font-size:13px;font-weight:700;color:var(--text)}.list-item-sub{font-size:11px;color:var(--text-muted);margin-top:2px;font-family:monospace}
 .list-item-actions{margin-left:auto;display:flex;gap:6px}
-.add-form{border:1px dashed rgba(50,72,198,.4);border-radius:var(--radius-md);padding:14px;margin-top:8px;display:none;flex-direction:column;gap:10px}.add-form.open{display:flex}
-.form-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}.form-row>div{flex:1;min-width:120px}
-.slack-id-tip{font-size:11px;color:var(--cobli-blue-chart);background:rgba(50,72,198,.12);padding:8px 12px;border-radius:var(--radius-sm);border-left:2px solid var(--cobli-blue-light);line-height:1.6}
+.add-form{border:1px dashed #94A3B8;border-radius:var(--radius-md);background:#F8FAFC;padding:16px;margin-top:12px;display:none;flex-direction:column;gap:12px}.add-form.open{display:flex}
+.form-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}.form-row>div{flex:1;min-width:140px}
+.slack-id-tip{font-size:11px;color:#1E40AF;background:#EFF6FF;padding:10px 14px;border-radius:var(--radius-sm);border-left:3px solid #3B82F6;line-height:1.6}
 .no-sugg{font-size:13px;color:var(--text-hint);text-align:center;padding:2rem}
 .loading{display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text-hint);font-size:13px;gap:8px}
 @keyframes spin{to{transform:rotate(360deg)}}.spin{animation:spin .8s linear infinite;display:inline-block}
+
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(7,7,78,.82);backdrop-filter:blur(5px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.hidden{display:none}
-.modal-box{background:#0d0d60;border:1px solid var(--cobli-blue-light);border-radius:var(--radius-lg);padding:24px;width:100%;max-width:540px;display:flex;flex-direction:column;gap:16px;max-height:90vh;overflow-y:auto}
-.modal-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
-.modal-footer{display:flex;gap:8px;justify-content:flex-end;padding-top:4px}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.modal-box{background:#FFF;border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:540px;display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04)}
+.modal-title{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;color:var(--cobli-navy)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--border)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
 
 .debug-banner{position:fixed;bottom:20px;right:20px;left:auto;background:#1a0020;border:1px solid #6b21a8;padding:8px 16px;border-radius:var(--radius-md);font-size:11px;font-family:monospace;color:#d8b4fe;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .debug-banner.error{background:#300;border-color:#991b1b;color:#fca5a5}
@@ -191,11 +226,12 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 <body>
 <div class="debug-banner" id="debug-banner">⏳ Iniciando…</div>
 
+<!-- AUTH -->
 <div id="auth-screen" style="display:flex">
   <div class="auth-card">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
       <div class="logo-mark">Co</div>
-      <div><div class="logo-text" style="font-size:18px">Cobli Slack</div><div class="logo-sub">Notificações inteligentes</div></div>
+      <div><div class="logo-text" style="font-size:18px; color:var(--cobli-navy)">Cobli Slack</div><div class="logo-sub">Notificações inteligentes</div></div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login">Entrar</button>
@@ -208,6 +244,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
+<!-- EDIT MODAL -->
 <div class="modal-overlay hidden" id="edit-modal">
   <div class="modal-box">
     <div class="modal-title" id="edit-modal-title"><i class="ti ti-pencil"></i> Editar</div>
@@ -219,6 +256,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
+<!-- APP -->
 <div class="layout" id="app" style="display:none">
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -246,125 +284,140 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
     <div><div class="topbar-title" id="topbar-title">Compositor de Mensagens</div><div class="topbar-sub" id="topbar-sub">Digite, escolha uma variação e envie para o Slack</div></div>
     <div class="topbar-right"><span class="status-pill"><span class="status-dot"></span> Conectado</span></div>
   </div>
+  <div class="content-wrapper">
   <div class="content">
 
+    <!-- COMPOSE -->
     <div class="panel active" id="panel-compose">
-      <div class="card">
-        <div class="card-title"><i class="ti ti-plug"></i> Canais de destino <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0">(selecione um ou mais)</span></div>
-        <div style="position:relative">
-          <div class="wh-multi-wrap" id="wh-chips">
-            <button class="wh-add-btn" id="wh-add-btn"><i class="ti ti-plus"></i> Adicionar canal</button>
+      <div class="compose-grid">
+        
+        <!-- COLUNA ESQUERDA: ENTRADA DE DADOS -->
+        <div class="compose-left">
+          <div class="card">
+            <div class="card-title"><i class="ti ti-plug"></i> Canais de destino <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0">(selecione um ou mais)</span></div>
+            <div style="position:relative">
+              <div class="wh-multi-wrap" id="wh-chips">
+                <button class="wh-add-btn" id="wh-add-btn"><i class="ti ti-plus"></i> Adicionar canal</button>
+              </div>
+              <div class="wh-picker-dropdown" id="wh-picker">
+                <div id="wh-picker-list"></div>
+                <div style="padding:8px 10px;border-top:1px solid var(--border)">
+                  <button class="btn btn-ghost btn-sm" style="width:100%" id="btn-go-webhooks"><i class="ti ti-settings"></i> Gerenciar canais</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="wh-picker-dropdown" id="wh-picker">
-            <div id="wh-picker-list"></div>
-            <div style="padding:8px 10px;border-top:1px solid var(--border)">
-              <button class="btn btn-ghost btn-sm" style="width:100%" id="btn-go-webhooks"><i class="ti ti-settings"></i> Gerenciar canais</button>
+
+          <div class="tabs">
+            <button class="tab-btn active" data-sc="ferias"><i class="ti ti-beach"></i> Férias</button>
+            <button class="tab-btn" data-sc="novidades"><i class="ti ti-sparkles"></i> Novidades / Melhorias</button>
+            <button class="tab-btn" data-sc="incidente"><i class="ti ti-alert-triangle"></i> Incidente / Sistema</button>
+            <button class="tab-btn" data-sc="aviso-geral"><i class="ti ti-speakerphone"></i> Aviso Geral</button>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i class="ti ti-pencil"></i> <span id="composer-label">Mensagem</span>
+              <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— use @ para pessoas/grupos · # para canais</span>
+            </div>
+            <div id="fields-container"></div>
+            <div class="hint-pills" id="hint-pills"></div>
+          </div>
+
+          <div class="options-card">
+            <div class="toggle-row">
+              <button class="toggle" id="tgl-contact"></button>
+              <span class="toggle-label">📞 Entrar em contato com:</span>
+            </div>
+            <div class="sub-row" id="contact-row" style="display:none">
+              <div style="position:relative;flex:1;max-width:400px" class="msg-wrap">
+                <input type="text" id="contact-input" placeholder="@pessoa, @grupo ou #canal" autocomplete="off" />
+                <div class="autocomplete-dropdown" id="ac-contact">
+                  <div class="ac-header" id="ac-contact-hdr">Pessoas &amp; Grupos</div>
+                  <div id="ac-contact-list"></div>
+                </div>
+              </div>
+              <span style="font-size:11px;color:var(--text-hint);align-self:center">Aparece no rodapé de todas as variações</span>
+            </div>
+            <div class="divider-h"></div>
+            <div class="toggle-row">
+              <button class="toggle" id="tgl-sched"></button>
+              <span class="toggle-label">Agendar envio</span>
+              <span class="sched-badge" id="sched-badge">⏰ Agendado</span>
+            </div>
+            <div class="sub-row" id="sched-row" style="display:none">
+              <i class="ti ti-calendar-time" style="font-size:15px;color:var(--text-muted);margin-top:2px"></i>
+              <div class="sched-inputs">
+                <input type="date" id="sched-date" disabled />
+                <input type="time" id="sched-time" value="09:00" disabled />
+              </div>
+              <span style="font-size:11px;color:var(--text-hint);align-self:center" id="sched-hint"></span>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="tabs">
-        <button class="tab-btn active" data-sc="ferias"><i class="ti ti-beach"></i> Férias</button>
-        <button class="tab-btn" data-sc="novidades"><i class="ti ti-sparkles"></i> Novidades / Melhorias</button>
-        <button class="tab-btn" data-sc="incidente"><i class="ti ti-alert-triangle"></i> Incidente / Sistema</button>
-        <button class="tab-btn" data-sc="aviso-geral"><i class="ti ti-speakerphone"></i> Aviso Geral</button>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><i class="ti ti-pencil"></i> <span id="composer-label">Mensagem</span>
-          <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— use @ para pessoas/grupos · # para canais</span>
-        </div>
-        <div id="fields-container"></div>
-        <div class="hint-pills" id="hint-pills"></div>
-      </div>
-
-      <div class="options-card">
-        <div class="toggle-row">
-          <button class="toggle" id="tgl-contact"></button>
-          <span class="toggle-label">📞 Entrar em contato com:</span>
-        </div>
-        <div class="sub-row" id="contact-row" style="display:none">
-          <div style="position:relative;flex:1;max-width:400px" class="msg-wrap">
-            <input type="text" id="contact-input" placeholder="@pessoa, @grupo ou #canal" autocomplete="off" />
-            <div class="autocomplete-dropdown" id="ac-contact">
-              <div class="ac-header" id="ac-contact-hdr">Pessoas &amp; Grupos</div>
-              <div id="ac-contact-list"></div>
+        <!-- COLUNA DIREITA: RESULTADOS E PREVIEW -->
+        <div class="compose-right">
+          <div>
+            <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+              <i class="ti ti-sparkles" style="font-size:14px"></i><span id="sugg-label">Variações de mensagem</span>
+            </div>
+            <div class="sugg-grid" id="sugg-grid"><div class="no-sugg" style="grid-column:1/-1">Preencha os campos ao lado para ver as sugestões ✨</div></div>
+            
+            <div class="retorno-block" id="retorno-block" style="display:none">
+              <div class="retorno-block-title"><i class="ti ti-player-play"></i> Mensagem de Retorno — agende já</div>
+              <p style="font-size:12px;color:var(--text-muted)">Baseada nos dados. Edite se quiser e agende para o dia do retorno.</p>
+              <div style="position:relative" class="msg-wrap">
+                <textarea class="retorno-edit" id="retorno-text" placeholder="Mensagem de retorno…"></textarea>
+                <div class="autocomplete-dropdown" id="ac-retorno">
+                  <div class="ac-header" id="ac-retorno-hdr">Pessoas &amp; Grupos</div>
+                  <div id="ac-retorno-list"></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <input type="date" id="retorno-date" style="width:auto" />
+                <input type="time" id="retorno-time" value="08:00" style="width:auto" />
+                <button class="btn btn-success btn-sm" id="btn-sched-retorno"><i class="ti ti-clock"></i> Agendar retorno</button>
+              </div>
             </div>
           </div>
-          <span style="font-size:11px;color:var(--text-hint);align-self:center">Aparece no rodapé de todas as variações</span>
-        </div>
-        <div class="divider-h"></div>
-        <div class="toggle-row">
-          <button class="toggle" id="tgl-sched"></button>
-          <span class="toggle-label">Agendar envio</span>
-          <span class="sched-badge" id="sched-badge">⏰ Agendado</span>
-        </div>
-        <div class="sub-row" id="sched-row" style="display:none">
-          <i class="ti ti-calendar-time" style="font-size:15px;color:var(--text-muted);margin-top:2px"></i>
-          <div class="sched-inputs">
-            <input type="date" id="sched-date" disabled />
-            <input type="time" id="sched-time" value="09:00" disabled />
-          </div>
-          <span style="font-size:11px;color:var(--text-hint);align-self:center" id="sched-hint"></span>
-        </div>
-      </div>
 
-      <div>
-        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:10px;display:flex;align-items:center;gap:6px">
-          <i class="ti ti-sparkles" style="font-size:14px"></i><span id="sugg-label">Variações de mensagem</span>
-        </div>
-        <div class="sugg-grid" id="sugg-grid"><div class="no-sugg" style="grid-column:1/-1">Preencha os campos acima para ver as sugestões ✨</div></div>
-        <div class="retorno-block" id="retorno-block" style="display:none">
-          <div class="retorno-block-title"><i class="ti ti-player-play"></i> Mensagem de Retorno — agende já</div>
-          <p style="font-size:12px;color:var(--text-muted)">Baseada nos dados acima. Edite se quiser e agende para o dia do retorno.</p>
-          <div style="position:relative" class="msg-wrap">
-            <textarea class="retorno-edit" id="retorno-text" placeholder="Mensagem de retorno…"></textarea>
-            <div class="autocomplete-dropdown" id="ac-retorno">
-              <div class="ac-header" id="ac-retorno-hdr">Pessoas &amp; Grupos</div>
-              <div id="ac-retorno-list"></div>
+          <div class="preview-card">
+            <div class="preview-hdr"><i class="ti ti-brand-slack" style="font-size:15px; color:#E01E5A"></i> Pré-visualização no Slack</div>
+            <div class="preview-msg" id="preview-msg">
+              <div class="preview-avatar-wrap">🤖</div>
+              <div style="flex:1">
+                <div><span class="preview-name">Cobli Bot</span><span class="preview-time" id="preview-time"></span></div>
+                <div class="preview-text" id="preview-text"></div>
+                <div class="preview-sched" id="preview-sched"><i class="ti ti-clock"></i> <span id="preview-sched-txt"></span></div>
+                <div class="preview-sender" id="preview-sender"></div>
+              </div>
             </div>
+            <div class="preview-empty" id="preview-empty">Selecione uma variação acima para pré-visualizar</div>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <input type="date" id="retorno-date" style="width:auto" />
-            <input type="time" id="retorno-time" value="08:00" style="width:auto" />
-            <button class="btn btn-success btn-sm" id="btn-sched-retorno"><i class="ti ti-clock"></i> Agendar retorno</button>
-          </div>
-        </div>
-      </div>
 
-      <div class="preview-card">
-        <div class="preview-hdr"><i class="ti ti-brand-slack" style="font-size:14px"></i> Pré-visualização no Slack</div>
-        <div class="preview-msg" id="preview-msg">
-          <div class="preview-avatar-wrap">🤖</div>
-          <div style="flex:1">
-            <div><span class="preview-name">Cobli Bot</span><span class="preview-time" id="preview-time"></span></div>
-            <div class="preview-text" id="preview-text"></div>
-            <div class="preview-sched" id="preview-sched"><i class="ti ti-clock"></i> <span id="preview-sched-txt"></span></div>
-            <div class="preview-sender" id="preview-sender"></div>
+          <div class="status-bar">
+            <button class="btn btn-primary" id="btn-send" disabled><i class="ti ti-send"></i><span id="btn-send-label">Enviar para o Slack</span></button>
+            <button class="btn btn-ghost" id="btn-clear"><i class="ti ti-trash" style="font-size:14px"></i> Limpar Tudo</button>
+            <div class="status-msg" id="send-status"></div>
           </div>
         </div>
-        <div class="preview-empty" id="preview-empty">Selecione uma sugestão para pré-visualizar</div>
-      </div>
+        
+      </div> <!-- Fim grid duas colunas -->
+    </div> <!-- Fim Compose -->
 
-      <div class="status-bar">
-        <button class="btn btn-primary" id="btn-send" disabled><i class="ti ti-send"></i><span id="btn-send-label">Enviar para o Slack</span></button>
-        <button class="btn btn-ghost" id="btn-clear"><i class="ti ti-trash" style="font-size:14px"></i> Limpar</button>
-        <div class="status-msg" id="send-status"></div>
-      </div>
-    </div>
-
+    <!-- QUEUE -->
     <div class="panel" id="panel-queue">
       <div class="card">
         <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
         <div id="queue-list-full"><div class="loading"><i class="ti ti-loader-2 spin"></i> Carregando...</div></div>
       </div>
-      <div class="card" style="border-color:rgba(0,174,151,.3);background:rgba(0,174,151,.05)">
-        <div class="card-title" style="color:var(--cobli-green)"><i class="ti ti-info-circle"></i> Como funciona</div>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.7">Mensagens agendadas ficam salvas no <strong style="color:var(--text)">Supabase</strong> e são disparadas pela <strong style="color:var(--cobli-green2)">Edge Function</strong>. Você pode editar o texto ou cancelar qualquer mensagem pendente.</p>
+      <div class="card" style="border-color:#A7F3D0;background:#F0FDF4">
+        <div class="card-title" style="color:#047857"><i class="ti ti-info-circle"></i> Como funciona</div>
+        <p style="font-size:13px;color:#064E3B;line-height:1.7">Mensagens agendadas ficam salvas no <strong style="color:#065F46">Supabase</strong> e são disparadas pela <strong style="color:#059669">Edge Function</strong>. Você pode editar o texto ou cancelar qualquer mensagem pendente.</p>
       </div>
     </div>
 
+    <!-- WEBHOOKS -->
     <div class="panel" id="panel-webhooks">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
@@ -393,9 +446,11 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
+    <!-- PEOPLE & GROUPS -->
     <div class="panel" id="panel-people">
       <div class="cards-row">
         
+        <!-- CARD PESSOAS -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
             <div class="card-title" style="margin-bottom:0"><i class="ti ti-user"></i> Pessoas</div>
@@ -429,6 +484,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           </div>
         </div>
         
+        <!-- CARD GRUPOS -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
             <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> Grupos (@)</div>
@@ -465,6 +521,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
+    <!-- CHANNELS -->
     <div class="panel" id="panel-channels">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
@@ -495,7 +552,12 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-  </div></div></div><script>
+  </div><!-- .content -->
+  </div><!-- .content-wrapper -->
+</div><!-- .main -->
+</div><!-- .layout -->
+
+<script>
 /* ══════════════════════════════════════════════════
    CONFIG
 ══════════════════════════════════════════════════ */
@@ -673,11 +735,11 @@ function onContactKeydown(e){const dd=document.getElementById('ac-contact');if(!
 function escapeRegex(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function applySpecialTags(txt){return txt.replace(/@here\b/gi,'<!here>').replace(/@channel\b/gi,'<!channel>').replace(/@everyone\b/gi,'<!everyone>').replace(/@aqui\b/gi,'<!here>').replace(/@canal\b/gi,'<!channel>').replace(/@todos\b/gi,'<!everyone>');}
 function resolveSlackTags(text){let txt=applySpecialTags(text);const peopleSorted=[...DB.people].sort((a,b)=>b.name.length-a.name.length);peopleSorted.forEach(p=>{if(!p.slack_id)return;const tagAlready=new RegExp(`<@${p.slack_id}>`,'g');if(tagAlready.test(txt))return;if(p.handle){txt=txt.replace(new RegExp('@'+escapeRegex(p.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);}txt=txt.replace(new RegExp('@'+escapeRegex(p.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);const fn=p.name.split(' ')[0];if(fn&&p.name.includes(' ')){txt=txt.replace(new RegExp('@'+escapeRegex(fn)+'(?=[\\s,;.!?\\n]|$)','gi'),(m,off)=>{const pre=txt.substring(Math.max(0,off-2),off);return pre.includes('<')?m:`<@${p.slack_id}>`});}});const groupsSorted=[...DB.groups].sort((a,b)=>b.name.length-a.name.length);groupsSorted.forEach(g=>{if(!g.handle)return;const tag=g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`;txt=txt.replace(new RegExp('@'+escapeRegex(g.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);txt=txt.replace(new RegExp('@'+escapeRegex(g.name)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);});const chSorted=[...DB.channels].sort((a,b)=>b.name.length-a.name.length);chSorted.forEach(c=>{if(!c.slack_id)return;txt=txt.replace(new RegExp('#'+escapeRegex(c.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<#${c.slack_id}>`);});return txt;}
-function slackTagsToHtml(txt){return txt.replace(/<@(U[A-Z0-9]+)>/g,(_,id)=>{const p=DB.people.find(x=>x.slack_id===id);return`<span style="background:rgba(50,72,198,.2);color:#a5b4fc;border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;}).replace(/<!subteam\^([^|>]+)\|?([^>]*)>/g,(_,id,label)=>{const g=DB.groups.find(x=>x.slack_id===id);return`<span style="background:rgba(0,174,151,.15);color:var(--cobli-green);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;}).replace(/<#(C[A-Z0-9]+)>/g,(_,id)=>{const c=DB.channels.find(x=>x.slack_id===id);return`<span style="background:rgba(15,253,201,.1);color:var(--cobli-green2);border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;}).replace(/<!here>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@here</span>').replace(/<!channel>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@channel</span>').replace(/<!everyone>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@everyone</span>').replace(/\*([^*]+)\*/g,'<strong>$1</strong>').replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>').replace(/\n/g,'<br>');}
+function slackTagsToHtml(txt){return txt.replace(/<@(U[A-Z0-9]+)>/g,(_,id)=>{const p=DB.people.find(x=>x.slack_id===id);return`<span style="background:rgba(50,72,198,.2);color:#3248C6;border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;}).replace(/<!subteam\^([^|>]+)\|?([^>]*)>/g,(_,id,label)=>{const g=DB.groups.find(x=>x.slack_id===id);return`<span style="background:rgba(0,174,151,.15);color:#008c7a;border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;}).replace(/<#(C[A-Z0-9]+)>/g,(_,id)=>{const c=DB.channels.find(x=>x.slack_id===id);return`<span style="background:#E0F2FE;color:#0284C7;border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;}).replace(/<!here>/g,'<span style="background:rgba(245,158,11,.15);color:#D97706;border-radius:3px;padding:0 3px">@here</span>').replace(/<!channel>/g,'<span style="background:rgba(245,158,11,.15);color:#D97706;border-radius:3px;padding:0 3px">@channel</span>').replace(/<!everyone>/g,'<span style="background:rgba(245,158,11,.15);color:#D97706;border-radius:3px;padding:0 3px">@everyone</span>').replace(/\*([^*]+)\*/g,'<strong>$1</strong>').replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>').replace(/\n/g,'<br>');}
 
 /* ══ CONTACT FOOTER ══ */
 function cSlack(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'\n\n📞 _Entrar em contato com: '+raw+'_':'\n\n📞 _Entrar em contato com: acione o responsável da área._';}
-function cHtml(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'<br><small style="color:var(--cobli-green2)">📞 Entrar em contato com: '+slackTagsToHtml(raw)+'</small>':'<br><small style="color:#666">📞 Entrar em contato com: acione o responsável da área.</small>';}
+function cHtml(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'<br><small style="color:#008c7a">📞 Entrar em contato com: '+slackTagsToHtml(raw)+'</small>':'<br><small style="color:#666">📞 Entrar em contato com: acione o responsável da área.</small>';}
 
 /* ══ SENDER FOOTER (AJUSTADO PARA NÃO REPETIR COM O SLACK) ══ */
 function senderSlack(isScheduled){
@@ -687,15 +749,15 @@ function senderSlack(isScheduled){
 }
 function senderHtml(isScheduled){
   return isScheduled
-    ? `<br><small style="color:#a5b4fc;font-style:italic">Agendado por ${esc(userDisplayName)}</small>`
-    : `<br><small style="color:#a5b4fc;font-style:italic">Enviado por ${esc(userDisplayName)}</small>`;
+    ? `<br><small style="color:#64748B;font-style:italic">Agendado por ${esc(userDisplayName)}</small>`
+    : `<br><small style="color:#64748B;font-style:italic">Enviado por ${esc(userDisplayName)}</small>`;
 }
 
 /* ══ BUILD SUGGESTIONS ══ */
 function getFieldVal(id){return(document.getElementById(id)?.value||'').trim();}
 function buildAndRender(){
   const suggs=buildSuggs();const grid=document.getElementById('sugg-grid');const lbl=document.getElementById('sugg-label');
-  if(!suggs.length){grid.innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos acima para ver as sugestões ✨</div>';lbl.textContent='Variações de mensagem';ST.selSugg=null;updatePreview(null);updateSendBtn();return;}
+  if(!suggs.length){grid.innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos ao lado para ver as sugestões ✨</div>';lbl.textContent='Variações de mensagem';ST.selSugg=null;updatePreview(null);updateSendBtn();return;}
   lbl.textContent=suggs.length+' variações — clique para selecionar:';
   const TL={ferias:'Férias',novidades:'Novidade',incidente:'Incidente','aviso-geral':'Aviso',retorno:'Retorno'};
   const TC={ferias:'tag-ferias',novidades:'tag-novidades',incidente:'tag-incidente','aviso-geral':'tag-aviso-geral',retorno:'tag-retorno'};
@@ -708,7 +770,7 @@ function buildAndRender(){
 function buildSuggs(){
   const sc=ST.scenario,cs=cSlack(),ch=cHtml(),cfg=SCENARIO_CFG[sc];if(!cfg)return[];
   function slackMsg(emoji,title,lines,extra=''){return`${emoji} *${title}*\n\n${lines.filter(Boolean).join('\n')}${extra}${cs}`;}
-  function htmlMsg(color,emoji,title,linesHtml,extra=''){return`<div class="slack-block"><div class="slack-bar" style="background:${color}"></div><div class="slack-body">${emoji} <b>${title}</b><br><br>${linesHtml.filter(Boolean).join('<br>')}${extra}${ch}</div></div>`;}
+  function htmlMsg(color,emoji,title,linesHtml,extra=''){return`<div class="slack-block"><div class="slack-bar" style="background:${color}"></div><div class="slack-body">${emoji} <b style="color:var(--text)">${title}</b><br><br>${linesHtml.filter(Boolean).join('<br>')}${extra}${ch}</div></div>`;}
 
   if(sc==='ferias'){
     const nome=getFieldVal('f-nome'),inicio=getFieldVal('f-inicio'),ret=getFieldVal('f-retorno'),obs=getFieldVal('f-obs');
@@ -718,7 +780,7 @@ function buildSuggs(){
     return[
       {tag:'ferias',label:'Comunicado formal',slack:slackMsg('🏖️','Aviso de Férias 🌴',[`${nS} estará de férias 📅`,inicio?`📆 Início: *${inicio}*`:'',ret?`🔙 Retorno: *${ret}*`:'',oS?`\n_${oS}_`:'']),html:htmlMsg(color,'🏖️','Aviso de Férias 🌴',[`${nH} estará de férias 📅`,inicio?`📆 Início: <b>${inicio}</b>`:'',ret?`🔙 Retorno: <b>${ret}</b>`:'',oH?`<em style="color:var(--text-muted)">${oH}</em>`:''])},
       {tag:'ferias',label:'Tom informal 🌴',slack:slackMsg('🌴','Alerta de Praia!',[`${nS} está de férias! 🏝️`,(inicio&&ret)?`📅 *${inicio}* até *${ret}*`:'','_Qualquer dúvida, falar com o time!_',oS?`_${oS}_`:'']),html:htmlMsg(color,'🌴','Alerta de Praia!',[`${nH} está de férias! 🏝️`,(inicio&&ret)?`📅 <b>${inicio}</b> até <b>${ret}</b>`:'',`<em style="color:var(--text-muted)">Qualquer dúvida, falar com o time!</em>`,oH?`<em style="color:var(--text-muted)">${oH}</em>`:''])},
-      {tag:'ferias',label:'Comunicado de RH 📢',slack:slackMsg('📢','Comunicado — Período de Férias',[`Informamos que ${nS} estará de férias${inicio&&ret?` no período de *${inicio}* a *${ret}*`:''}.`,oS?`\n_${oS}_`:'']),html:htmlMsg('#7F8DDB','📢','Comunicado — Período de Férias',[`Informamos que ${nH} estará de férias${inicio&&ret?` no período de <b>${inicio}</b> a <b>${ret}</b>`:''}`,oH?`<em style="color:var(--text-muted)">${oH}</em>`:'']),},
+      {tag:'ferias',label:'Comunicado de RH 📢',slack:slackMsg('📢','Comunicado — Período de Férias',[`Informamos que ${nS} estará de férias${inicio&&ret?` no período de *${inicio}* a *${ret}*`:''}.`,oS?`\n_${oS}_`:'']),html:htmlMsg('#3248C6','📢','Comunicado — Período de Férias',[`Informamos que ${nH} estará de férias${inicio&&ret?` no período de <b>${inicio}</b> a <b>${ret}</b>`:''}`,oH?`<em style="color:var(--text-muted)">${oH}</em>`:'']),},
     ];}
 
   if(sc==='novidades'){
@@ -736,10 +798,10 @@ function buildSuggs(){
         html:htmlMsg(color,'🚀',`Nova ${titH} — já disponível!`,[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',descH?`📋 O que mudou:<br>${descH}`:'',bH?`✨ Benefício: ${bH}`:'',oH?`<em style="color:var(--text-muted)">${oH}</em>`:'']),},
       {tag:'novidades',label:'✅ Aviso curto e direto',
         slack:`✅ *${titS}* está em produção! 🎉\n\n${descS}${bS?'\n\n💡 _'+bS+'_':''}${oS?'\n\n_'+oS+'_':''}${cs}`,
-        html:`<div class="slack-block"><div class="slack-bar" style="background:${color}"></div><div class="slack-body">✅ <b>${titH}</b> está em produção! 🎉<br><br>${descH}${bH?'<br><br>💡 <em style="color:var(--text-muted)">'+bH+'</em>':''}${oH?'<br><em style="color:var(--text-muted)">'+oH+'</em>':''}${ch}</div></div>`},
+        html:`<div class="slack-block"><div class="slack-bar" style="background:${color}"></div><div class="slack-body">✅ <b style="color:var(--text)">${titH}</b> está em produção! 🎉<br><br>${descH}${bH?'<br><br>💡 <em style="color:var(--text-muted)">'+bH+'</em>':''}${oH?'<br><em style="color:var(--text-muted)">'+oH+'</em>':''}${ch}</div></div>`},
       {tag:'novidades',label:'📣 Comunicado formal',
         slack:slackMsg('📣',`Comunicado: ${titS}`,[sisS?`📦 Módulo: *${sisS}*`:'',descS?descS:'',bS?`\n🎯 *Impacto esperado:* ${bS}`:'',oS?`\n_${oS}_`:'']),
-        html:htmlMsg('#7F8DDB','📣',`Comunicado: ${titH}`,[sisH?`📦 Módulo: <b>${sisH}</b>`:'',descH,'',bH?`<br>🎯 <b>Impacto esperado:</b> ${bH}`:'',oH?`<em style="color:var(--text-muted)">${oH}</em>`:'']),},
+        html:htmlMsg('#3248C6','📣',`Comunicado: ${titH}`,[sisH?`📦 Módulo: <b>${sisH}</b>`:'',descH,'',bH?`<br>🎯 <b>Impacto esperado:</b> ${bH}`:'',oH?`<em style="color:var(--text-muted)">${oH}</em>`:'']),},
     ];}
 
   if(sc==='incidente'){
@@ -762,7 +824,7 @@ function buildSuggs(){
     const msgS=msg?resolveSlackTags(msg):'',msgH=msg?slackTagsToHtml(resolveSlackTags(msg)):'';
     return[
       {tag:'aviso-geral',label:'📢 Comunicado padrão',slack:slackMsg('📢',titS,[msgS,'_— Equipe Cobli_']),html:htmlMsg('#F59E0B','📢',titH,[msgH,`<em style="color:var(--text-muted)">— Equipe Cobli</em>`])},
-      {tag:'aviso-geral',label:'📋 Informativo simples',slack:`📋 *${titS}*\n\n${msgS}${cs}`,html:`<div class="slack-block"><div class="slack-bar" style="background:#7F8DDB"></div><div class="slack-body">📋 <b>${titH}</b><br><br>${msgH}${ch}</div></div>`},
+      {tag:'aviso-geral',label:'📋 Informativo simples',slack:`📋 *${titS}*\n\n${msgS}${cs}`,html:`<div class="slack-block"><div class="slack-bar" style="background:#3248C6"></div><div class="slack-body">📋 <b style="color:var(--text)">${titH}</b><br><br>${msgH}${ch}</div></div>`},
     ];}
   return[];
 }
@@ -937,7 +999,7 @@ async function loadQueue(){
         <div style="flex:1">
           <div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${esc(m.webhook_name||'—')}</div>
           <div class="queue-text">${esc(m.preview_text||'')}</div>
-          ${m.scheduled_by?`<div style="font-size:10px;color:#555;margin-top:3px;font-style:italic">Agendado por ${esc(m.scheduled_by)}</div>`:''}
+          ${m.scheduled_by?`<div style="font-size:10px;color:var(--text-hint);margin-top:3px;font-style:italic">Agendado por ${esc(m.scheduled_by)}</div>`:''}
         </div>
         <div style="display:flex;gap:6px;flex-shrink:0">
           <button class="btn-edit" data-edit-sched="${m.id}" data-edit-text="${esc(m.slack_text||'')}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button>
@@ -993,7 +1055,7 @@ function renderWhSettings(){
   const paginated = getPaginatedList(DB.webhooks, 'webhooks', w => w.name.toLowerCase().includes(LST.webhooks.q));
   
   if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum resultado</div>';return;}
-  el.innerHTML=paginated.map(w=>`<div class="list-item"><div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji||'📢'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,52))}…</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-wh="${w.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
+  el.innerHTML=paginated.map(w=>`<div class="list-item"><div class="list-item-avatar" style="background:#E0E7FF;color:#3730A3;font-size:18px">${w.emoji||'📢'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,52))}…</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-wh="${w.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
 }
 
 /* ══ SETTINGS — PEOPLE ══ */
@@ -1071,7 +1133,7 @@ function renderChannelsList(){
 
 /* ══ UTILS ══ */
 function showStatus(msg,type){const el=document.getElementById('send-status');el.className='status-msg '+(type||'');const icon=type==='success'?'ti-circle-check':type==='error'?'ti-alert-circle':'ti-info-circle';el.innerHTML=`<i class="ti ${icon}"></i> ${msg}`;if(type!=='warn')setTimeout(()=>{el.textContent='';el.className='status-msg';},4000);}
-function clearCompose(){document.getElementById('sugg-grid').innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos acima para ver as sugestões ✨</div>';document.getElementById('sugg-label').textContent='Variações de mensagem';ST.selSugg=null;updatePreview(null);updateSendBtn();const st=document.getElementById('send-status');st.textContent='';st.className='status-msg';renderScenarioFields();}
+function clearCompose(){document.getElementById('sugg-grid').innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos ao lado para ver as sugestões ✨</div>';document.getElementById('sugg-label').textContent='Variações de mensagem';ST.selSugg=null;updatePreview(null);updateSendBtn();const st=document.getElementById('send-status');st.textContent='';st.className='status-msg';renderScenarioFields();}
 function renderAll(){renderWhSettings();renderWhChips();renderPeopleList();renderGroupsList();renderChannelsList();}
 function v(id){return document.getElementById(id)?.value.trim()||'';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
