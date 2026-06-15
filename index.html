@@ -69,9 +69,33 @@ textarea{resize:vertical;line-height:1.65}
 .tab-btn:hover{color:var(--text);border-color:var(--cobli-blue-chart)}.tab-btn.active{background:var(--cobli-blue);color:#fff;border-color:var(--cobli-blue)}
 .msg-wrap{position:relative}
 textarea.msg-ta{min-height:80px;padding:12px 14px}
-.hint-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.hint-pill{font-size:11px;padding:3px 10px;border-radius:12px;border:1px solid var(--border);color:var(--text-hint);cursor:pointer;transition:all .15s;user-select:none}
-.hint-pill:hover{background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);border-color:var(--cobli-blue-chart)}
+
+/* ====== ÍCONES (HINTS) MAIS VIVOS ====== */
+.hint-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hint-pill{
+  font-size:13px;
+  padding:5px 12px;
+  border-radius:14px;
+  border:1px solid rgba(127,141,219,0.5);
+  background:rgba(50,72,198,0.25);
+  color:#FFF;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  user-select:none;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+.hint-pill:hover{
+  background:rgba(50,72,198,0.6);
+  color:var(--cobli-green2);
+  border-color:var(--cobli-green2);
+  transform:translateY(-2px);
+  box-shadow:0 4px 8px rgba(0,0,0,0.2);
+}
+/* ========================================= */
+
 .wh-multi-wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .wh-chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:20px;background:var(--bg-input);border:1px solid var(--cobli-green);font-size:12px;font-weight:600;color:var(--cobli-green2);cursor:default}
 .wh-chip-remove{background:none;border:none;color:var(--cobli-red);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;opacity:.7}.wh-chip-remove:hover{opacity:1}
@@ -141,8 +165,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .modal-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
 .modal-footer{display:flex;gap:8px;justify-content:flex-end;padding-top:4px}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-
-/* NOVO DEBUG BANNER */
 .debug-banner{position:fixed;bottom:20px;right:20px;left:auto;background:#1a0020;border:1px solid #6b21a8;padding:8px 16px;border-radius:var(--radius-md);font-size:11px;font-family:monospace;color:#d8b4fe;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .debug-banner.error{background:#300;border-color:#991b1b;color:#fca5a5}
 .debug-banner.success{background:#002a14;border-color:#166534;color:#86efac}
@@ -151,6 +173,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 <body>
 <div class="debug-banner" id="debug-banner">⏳ Iniciando…</div>
 
+<!-- AUTH -->
 <div id="auth-screen" style="display:flex">
   <div class="auth-card">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
@@ -168,6 +191,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
+<!-- EDIT MODAL -->
 <div class="modal-overlay hidden" id="edit-modal">
   <div class="modal-box">
     <div class="modal-title" id="edit-modal-title"><i class="ti ti-pencil"></i> Editar</div>
@@ -179,6 +203,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
+<!-- APP -->
 <div class="layout" id="app" style="display:none">
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -208,6 +233,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
   <div class="content">
 
+    <!-- COMPOSE -->
     <div class="panel active" id="panel-compose">
       <div class="card">
         <div class="card-title"><i class="ti ti-plug"></i> Canais de destino <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0">(selecione um ou mais)</span></div>
@@ -314,6 +340,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
+    <!-- QUEUE -->
     <div class="panel" id="panel-queue">
       <div class="card">
         <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
@@ -325,6 +352,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
+    <!-- WEBHOOKS -->
     <div class="panel" id="panel-webhooks">
       <div class="card">
         <div class="card-title"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
@@ -342,6 +370,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
+    <!-- PEOPLE -->
     <div class="panel" id="panel-people">
       <div class="card">
         <div class="card-title"><i class="ti ti-user"></i> Pessoas cadastradas</div>
@@ -385,6 +414,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
+    <!-- CHANNELS -->
     <div class="panel" id="panel-channels">
       <div class="card">
         <div class="card-title"><i class="ti ti-hash"></i> Canais Slack (#)</div>
@@ -404,7 +434,11 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-  </div></div></div><script>
+  </div><!-- .content -->
+</div><!-- .main -->
+</div><!-- .layout -->
+
+<script>
 /* ══════════════════════════════════════════════════
    CONFIG
 ══════════════════════════════════════════════════ */
@@ -442,7 +476,6 @@ function showAuthErr(m){const e=document.getElementById('auth-err');e.textConten
 function buildDisplayName(email){
   if(!email) return 'usuário';
   const local = email.split('@')[0];
-  // "joao.silva" → "Joao Silva", "joaosilva" → "Joaosilva"
   return local.split('.').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
 }
 
@@ -493,12 +526,32 @@ function renderWhChips(){const wrap=document.getElementById('wh-chips');const ch
 function toggleWhPicker(forceClose){ST.whPickerOpen=forceClose?false:!ST.whPickerOpen;document.getElementById('wh-picker').classList.toggle('open',ST.whPickerOpen);if(ST.whPickerOpen)renderWhPicker();}
 function pickWh(id){if(ST.selWhIds.includes(id))ST.selWhIds=ST.selWhIds.filter(x=>x!==id);else ST.selWhIds.push(id);renderWhChips();renderWhPicker();updateSendBtn();}
 
-/* ══ SCENARIO FIELDS ══ */
+/* ══ SCENARIO FIELDS (NOVA LISTA DE ÍCONES MAIS COMPLETA) ══ */
 const SCENARIO_CFG={
-  ferias:{label:'Detalhes das férias',fields:[{id:'f-nome',label:'Pessoa (@)',ph:'@Nome Sobrenome',hint:'Use @ para buscar cadastros'},{id:'f-inicio',label:'Data de início',ph:'25/06',hint:'Ex: 25/06'},{id:'f-retorno',label:'Data de retorno',ph:'15/07',hint:'Ex: 15/07'},{id:'f-obs',label:'Observação (opcional)',ph:'Qualquer dúvida falar com…',hint:'',ta:true}],hints:['@here','@channel','@nome','25/06','15/07','🌴','🏖️','✈️'],color:'#00AE97'},
-  novidades:{label:'Novidade / Melhoria implantada',fields:[{id:'f-titulo',label:'Título da novidade',ph:'Ex: Nova funcionalidade de relatórios',hint:''},{id:'f-sistema',label:'Sistema / módulo afetado',ph:'Ex: App Cobli, Portal de Gestão…',hint:''},{id:'f-descricao',label:'O que foi implantado',ph:'Descreva a melhoria ou novidade…',hint:'Use @ para marcar pessoas/equipes',ta:true},{id:'f-beneficio',label:'Benefício / impacto esperado',ph:'Ex: Reduz tempo de consulta em 30%…',hint:'',ta:true},{id:'f-obs',label:'Observações (opcional)',ph:'Disponível a partir de… link de documentação…',hint:'',ta:true}],hints:['✅','🚀','✨','🆕','@here','@channel','já disponível','em produção'],color:'#0FFDC9'},
-  incidente:{label:'Incidente / Instabilidade',fields:[{id:'f-sistema',label:'Sistema/serviço afetado',ph:'Ex: App Cobli, API Rastreamento…',hint:''},{id:'f-problema',label:'O que está acontecendo',ph:'Descreva o problema…',hint:'',ta:true},{id:'f-impacto',label:'Quem/o que é afetado',ph:'Ex: Todos os usuários, módulo X…',hint:''},{id:'f-status',label:'Status atual',ph:'Em investigação / Equipe atuando…',hint:''}],hints:['🚨','🔧','✅','@here','@channel','em investigação','equipe atuando','resolvido'],color:'#FF4633'},
-  'aviso-geral':{label:'Aviso / Comunicado',fields:[{id:'f-titulo',label:'Título do aviso',ph:'Ex: Manutenção programada',hint:''},{id:'f-msg',label:'Mensagem principal',ph:'Detalhe o comunicado…',hint:'Use @ para marcar pessoas/grupos',ta:true}],hints:['📢','📋','✅','@here','@channel','@nome'],color:'#F59E0B'},
+  ferias:{
+    label:'Detalhes das férias',
+    fields:[{id:'f-nome',label:'Pessoa (@)',ph:'@Nome Sobrenome',hint:'Use @ para buscar cadastros'},{id:'f-inicio',label:'Data de início',ph:'25/06',hint:'Ex: 25/06'},{id:'f-retorno',label:'Data de retorno',ph:'15/07',hint:'Ex: 15/07'},{id:'f-obs',label:'Observação (opcional)',ph:'Qualquer dúvida falar com…',hint:'',ta:true}],
+    hints:['🌴','🏖️','✈️','😎','🍹','🎒','☀️','👋','📅','🔙','@here','@channel','@nome'],
+    color:'#00AE97'
+  },
+  novidades:{
+    label:'Novidade / Melhoria implantada',
+    fields:[{id:'f-titulo',label:'Título da novidade',ph:'Ex: Nova funcionalidade de relatórios',hint:''},{id:'f-sistema',label:'Sistema / módulo afetado',ph:'Ex: App Cobli, Portal de Gestão…',hint:''},{id:'f-descricao',label:'O que foi implantado',ph:'Descreva a melhoria ou novidade…',hint:'Use @ para marcar pessoas/equipes',ta:true},{id:'f-beneficio',label:'Benefício / impacto esperado',ph:'Ex: Reduz tempo de consulta em 30%…',hint:'',ta:true},{id:'f-obs',label:'Observações (opcional)',ph:'Disponível a partir de… link de documentação…',hint:'',ta:true}],
+    hints:['✅','🚀','✨','🆕','💡','🎉','🔥','🛠️','💻','📈','@here','@channel','já disponível','em produção'],
+    color:'#0FFDC9'
+  },
+  incidente:{
+    label:'Incidente / Instabilidade',
+    fields:[{id:'f-sistema',label:'Sistema/serviço afetado',ph:'Ex: App Cobli, API Rastreamento…',hint:''},{id:'f-problema',label:'O que está acontecendo',ph:'Descreva o problema…',hint:'',ta:true},{id:'f-impacto',label:'Quem/o que é afetado',ph:'Ex: Todos os usuários, módulo X…',hint:''},{id:'f-status',label:'Status atual',ph:'Em investigação / Equipe atuando…',hint:''}],
+    hints:['🚨','🔧','✅','⚠️','🐛','🔥','🔴','🟢','⏳','🔍','@here','@channel','em investigação','equipe atuando','resolvido'],
+    color:'#FF4633'
+  },
+  'aviso-geral':{
+    label:'Aviso / Comunicado',
+    fields:[{id:'f-titulo',label:'Título do aviso',ph:'Ex: Manutenção programada',hint:''},{id:'f-msg',label:'Mensagem principal',ph:'Detalhe o comunicado…',hint:'Use @ para marcar pessoas/grupos',ta:true}],
+    hints:['📢','📋','✅','🗣️','📌','👀','🔔','📝','🤝','❕','@here','@channel','@nome'],
+    color:'#F59E0B'
+  },
 };
 
 function renderScenarioFields(){
@@ -561,9 +614,17 @@ function slackTagsToHtml(txt){return txt.replace(/<@(U[A-Z0-9]+)>/g,(_,id)=>{con
 function cSlack(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'\n\n📞 _Entrar em contato com: '+raw+'_':'\n\n📞 _Entrar em contato com: acione o responsável da área._';}
 function cHtml(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'<br><small style="color:var(--cobli-green2)">📞 Entrar em contato com: '+slackTagsToHtml(raw)+'</small>':'<br><small style="color:#666">📞 Entrar em contato com: acione o responsável da área.</small>';}
 
-/* ══ SENDER FOOTER (For Payload/HTML Only) ══ */
-function senderSlack(isScheduled){return isScheduled?`\n\n_Agendado por ${userDisplayName}_`:`\n\n_Enviado por ${userDisplayName}_`;}
-function senderHtml(isScheduled){return isScheduled?`<br><small style="color:#555;font-style:italic">Agendado por ${esc(userDisplayName)}</small>`:`<br><small style="color:#555;font-style:italic">Enviado por ${esc(userDisplayName)}</small>`;}
+/* ══ SENDER FOOTER (AJUSTADO PARA A MESMA LINHA) ══ */
+function senderSlack(isScheduled){
+  return isScheduled
+    ? `Agendado por ${userDisplayName} | Gerado por Supply Serviços - Notificações`
+    : `Enviado por ${userDisplayName} | Gerado por Supply Serviços - Notificações`;
+}
+function senderHtml(isScheduled){
+  return isScheduled
+    ? `<br><small style="color:#a5b4fc;font-style:italic">Agendado por ${esc(userDisplayName)} | Gerado por Supply Serviços - Notificações</small>`
+    : `<br><small style="color:#a5b4fc;font-style:italic">Enviado por ${esc(userDisplayName)} | Gerado por Supply Serviços - Notificações</small>`;
+}
 
 /* ══ BUILD SUGGESTIONS ══ */
 function getFieldVal(id){return(document.getElementById(id)?.value||'').trim();}
@@ -667,9 +728,8 @@ async function sendMessage(){
   const btn=document.getElementById('btn-send');btn.disabled=true;document.getElementById('btn-send-label').textContent='Enviando…';
   const color=SCENARIO_COLORS[ST.scenario]||'#001BB8';
   
-  // NOTE: Removi o "senderSlack" do corpo principal para não ficar dentro da borda verde no Slack.
   const textWithSender=ST.selSugg.slack; 
-  const footerText=senderSlack(false).replace(/_/g, '').trim(); 
+  const footerText=senderSlack(false); 
   
   try{
     const {data:{session}}=await sb.auth.getSession();
@@ -680,7 +740,7 @@ async function sendMessage(){
       body:JSON.stringify({
         webhook_url:w.url,
         message_text:textWithSender,
-        footer:footerText, // <-- Sugestão de suporte para a Edge Function processar por fora do attachment.
+        footer:footerText,
         color
       })
     }).then(r=>r.json())));
@@ -697,7 +757,7 @@ async function scheduleMsg(){
   const btn=document.getElementById('btn-send');btn.disabled=true;document.getElementById('btn-send-label').textContent='Agendando…';
   const color=SCENARIO_COLORS[ST.scenario]||'#001BB8';
   
-  const textWithSender=ST.selSugg.slack; // Removido do texto principal aqui tbm
+  const textWithSender=ST.selSugg.slack; 
   try{
     const webhooks=DB.webhooks.filter(w=>ST.selWhIds.includes(w.id));
     const inserts=webhooks.map(w=>({user_id:user.id,webhook_id:w.id,webhook_name:w.name,slack_text:textWithSender,color,preview_text:ST.selSugg.slack.split('\n')[0].replace(/\*/g,''),scheduled_at:dt.toISOString(),scheduled_by:userDisplayName}));
@@ -713,7 +773,7 @@ async function scheduleRetorno(){
   const dt=new Date(d+'T'+t);if(dt<=new Date()){alert('Selecione um horário futuro.');return;}
   const retText=document.getElementById('retorno-text').value.trim();if(!retText){alert('Preencha a mensagem de retorno.');return;}
   
-  const slackText=resolveSlackTags(retText); // Removido do texto principal aqui tbm
+  const slackText=resolveSlackTags(retText);
   const btn=document.getElementById('btn-sched-retorno');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 spin"></i> Agendando…';
   try{
     const webhooks=DB.webhooks.filter(w=>ST.selWhIds.includes(w.id));
