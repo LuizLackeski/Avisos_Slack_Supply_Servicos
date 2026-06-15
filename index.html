@@ -148,6 +148,20 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .queue-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:6px;background:var(--bg-card)}
 .queue-time{font-size:11px;font-weight:700;color:var(--cobli-green2);white-space:nowrap;min-width:90px;padding-top:2px}
 .queue-text{font-size:12px;color:var(--text-muted);flex:1;line-height:1.5}
+
+/* ====== LISTAS PAGINADAS EM GRID ====== */
+.list-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.search-input{padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg-input);color:var(--text);font-size:12px;outline:none;transition:border 0.2s;min-width:180px;flex:1;}
+.search-input:focus{border-color:var(--cobli-blue-light);}
+.pagination{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);font-weight:600;}
+.page-btn{background:var(--bg-input);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:3px 6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.page-btn:hover:not(:disabled){background:rgba(50,72,198,0.2);border-color:var(--cobli-blue-light);color:var(--cobli-blue-chart);}
+.page-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.grid-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+@media(max-width:700px){.grid-list{grid-template-columns:1fr;}}
+.grid-list .list-item{margin-bottom:0;height:100%;align-items:flex-start;}
+/* ========================================= */
+
 .list-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);margin-bottom:6px}
 .list-item-avatar{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
 .list-item-name{font-size:13px;font-weight:600}.list-item-sub{font-size:11px;color:var(--text-muted);margin-top:2px;font-family:monospace}
@@ -165,6 +179,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .modal-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
 .modal-footer{display:flex;gap:8px;justify-content:flex-end;padding-top:4px}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
 .debug-banner{position:fixed;bottom:20px;right:20px;left:auto;background:#1a0020;border:1px solid #6b21a8;padding:8px 16px;border-radius:var(--radius-md);font-size:11px;font-family:monospace;color:#d8b4fe;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .debug-banner.error{background:#300;border-color:#991b1b;color:#fca5a5}
 .debug-banner.success{background:#002a14;border-color:#166534;color:#86efac}
@@ -355,9 +370,20 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
     <!-- WEBHOOKS -->
     <div class="panel" id="panel-webhooks">
       <div class="card">
-        <div class="card-title"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
-        <div id="wh-settings-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-wh"><i class="ti ti-plus"></i> Adicionar canal</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
+          <div class="card-title" style="margin-bottom:0"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
+          <div class="list-controls">
+            <input type="text" class="search-input" placeholder="Buscar canal..." oninput="setSearch('webhooks', this.value)" />
+            <div class="pagination">
+              <button class="page-btn" id="btn-prev-webhooks" onclick="prevPage('webhooks')"><i class="ti ti-chevron-left"></i></button>
+              <span id="page-info-webhooks">1 / 1</span>
+              <button class="page-btn" id="btn-next-webhooks" onclick="nextPage('webhooks')"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="wh-settings-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        
+        <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-wh"><i class="ti ti-plus"></i> Adicionar canal</button>
         <div class="add-form" id="wh-form">
           <div><label class="form-label">Nome do canal</label><input type="text" id="wh-add-name" placeholder="Ex: #alertas-ti" /></div>
           <div><label class="form-label">Webhook URL</label><input type="text" id="wh-add-url" placeholder="https://hooks.slack.com/services/..." /></div>
@@ -373,9 +399,20 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
     <!-- PEOPLE -->
     <div class="panel" id="panel-people">
       <div class="card">
-        <div class="card-title"><i class="ti ti-user"></i> Pessoas cadastradas</div>
-        <div id="people-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-person"><i class="ti ti-plus"></i> Adicionar pessoa</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
+          <div class="card-title" style="margin-bottom:0"><i class="ti ti-user"></i> Pessoas cadastradas</div>
+          <div class="list-controls">
+            <input type="text" class="search-input" placeholder="Buscar pessoa (@)..." oninput="setSearch('people', this.value)" />
+            <div class="pagination">
+              <button class="page-btn" id="btn-prev-people" onclick="prevPage('people')"><i class="ti ti-chevron-left"></i></button>
+              <span id="page-info-people">1 / 1</span>
+              <button class="page-btn" id="btn-next-people" onclick="nextPage('people')"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="people-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        
+        <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-person"><i class="ti ti-plus"></i> Adicionar pessoa</button>
         <div class="add-form" id="person-form">
           <div class="slack-id-tip"><strong>💡 Slack User ID:</strong> Clique no perfil → <em>Ver perfil</em> → <strong>⋯</strong> → <em>Copiar ID do membro</em>. Formato: <code>U07EADY4SGN</code></div>
           <div class="form-row">
@@ -392,10 +429,22 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           </div>
         </div>
       </div>
+      
       <div class="card">
-        <div class="card-title"><i class="ti ti-users"></i> Grupos de pessoas (@)</div>
-        <div id="groups-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-group"><i class="ti ti-plus"></i> Adicionar grupo</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
+          <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> Grupos de pessoas (@)</div>
+          <div class="list-controls">
+            <input type="text" class="search-input" placeholder="Buscar grupo..." oninput="setSearch('groups', this.value)" />
+            <div class="pagination">
+              <button class="page-btn" id="btn-prev-groups" onclick="prevPage('groups')"><i class="ti ti-chevron-left"></i></button>
+              <span id="page-info-groups">1 / 1</span>
+              <button class="page-btn" id="btn-next-groups" onclick="nextPage('groups')"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="groups-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        
+        <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-group"><i class="ti ti-plus"></i> Adicionar grupo</button>
         <div class="add-form" id="group-form">
           <div class="slack-id-tip"><strong>💡 Slack Group ID:</strong> Configurações → Grupos de usuários. Formato: <code>S0614TZR7</code></div>
           <div class="form-row">
@@ -417,9 +466,20 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
     <!-- CHANNELS -->
     <div class="panel" id="panel-channels">
       <div class="card">
-        <div class="card-title"><i class="ti ti-hash"></i> Canais Slack (#)</div>
-        <div id="channels-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
-        <button class="btn btn-ghost btn-sm" style="margin-top:4px" id="btn-add-channel"><i class="ti ti-plus"></i> Adicionar canal</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
+          <div class="card-title" style="margin-bottom:0"><i class="ti ti-hash"></i> Canais Slack (#)</div>
+          <div class="list-controls">
+            <input type="text" class="search-input" placeholder="Buscar canal (#)..." oninput="setSearch('channels', this.value)" />
+            <div class="pagination">
+              <button class="page-btn" id="btn-prev-channels" onclick="prevPage('channels')"><i class="ti ti-chevron-left"></i></button>
+              <span id="page-info-channels">1 / 1</span>
+              <button class="page-btn" id="btn-next-channels" onclick="nextPage('channels')"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="channels-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        
+        <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-channel"><i class="ti ti-plus"></i> Adicionar canal</button>
         <div class="add-form" id="channel-form">
           <div class="form-row">
             <div><label class="form-label">Nome (sem #)</label><input type="text" id="ch-name" placeholder="suporte-geral" /></div>
@@ -456,6 +516,14 @@ let _editTarget = null; // current edit modal state
 
 /* VARIÁVEL PARA RASTREAR CAMPO ATIVO DOS HINTS */
 let _lastFocusedField = null;
+
+/* ESTADO DE PAGINAÇÃO E BUSCA DAS LISTAS */
+let LST = {
+  webhooks: { q: '', p: 1 },
+  people:   { q: '', p: 1 },
+  groups:   { q: '', p: 1 },
+  channels: { q: '', p: 1 }
+};
 
 /* ══ DEBUG ══ */
 function dbg(msg,type=''){const el=document.getElementById('debug-banner');if(!el)return;el.className='debug-banner'+(type?' '+type:'');el.textContent=msg;console.log('[COBLI]',msg);}
@@ -526,7 +594,7 @@ function renderWhChips(){const wrap=document.getElementById('wh-chips');const ch
 function toggleWhPicker(forceClose){ST.whPickerOpen=forceClose?false:!ST.whPickerOpen;document.getElementById('wh-picker').classList.toggle('open',ST.whPickerOpen);if(ST.whPickerOpen)renderWhPicker();}
 function pickWh(id){if(ST.selWhIds.includes(id))ST.selWhIds=ST.selWhIds.filter(x=>x!==id);else ST.selWhIds.push(id);renderWhChips();renderWhPicker();updateSendBtn();}
 
-/* ══ SCENARIO FIELDS (NOVA LISTA DE ÍCONES MAIS COMPLETA) ══ */
+/* ══ SCENARIO FIELDS ══ */
 const SCENARIO_CFG={
   ferias:{
     label:'Detalhes das férias',
@@ -783,6 +851,62 @@ async function scheduleRetorno(){
   }catch(e){alert('Erro ao agendar retorno:\n'+e.message);btn.disabled=false;btn.innerHTML='<i class="ti ti-clock"></i> Agendar retorno';}
 }
 
+/* ══ PAGINATION & FILTER LOGIC ══ */
+function setSearch(type, val) {
+  LST[type].q = val.toLowerCase();
+  LST[type].p = 1; // Reseta para a página 1 ao pesquisar
+  if(type === 'webhooks') renderWhSettings();
+  if(type === 'people')   renderPeopleList();
+  if(type === 'groups')   renderGroupsList();
+  if(type === 'channels') renderChannelsList();
+}
+function prevPage(type) {
+  if (LST[type].p > 1) {
+    LST[type].p--;
+    if(type === 'webhooks') renderWhSettings();
+    if(type === 'people')   renderPeopleList();
+    if(type === 'groups')   renderGroupsList();
+    if(type === 'channels') renderChannelsList();
+  }
+}
+function nextPage(type) {
+  LST[type].p++;
+  if(type === 'webhooks') renderWhSettings();
+  if(type === 'people')   renderPeopleList();
+  if(type === 'groups')   renderGroupsList();
+  if(type === 'channels') renderChannelsList();
+}
+
+function getPaginatedList(data, type, filterFn) {
+  const state = LST[type];
+  
+  // 1. Filtrar
+  let filtered = data.filter(filterFn);
+  
+  // 2. Ordenar Alfabeticamente (ignorando maiusculas/minusculas)
+  filtered.sort((a,b) => (a.name||'').localeCompare((b.name||''), undefined, { sensitivity: 'base' }));
+  
+  // 3. Interagir com a Paginação
+  const limit = 10;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / limit));
+  
+  // Impede que fique numa página vazia se o usuário apagar um item ou filtrar
+  if (state.p > totalPages) state.p = totalPages;
+  
+  // Atualiza os botões do HTML
+  const btnPrev = document.getElementById(`btn-prev-${type}`);
+  const btnNext = document.getElementById(`btn-next-${type}`);
+  const txtInfo = document.getElementById(`page-info-${type}`);
+  
+  if(btnPrev) btnPrev.disabled = state.p <= 1;
+  if(btnNext) btnNext.disabled = state.p >= totalPages;
+  if(txtInfo) txtInfo.textContent = `${state.p} / ${totalPages}`;
+  
+  // Retorna os 10 itens corretos
+  const start = (state.p - 1) * limit;
+  return filtered.slice(start, start + limit);
+}
+
 /* ══ OPTIONS ══ */
 function toggleContact(){ST.contactOn=!ST.contactOn;document.getElementById('tgl-contact').classList.toggle('on',ST.contactOn);document.getElementById('contact-row').style.display=ST.contactOn?'flex':'none';if(ST.contactOn)document.getElementById('contact-input').focus();buildAndRender();}
 function toggleSchedule(){ST.schedOn=!ST.schedOn;document.getElementById('tgl-sched').classList.toggle('on',ST.schedOn);document.getElementById('sched-row').style.display=ST.schedOn?'flex':'none';const di=document.getElementById('sched-date'),ti=document.getElementById('sched-time');di.disabled=!ST.schedOn;ti.disabled=!ST.schedOn;if(ST.schedOn){di.value=new Date().toISOString().split('T')[0];di.min=di.value;di.onchange=ti.onchange=updateSchedHint;updateSchedHint();}else{document.getElementById('sched-badge').classList.remove('visible');document.getElementById('sched-hint').textContent='';document.getElementById('preview-sched').classList.remove('visible');}updateSendBtn();}
@@ -867,7 +991,13 @@ function editWebhook(id){
     }
   );
 }
-function renderWhSettings(){const el=document.getElementById('wh-settings-list');if(!DB.webhooks.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>';return;}el.innerHTML=DB.webhooks.map(w=>`<div class="list-item"><div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji||'📢'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,52))}…</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-wh="${w.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
+function renderWhSettings(){
+  const el=document.getElementById('wh-settings-list');
+  const paginated = getPaginatedList(DB.webhooks, 'webhooks', w => w.name.toLowerCase().includes(LST.webhooks.q));
+  
+  if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum resultado</div>';return;}
+  el.innerHTML=paginated.map(w=>`<div class="list-item"><div class="list-item-avatar" style="background:rgba(50,72,198,.2);color:var(--cobli-blue-chart);font-size:18px">${w.emoji||'📢'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,52))}…</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-wh="${w.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
+}
 
 /* ══ SETTINGS — PEOPLE ══ */
 async function savePerson(){const name=v('p-name'),slack_id=v('p-slack-id').replace(/[<@>]/g,''),handle=v('p-handle').replace('@',''),role=v('p-role');if(!name){alert('Preencha o nome.');return;}try{const {data,error}=await sb.from('people').insert({user_id:user.id,name,slack_id,handle,role}).select().single();if(error)throw error;DB.people.push(data);['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('person-form').classList.remove('open');renderPeopleList();showStatus(name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}
@@ -886,7 +1016,13 @@ function editPerson(id){
     }
   );
 }
-function renderPeopleList(){const el=document.getElementById('people-list');if(!DB.people.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhuma pessoa cadastrada</div>';return;}el.innerHTML=DB.people.map(p=>`<div class="list-item"><div class="list-item-avatar ac-avatar person">${initials(p.name)}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(p.name)}</div><div class="list-item-sub">${p.slack_id?'ID: '+esc(p.slack_id):''}${p.handle?' · @'+esc(p.handle):''}${p.role?' · '+esc(p.role):''}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-person="${p.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
+function renderPeopleList(){
+  const el=document.getElementById('people-list');
+  const paginated = getPaginatedList(DB.people, 'people', p => p.name.toLowerCase().includes(LST.people.q) || (p.handle||'').toLowerCase().includes(LST.people.q));
+  
+  if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhuma pessoa encontrada</div>';return;}
+  el.innerHTML=paginated.map(p=>`<div class="list-item"><div class="list-item-avatar ac-avatar person">${initials(p.name)}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(p.name)}</div><div class="list-item-sub">${p.slack_id?'ID: '+esc(p.slack_id):''}${p.handle?' · @'+esc(p.handle):''}${p.role?' · '+esc(p.role):''}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-person="${p.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
+}
 
 /* ══ SETTINGS — GROUPS ══ */
 async function saveGroup(){const name=v('g-name'),handle=v('g-handle').replace('@',''),slack_id=v('g-slack-id'),emoji=v('g-emoji')||'👥';if(!name||!handle){alert('Preencha nome e handle.');return;}try{const {data,error}=await sb.from('groups').insert({user_id:user.id,name,handle,slack_id,emoji}).select().single();if(error)throw error;DB.groups.push(data);['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('group-form').classList.remove('open');renderGroupsList();showStatus('Grupo '+name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}}
@@ -904,7 +1040,13 @@ function editGroup(id){
     }
   );
 }
-function renderGroupsList(){const el=document.getElementById('groups-list');if(!DB.groups.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum grupo cadastrado</div>';return;}el.innerHTML=DB.groups.map(g=>`<div class="list-item"><div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji||'👥'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(g.name)}</div><div class="list-item-sub">@${esc(g.handle)}${g.slack_id?' · ID: '+esc(g.slack_id):''}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-group="${g.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
+function renderGroupsList(){
+  const el=document.getElementById('groups-list');
+  const paginated = getPaginatedList(DB.groups, 'groups', g => g.name.toLowerCase().includes(LST.groups.q) || (g.handle||'').toLowerCase().includes(LST.groups.q));
+  
+  if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum grupo encontrado</div>';return;}
+  el.innerHTML=paginated.map(g=>`<div class="list-item"><div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji||'👥'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(g.name)}</div><div class="list-item-sub">@${esc(g.handle)}${g.slack_id?' · ID: '+esc(g.slack_id):''}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-group="${g.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
+}
 
 /* ══ SETTINGS — CHANNELS ══ */
 async function saveChannel(){const name=v('ch-name').replace('#',''),desc=v('ch-desc'),slack_id=v('ch-slack-id');if(!name){alert('Preencha o nome.');return;}try{const {data,error}=await sb.from('channels').insert({user_id:user.id,name,desc,slack_id}).select().single();if(error)throw error;DB.channels.push(data);['ch-name','ch-desc','ch-slack-id'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('channel-form').classList.remove('open');renderChannelsList();showStatus('#'+name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}}
@@ -922,7 +1064,13 @@ function editChannel(id){
     }
   );
 }
-function renderChannelsList(){const el=document.getElementById('channels-list');if(!DB.channels.length){el.innerHTML='<div class="no-sugg" style="padding:1rem">Nenhum canal cadastrado</div>';return;}el.innerHTML=DB.channels.map(c=>`<div class="list-item"><div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div><div style="flex:1;min-width:0"><div class="list-item-name">#${esc(c.name)}</div>${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}${c.slack_id?`<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>`:''}</div><div class="list-item-actions"><button class="btn-edit" data-edit-channel="${c.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
+function renderChannelsList(){
+  const el=document.getElementById('channels-list');
+  const paginated = getPaginatedList(DB.channels, 'channels', c => c.name.toLowerCase().includes(LST.channels.q));
+  
+  if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum canal encontrado</div>';return;}
+  el.innerHTML=paginated.map(c=>`<div class="list-item"><div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div><div style="flex:1;min-width:0"><div class="list-item-name">#${esc(c.name)}</div>${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}${c.slack_id?`<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>`:''}</div><div class="list-item-actions"><button class="btn-edit" data-edit-channel="${c.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
+}
 
 /* ══ UTILS ══ */
 function showStatus(msg,type){const el=document.getElementById('send-status');el.className='status-msg '+(type||'');const icon=type==='success'?'ti-circle-check':type==='error'?'ti-alert-circle':'ti-info-circle';el.innerHTML=`<i class="ti ${icon}"></i> ${msg}`;if(type!=='warn')setTimeout(()=>{el.textContent='';el.className='status-msg';},4000);}
