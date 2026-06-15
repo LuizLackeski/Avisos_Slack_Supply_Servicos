@@ -162,7 +162,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .ac-avatar.person{background:rgba(50,72,198,.35);color:#7F8DDB}
 .ac-avatar.group{background:rgba(0,174,151,.25);color:var(--cobli-green)}
 .ac-avatar.channel{background:rgba(15,253,201,.15);color:var(--cobli-green2)}
-.ac-avatar.macro{background:rgba(245,158,11,.2);color:#FCD34D} /* Cor Laranja/Amarela para Macros */
+.ac-avatar.macro{background:rgba(245,158,11,.2);color:#FCD34D} 
 .ac-name{font-weight:600}.ac-sub{font-size:11px;color:var(--text-hint)}
 
 .sugg-grid{display:grid;grid-template-columns:1fr;gap:10px}
@@ -224,7 +224,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .add-form{border:1px dashed rgba(50,72,198,.4);border-radius:var(--radius-md);background:transparent;padding:16px;margin-top:12px;display:none;flex-direction:column;gap:12px}.add-form.open{display:flex}
 .form-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}.form-row>div{flex:1;min-width:140px}
 .slack-id-tip{font-size:11px;color:var(--cobli-blue-chart);background:rgba(50,72,198,.12);padding:10px 14px;border-radius:var(--radius-sm);border-left:3px solid var(--cobli-blue-light);line-height:1.6}
-.no-sugg{font-size:13px;color:#64748B;text-align:center;padding:2rem}
+.no-sugg{font-size:13px;color:var(--text-hint);text-align:center;padding:2rem}
 .loading{display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text-hint);font-size:13px;gap:8px}
 @keyframes spin{to{transform:rotate(360deg)}}.spin{animation:spin .8s linear infinite;display:inline-block}
 
@@ -244,7 +244,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 <body>
 <div class="debug-banner" id="debug-banner">⏳ Iniciando…</div>
 
-<!-- AUTH -->
 <div id="auth-screen" style="display:flex">
   <div class="auth-card">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
@@ -262,7 +261,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
-<!-- EDIT MODAL -->
 <div class="modal-overlay hidden" id="edit-modal">
   <div class="modal-box">
     <div class="modal-title" id="edit-modal-title"><i class="ti ti-pencil"></i> Editar</div>
@@ -274,7 +272,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
-<!-- APP -->
 <div class="layout" id="app" style="display:none">
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -306,11 +303,9 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   <div class="content-wrapper">
   <div class="content">
 
-    <!-- COMPOSE -->
     <div class="panel active" id="panel-compose">
       <div class="compose-grid">
         
-        <!-- COLUNA ESQUERDA: ENTRADA DE DADOS -->
         <div class="compose-left">
           <div class="card">
             <div class="card-title"><i class="ti ti-plug"></i> Canais de destino <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0">(selecione um ou mais)</span></div>
@@ -374,7 +369,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           </div>
         </div>
 
-        <!-- COLUNA DIREITA: RESULTADOS E PREVIEW -->
         <div class="compose-right">
           <div>
             <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px">
@@ -421,11 +415,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           </div>
         </div>
         
-      </div> <!-- Fim grid duas colunas -->
-    </div> <!-- Fim Compose -->
-
-    <!-- QUEUE -->
-    <div class="panel" id="panel-queue">
+      </div> </div> <div class="panel" id="panel-queue">
       <div class="card">
         <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
         <div id="queue-list-full"><div class="loading"><i class="ti ti-loader-2 spin"></i> Carregando...</div></div>
@@ -436,7 +426,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-    <!-- WEBHOOKS -->
     <div class="panel" id="panel-webhooks">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
@@ -465,7 +454,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-    <!-- MACROS (NOVO) -->
     <div class="panel" id="panel-macros">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
@@ -500,11 +488,9 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-    <!-- PEOPLE & GROUPS -->
     <div class="panel" id="panel-people">
       <div class="cards-row">
         
-        <!-- CARD PESSOAS -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
             <div class="card-title" style="margin-bottom:0"><i class="ti ti-user"></i> Pessoas</div>
@@ -531,14 +517,24 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
               <div><label class="form-label">Handle (@) — opcional</label><input type="text" id="p-handle" placeholder="leonardo.silva" /></div>
               <div><label class="form-label">Cargo / área</label><input type="text" id="p-role" placeholder="Tech Lead · Engenharia" /></div>
             </div>
-            <div class="form-row">
+            
+            <div style="margin-top:12px; padding:14px; background:rgba(0,0,0,0.15); border-radius:8px; border:1px solid var(--border)">
+              <label class="form-label" style="color:var(--cobli-green2)"><i class="ti ti-list"></i> Incluir em uma Lista (Macro) — opcional</label>
+              <select id="p-macro-select" onchange="document.getElementById('p-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'">
+                </select>
+              <div id="p-macro-new" class="form-row" style="display:none; margin-top:10px">
+                <div><label class="form-label">Nome da nova lista</label><input type="text" id="p-macro-name" placeholder="Ex: Time TI" /></div>
+                <div><label class="form-label">Gatilho (sem /)</label><input type="text" id="p-macro-handle" placeholder="ti" /></div>
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top:14px">
               <button class="btn btn-success btn-sm" id="btn-save-person"><i class="ti ti-check"></i> Salvar</button>
               <button class="btn btn-ghost btn-sm" id="btn-cancel-person">Cancelar</button>
             </div>
           </div>
         </div>
         
-        <!-- CARD GRUPOS -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
             <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> Grupos Originais (@)</div>
@@ -565,7 +561,18 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
               <div><label class="form-label">Slack Group ID</label><input type="text" id="g-slack-id" placeholder="S0614TZR7" /></div>
               <div><label class="form-label">Emoji</label><input type="text" id="g-emoji" placeholder="👥" style="max-width:100px" /></div>
             </div>
-            <div class="form-row">
+            
+            <div style="margin-top:12px; padding:14px; background:rgba(0,0,0,0.15); border-radius:8px; border:1px solid var(--border)">
+              <label class="form-label" style="color:var(--cobli-green2)"><i class="ti ti-list"></i> Incluir em uma Lista (Macro) — opcional</label>
+              <select id="g-macro-select" onchange="document.getElementById('g-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'">
+                </select>
+              <div id="g-macro-new" class="form-row" style="display:none; margin-top:10px">
+                <div><label class="form-label">Nome da nova lista</label><input type="text" id="g-macro-name" placeholder="Ex: Alertas" /></div>
+                <div><label class="form-label">Gatilho (sem /)</label><input type="text" id="g-macro-handle" placeholder="alertas" /></div>
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top:14px">
               <button class="btn btn-success btn-sm" id="btn-save-group"><i class="ti ti-check"></i> Salvar</button>
               <button class="btn btn-ghost btn-sm" id="btn-cancel-group">Cancelar</button>
             </div>
@@ -575,7 +582,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-    <!-- CHANNELS -->
     <div class="panel" id="panel-channels">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
@@ -606,12 +612,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-  </div><!-- .content -->
-  </div><!-- .content-wrapper -->
-</div><!-- .main -->
-</div><!-- .layout -->
-
-<script>
+  </div></div></div></div><script>
 /* ══════════════════════════════════════════════════
    CONFIG
 ══════════════════════════════════════════════════ */
@@ -686,7 +687,7 @@ async function loadAll(){
     const gProm = sb.from('groups').select('*').order('name');
     const cProm = sb.from('channels').select('*').order('name');
     const wProm = sb.from('webhooks').select('*').order('name');
-    const mProm = sb.from('macros').select('*').order('name'); // Tabela nova
+    const mProm = sb.from('macros').select('*').order('name');
 
     const [p,g,c,w,m]=await Promise.all([pProm, gProm, cProm, wProm, mProm]);
     
@@ -696,14 +697,7 @@ async function loadAll(){
     if(w.error)throw new Error('webhooks: '+w.error.message);
     
     DB.people=p.data||[];DB.groups=g.data||[];DB.channels=c.data||[];DB.webhooks=w.data||[];
-    
-    // Trata a tabela macros graciosamente caso não exista ainda
-    if(m.error) {
-       console.warn("Tabela macros não encontrada. Rode o script SQL.");
-       DB.macros = [];
-    } else {
-       DB.macros = m.data || [];
-    }
+    DB.macros = m.error ? [] : (m.data || []);
 
     dbg(`BD: ${DB.people.length}p ${DB.groups.length}g ${DB.channels.length}c ${DB.webhooks.length}w ${DB.macros.length}m`,'success');
     renderAll();
@@ -713,6 +707,54 @@ async function loadAll(){
 /* ══ NAV ══ */
 const PMETA={compose:{t:'Compositor de Mensagens',s:'Digite, escolha uma variação e envie para o Slack'},queue:{t:'Agendamentos',s:'Mensagens programadas no Supabase — edite ou cancele'},webhooks:{t:'Webhooks Destino',s:'Canais de comunicação para disparo'},people:{t:'Pessoas & Grupos (@)',s:'Autocomplete de menções — edite ou remova'},channels:{t:'Canais Slack (#)',s:'Autocomplete de canais — edite ou remova'},macros:{t:'Listas ( / )',s:'Macros para expandir múltiplas pessoas de uma vez'}};
 function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');document.querySelector(`.nav-item[data-panel="${id}"]`)?.classList.add('active');const m=PMETA[id]||{};document.getElementById('topbar-title').textContent=m.t||'';document.getElementById('topbar-sub').textContent=m.s||'';if(id==='webhooks')renderWhSettings();if(id==='people'){renderPeopleList();renderGroupsList();}if(id==='channels')renderChannelsList();if(id==='macros')renderMacrosList();if(id==='queue')loadQueue();if(id==='compose')renderWhPicker();}
+
+/* ══ SELECT MACROS COMPONENTE DENTRO DOS FORMS ══ */
+window.renderMacroSelects = function() {
+  const opts = '<option value="">Não adicionar a nenhuma lista</option><option value="new">+ Criar nova lista...</option>' + 
+               DB.macros.map(m => `<option value="${m.id}">/${m.handle} (${m.name})</option>`).join('');
+  const pSel = document.getElementById('p-macro-select'); if(pSel) pSel.innerHTML = opts;
+  const gSel = document.getElementById('g-macro-select'); if(gSel) gSel.innerHTML = opts;
+}
+
+/* Função central para gerenciar a vinculação em macros durante o save/edit */
+async function handleMacroAssignment(prefix, record, type) {
+  const sel = document.getElementById(`${prefix}-macro-select`);
+  if(!sel) return;
+  const selectVal = sel.value;
+  if (!selectVal) return;
+
+  let tag = '';
+  if (type === 'person') {
+    tag = record.slack_id ? `<@${record.slack_id}>` : `@${record.handle || record.name}`;
+  } else {
+    tag = record.slack_id ? `<!subteam^${record.slack_id}|@${record.handle}>` : `@${record.handle || record.name}`;
+  }
+
+  if (selectVal === 'new') {
+    const mName = v(`${prefix}-macro-name`);
+    const mHandle = v(`${prefix}-macro-handle`).replace('/', '');
+    if(mName && mHandle) {
+      const {data, error} = await sb.from('macros').insert({user_id: user.id, name: mName, handle: mHandle, content: tag}).select().single();
+      if(!error) { 
+         DB.macros.push(data); 
+         renderMacrosList(); 
+         window.renderMacroSelects();
+         showStatus(`Lista /${mHandle} criada e vinculada!`, 'success'); 
+      }
+    }
+  } else {
+    const macro = DB.macros.find(m => m.id == selectVal);
+    if (macro && !macro.content.includes(tag)) {
+       const newContent = (macro.content + ' ' + tag).trim();
+       const {error} = await sb.from('macros').update({content: newContent}).eq('id', macro.id);
+       if(!error) { 
+          macro.content = newContent; 
+          renderMacrosList(); 
+          showStatus(`Adicionado à lista /${macro.handle}`, 'success'); 
+       }
+    }
+  }
+}
 
 /* ══ MULTI-WEBHOOK ══ */
 function renderWhPicker(){const list=document.getElementById('wh-picker-list');if(!DB.webhooks.length){list.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>';return;}list.innerHTML=DB.webhooks.map(w=>`<div class="wh-picker-item ${ST.selWhIds.includes(w.id)?'selected':''}" data-pick-wh="${w.id}"><span style="font-size:18px">${w.emoji||'📢'}</span><div class="wh-name">${esc(w.name)}</div><i class="ti ti-check wh-check"></i></div>`).join('');}
@@ -841,7 +883,7 @@ function slackTagsToHtml(txt){
 function cSlack(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'\n\n📞 _Entrar em contato com: '+raw+'_':'\n\n📞 _Entrar em contato com: acione o responsável da área._';}
 function cHtml(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'<br><small style="color:var(--cobli-green2)">📞 Entrar em contato com: '+slackTagsToHtml(raw)+'</small>':'<br><small style="color:#666">📞 Entrar em contato com: acione o responsável da área.</small>';}
 
-/* ══ SENDER FOOTER (AJUSTADO PARA NÃO REPETIR COM O SLACK) ══ */
+/* ══ SENDER FOOTER ══ */
 function senderSlack(isScheduled){
   return isScheduled
     ? `Notificação agendada por ${userDisplayName}`
@@ -1013,7 +1055,7 @@ async function scheduleRetorno(){
 /* ══ PAGINATION & FILTER LOGIC ══ */
 function setSearch(type, val) {
   LST[type].q = val.toLowerCase();
-  LST[type].p = 1; // Reseta para a página 1 ao pesquisar
+  LST[type].p = 1; 
   if(type === 'webhooks') renderWhSettings();
   if(type === 'people')   renderPeopleList();
   if(type === 'groups')   renderGroupsList();
@@ -1041,21 +1083,13 @@ function nextPage(type) {
 
 function getPaginatedList(data, type, filterFn) {
   const state = LST[type];
-  
-  // 1. Filtrar
   let filtered = data.filter(filterFn);
-  
-  // 2. Ordenar Alfabeticamente (ignorando maiusculas/minusculas)
   filtered.sort((a,b) => (a.name||'').localeCompare((b.name||''), undefined, { sensitivity: 'base' }));
   
-  // 3. Interagir com a Paginação
   const limit = 10;
   const totalPages = Math.max(1, Math.ceil(filtered.length / limit));
-  
-  // Impede que fique numa página vazia se o usuário apagar um item ou filtrar
   if (state.p > totalPages) state.p = totalPages;
   
-  // Atualiza os botões do HTML
   const btnPrev = document.getElementById(`btn-prev-${type}`);
   const btnNext = document.getElementById(`btn-next-${type}`);
   const txtInfo = document.getElementById(`page-info-${type}`);
@@ -1064,7 +1098,6 @@ function getPaginatedList(data, type, filterFn) {
   if(btnNext) btnNext.disabled = state.p >= totalPages;
   if(txtInfo) txtInfo.textContent = `${state.p} / ${totalPages}`;
   
-  // Retorna os 10 itens corretos
   const start = (state.p - 1) * limit;
   return filtered.slice(start, start + limit);
 }
@@ -1162,18 +1195,52 @@ function renderWhSettings(){
 }
 
 /* ══ SETTINGS — PEOPLE ══ */
-async function savePerson(){const name=v('p-name'),slack_id=v('p-slack-id').replace(/[<@>]/g,''),handle=v('p-handle').replace('@',''),role=v('p-role');if(!name){alert('Preencha o nome.');return;}try{const {data,error}=await sb.from('people').insert({user_id:user.id,name,slack_id,handle,role}).select().single();if(error)throw error;DB.people.push(data);['p-name','p-slack-id','p-handle','p-role'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('person-form').classList.remove('open');renderPeopleList();showStatus(name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}
+async function savePerson(){
+  const name=v('p-name'),slack_id=v('p-slack-id').replace(/[<@>]/g,''),handle=v('p-handle').replace('@',''),role=v('p-role');
+  if(!name){alert('Preencha o nome.');return;}
+  try{
+    const {data,error}=await sb.from('people').insert({user_id:user.id,name,slack_id,handle,role}).select().single();
+    if(error)throw error;
+    DB.people.push(data);
+    await handleMacroAssignment('p', data, 'person');
+    ['p-name','p-slack-id','p-handle','p-role','p-macro-name','p-macro-handle'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+    document.getElementById('p-macro-select').value='';
+    document.getElementById('p-macro-new').style.display='none';
+    document.getElementById('person-form').classList.remove('open');
+    renderPeopleList();showStatus(name+' salvo! ✓','success');
+  }catch(e){alert('Erro: '+e.message);}
 }
 async function deletePerson(id){if(!confirm('Remover?'))return;try{const {error}=await sb.from('people').delete().eq('id',id);if(error)throw error;DB.people=DB.people.filter(p=>p.id!==id);renderPeopleList();}catch(e){alert('Erro: '+e.message);}}
 function editPerson(id){
   const p=DB.people.find(x=>x.id===id);if(!p)return;
+  const macroOptions = DB.macros.map(m => `<option value="${m.id}">/${m.handle} (${m.name})</option>`).join('');
   openEditModal('Editar Pessoa',
     `<div class="form-row"><div><label class="form-label">Nome de exibição</label><input type="text" id="ep-name" value="${esc(p.name)}" /></div><div><label class="form-label">Slack User ID</label><input type="text" id="ep-sid" value="${esc(p.slack_id||'')}" /></div></div>
-     <div class="form-row" style="margin-top:10px"><div><label class="form-label">Handle (@)</label><input type="text" id="ep-handle" value="${esc(p.handle||'')}" /></div><div><label class="form-label">Cargo / área</label><input type="text" id="ep-role" value="${esc(p.role||'')}" /></div></div>`,
+     <div class="form-row" style="margin-top:10px"><div><label class="form-label">Handle (@)</label><input type="text" id="ep-handle" value="${esc(p.handle||'')}" /></div><div><label class="form-label">Cargo / área</label><input type="text" id="ep-role" value="${esc(p.role||'')}" /></div></div>
+     <div style="margin-top:16px; padding:14px; background:rgba(0,0,0,0.15); border-radius:8px; border:1px solid var(--border)">
+       <label class="form-label" style="color:var(--cobli-green2)"><i class="ti ti-list"></i> Adicionar a uma Lista (Macro)</label>
+       <select id="ep-macro-select" onchange="document.getElementById('ep-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'">
+         <option value="">Não adicionar</option>
+         <option value="new">+ Criar nova lista...</option>
+         ${macroOptions}
+       </select>
+       <div id="ep-macro-new" class="form-row" style="display:none; margin-top:10px">
+          <div><label class="form-label">Nome da lista</label><input type="text" id="ep-macro-name" placeholder="Ex: Time TI" /></div>
+          <div><label class="form-label">Gatilho (sem /)</label><input type="text" id="ep-macro-handle" placeholder="ti" /></div>
+       </div>
+     </div>`,
     async()=>{
       const name=document.getElementById('ep-name').value.trim(),slack_id=document.getElementById('ep-sid').value.trim().replace(/[<@>]/g,''),handle=document.getElementById('ep-handle').value.trim().replace('@',''),role=document.getElementById('ep-role').value.trim();
       if(!name){alert('Nome obrigatório.');return;}
-      try{const {error}=await sb.from('people').update({name,slack_id,handle,role}).eq('id',id);if(error)throw error;const idx=DB.people.findIndex(x=>x.id===id);if(idx>=0)DB.people[idx]={...DB.people[idx],name,slack_id,handle,role};closeEditModal();renderPeopleList();showStatus('Pessoa atualizada ✓','success');}
+      try{
+        const {error}=await sb.from('people').update({name,slack_id,handle,role}).eq('id',id);if(error)throw error;
+        const idx=DB.people.findIndex(x=>x.id===id);
+        if(idx>=0){
+          DB.people[idx]={...DB.people[idx],name,slack_id,handle,role};
+          await handleMacroAssignment('ep', DB.people[idx], 'person');
+        }
+        closeEditModal();renderPeopleList();showStatus('Pessoa atualizada ✓','success');
+      }
       catch(e){alert('Erro: '+e.message);}
     }
   );
@@ -1187,17 +1254,52 @@ function renderPeopleList(){
 }
 
 /* ══ SETTINGS — GROUPS ══ */
-async function saveGroup(){const name=v('g-name'),handle=v('g-handle').replace('@',''),slack_id=v('g-slack-id'),emoji=v('g-emoji')||'👥';if(!name||!handle){alert('Preencha nome e handle.');return;}try{const {data,error}=await sb.from('groups').insert({user_id:user.id,name,handle,slack_id,emoji}).select().single();if(error)throw error;DB.groups.push(data);['g-name','g-handle','g-slack-id','g-emoji'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('group-form').classList.remove('open');renderGroupsList();showStatus('Grupo '+name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}}
+async function saveGroup(){
+  const name=v('g-name'),handle=v('g-handle').replace('@',''),slack_id=v('g-slack-id'),emoji=v('g-emoji')||'👥';
+  if(!name||!handle){alert('Preencha nome e handle.');return;}
+  try{
+    const {data,error}=await sb.from('groups').insert({user_id:user.id,name,handle,slack_id,emoji}).select().single();
+    if(error)throw error;
+    DB.groups.push(data);
+    await handleMacroAssignment('g', data, 'group');
+    ['g-name','g-handle','g-slack-id','g-emoji','g-macro-name','g-macro-handle'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+    document.getElementById('g-macro-select').value='';
+    document.getElementById('g-macro-new').style.display='none';
+    document.getElementById('group-form').classList.remove('open');
+    renderGroupsList();showStatus('Grupo '+name+' salvo! ✓','success');
+  }catch(e){alert('Erro: '+e.message);}
+}
 async function deleteGroup(id){if(!confirm('Remover?'))return;try{const {error}=await sb.from('groups').delete().eq('id',id);if(error)throw error;DB.groups=DB.groups.filter(g=>g.id!==id);renderGroupsList();}catch(e){alert('Erro: '+e.message);}}
 function editGroup(id){
   const g=DB.groups.find(x=>x.id===id);if(!g)return;
+  const macroOptions = DB.macros.map(m => `<option value="${m.id}">/${m.handle} (${m.name})</option>`).join('');
   openEditModal('Editar Grupo',
     `<div class="form-row"><div><label class="form-label">Nome do grupo</label><input type="text" id="eg-name" value="${esc(g.name)}" /></div><div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="eg-handle" value="${esc(g.handle||'')}" /></div></div>
-     <div class="form-row" style="margin-top:10px"><div><label class="form-label">Slack Group ID</label><input type="text" id="eg-sid" value="${esc(g.slack_id||'')}" /></div><div><label class="form-label">Emoji</label><input type="text" id="eg-emoji" value="${esc(g.emoji||'👥')}" style="max-width:80px" /></div></div>`,
+     <div class="form-row" style="margin-top:10px"><div><label class="form-label">Slack Group ID</label><input type="text" id="eg-sid" value="${esc(g.slack_id||'')}" /></div><div><label class="form-label">Emoji</label><input type="text" id="eg-emoji" value="${esc(g.emoji||'👥')}" style="max-width:80px" /></div></div>
+     <div style="margin-top:16px; padding:14px; background:rgba(0,0,0,0.15); border-radius:8px; border:1px solid var(--border)">
+       <label class="form-label" style="color:var(--cobli-green2)"><i class="ti ti-list"></i> Adicionar a uma Lista (Macro)</label>
+       <select id="eg-macro-select" onchange="document.getElementById('eg-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'">
+         <option value="">Não adicionar</option>
+         <option value="new">+ Criar nova lista...</option>
+         ${macroOptions}
+       </select>
+       <div id="eg-macro-new" class="form-row" style="display:none; margin-top:10px">
+          <div><label class="form-label">Nome da lista</label><input type="text" id="eg-macro-name" placeholder="Ex: Alertas" /></div>
+          <div><label class="form-label">Gatilho (sem /)</label><input type="text" id="eg-macro-handle" placeholder="alertas" /></div>
+       </div>
+     </div>`,
     async()=>{
       const name=document.getElementById('eg-name').value.trim(),handle=document.getElementById('eg-handle').value.trim().replace('@',''),slack_id=document.getElementById('eg-sid').value.trim(),emoji=document.getElementById('eg-emoji').value.trim()||'👥';
       if(!name||!handle){alert('Nome e handle obrigatórios.');return;}
-      try{const {error}=await sb.from('groups').update({name,handle,slack_id,emoji}).eq('id',id);if(error)throw error;const idx=DB.groups.findIndex(x=>x.id===id);if(idx>=0)DB.groups[idx]={...DB.groups[idx],name,handle,slack_id,emoji};closeEditModal();renderGroupsList();showStatus('Grupo atualizado ✓','success');}
+      try{
+        const {error}=await sb.from('groups').update({name,handle,slack_id,emoji}).eq('id',id);if(error)throw error;
+        const idx=DB.groups.findIndex(x=>x.id===id);
+        if(idx>=0){
+          DB.groups[idx]={...DB.groups[idx],name,handle,slack_id,emoji};
+          await handleMacroAssignment('eg', DB.groups[idx], 'group');
+        }
+        closeEditModal();renderGroupsList();showStatus('Grupo atualizado ✓','success');
+      }
       catch(e){alert('Erro: '+e.message);}
     }
   );
@@ -1235,8 +1337,8 @@ function renderChannelsList(){
 }
 
 /* ══ SETTINGS — MACROS (NOVO) ══ */
-async function saveMacro(){const name=v('m-name'),handle=v('m-handle').replace('/',''),content=v('m-content');if(!name||!handle||!content){alert('Preencha nome, gatilho e conteúdo.');return;}try{const {data,error}=await sb.from('macros').insert({user_id:user.id,name,handle,content}).select().single();if(error)throw error;DB.macros.push(data);['m-name','m-handle','m-content'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('macro-form').classList.remove('open');renderMacrosList();showStatus('Lista /'+handle+' salva! ✓','success');}catch(e){alert('Erro: '+e.message);}}
-async function deleteMacro(id){if(!confirm('Remover esta lista?'))return;try{const {error}=await sb.from('macros').delete().eq('id',id);if(error)throw error;DB.macros=DB.macros.filter(m=>m.id!==id);renderMacrosList();}catch(e){alert('Erro: '+e.message);}}
+async function saveMacro(){const name=v('m-name'),handle=v('m-handle').replace('/',''),content=v('m-content');if(!name||!handle||!content){alert('Preencha nome, gatilho e conteúdo.');return;}try{const {data,error}=await sb.from('macros').insert({user_id:user.id,name,handle,content}).select().single();if(error)throw error;DB.macros.push(data);['m-name','m-handle','m-content'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('macro-form').classList.remove('open');renderMacrosList();window.renderMacroSelects();showStatus('Lista /'+handle+' salva! ✓','success');}catch(e){alert('Erro: '+e.message);}}
+async function deleteMacro(id){if(!confirm('Remover esta lista?'))return;try{const {error}=await sb.from('macros').delete().eq('id',id);if(error)throw error;DB.macros=DB.macros.filter(m=>m.id!==id);renderMacrosList();window.renderMacroSelects();}catch(e){alert('Erro: '+e.message);}}
 function editMacro(id){
   const m=DB.macros.find(x=>x.id===id);if(!m)return;
   openEditModal('Editar Lista / Macro',
@@ -1245,7 +1347,7 @@ function editMacro(id){
     async()=>{
       const name=document.getElementById('em-name').value.trim(),handle=document.getElementById('em-handle').value.trim().replace('/',''),content=document.getElementById('em-content').value.trim();
       if(!name||!handle||!content){alert('Preencha todos os campos.');return;}
-      try{const {error}=await sb.from('macros').update({name,handle,content}).eq('id',id);if(error)throw error;const idx=DB.macros.findIndex(x=>x.id===id);if(idx>=0)DB.macros[idx]={...DB.macros[idx],name,handle,content};closeEditModal();renderMacrosList();showStatus('Lista atualizada ✓','success');}
+      try{const {error}=await sb.from('macros').update({name,handle,content}).eq('id',id);if(error)throw error;const idx=DB.macros.findIndex(x=>x.id===id);if(idx>=0)DB.macros[idx]={...DB.macros[idx],name,handle,content};closeEditModal();renderMacrosList();window.renderMacroSelects();showStatus('Lista atualizada ✓','success');}
       catch(e){alert('Erro: '+e.message);}
     }
   );
@@ -1262,7 +1364,7 @@ function renderMacrosList(){
 /* ══ UTILS ══ */
 function showStatus(msg,type){const el=document.getElementById('send-status');el.className='status-msg '+(type||'');const icon=type==='success'?'ti-circle-check':type==='error'?'ti-alert-circle':'ti-info-circle';el.innerHTML=`<i class="ti ${icon}"></i> ${msg}`;if(type!=='warn')setTimeout(()=>{el.textContent='';el.className='status-msg';},4000);}
 function clearCompose(){document.getElementById('sugg-grid').innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos ao lado para ver as sugestões ✨</div>';document.getElementById('sugg-label').textContent='Variações de mensagem';ST.selSugg=null;updatePreview(null);updateSendBtn();const st=document.getElementById('send-status');st.textContent='';st.className='status-msg';renderScenarioFields();}
-function renderAll(){renderWhSettings();renderWhChips();renderPeopleList();renderGroupsList();renderChannelsList();renderMacrosList();}
+function renderAll(){renderWhSettings();renderWhChips();renderPeopleList();renderGroupsList();renderChannelsList();renderMacrosList();window.renderMacroSelects();}
 function v(id){return document.getElementById(id)?.value.trim()||'';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function initials(n){return(n||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
