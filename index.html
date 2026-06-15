@@ -16,24 +16,18 @@
   --cobli-green: #00AE97;
   --cobli-green2: #0FFDC9;
   
-  /* NOVO FUNDO GERAL - Azul suave inspirado nos ícones */
   --bg-app: #1C276B; 
-  
-  /* Cores Escuras dos Cartões e Inputs originais */
   --bg-card: #0f0f6a;
   --bg-input: #1F1F5F;
   --bg-hover: #1a1a7a;
   
-  /* Bordas */
   --border: rgba(114,141,219,0.3);
   --border-focus: #3248C6;
   
-  /* Textos */
   --text: #E6E6ED;
   --text-muted: rgba(230,230,237,0.65);
   --text-hint: rgba(230,230,237,0.4);
   
-  /* Status */
   --success: #00AE97;
   --error: #FF4633;
   --warn: #F59E0B;
@@ -47,7 +41,6 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg-app);color:var(--text);min-height:100vh;line-height:1.5}
 .layout{display:flex;min-height:100vh}
 
-/* SIDEBAR */
 .sidebar{width:260px;flex-shrink:0;background:var(--cobli-navy);border-right:1px solid rgba(0,0,0,0.2);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;box-shadow: 2px 0 10px rgba(0,0,0,0.1)}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px}
 .logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#001BB8,#0FFDC9);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff}
@@ -64,7 +57,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 
 .main{margin-left:260px;flex:1;display:flex;flex-direction:column;min-height:100vh; background:var(--bg-app);}
 
-/* TOPBAR */
 .topbar{background:rgba(28, 39, 107, 0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
 .topbar-title{font-size:16px;font-weight:600; color:var(--text);}.topbar-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
@@ -72,7 +64,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--cobli-green)}
 
 .content-wrapper { padding: 24px 28px; display: flex; justify-content: center; }
-.content{display:flex;flex-direction:column;gap:18px;width:100%;max-width:1200px;} /* Centralizado e largo */
+.content{display:flex;flex-direction:column;gap:18px;width:100%;max-width:1200px;} 
 
 /* AUTH */
 #auth-screen{display:none;align-items:center;justify-content:center;min-height:100vh;background:var(--bg-app)}
@@ -86,16 +78,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 /* PANELS */
 .panel{display:none}.panel.active{display:flex;flex-direction:column;gap:18px}
 
-/* GRID DUAS COLUNAS PARA O COMPOSER */
 .compose-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
 .compose-left, .compose-right { display: flex; flex-direction: column; gap: 18px; }
 @media(max-width: 950px) { .compose-grid { grid-template-columns: 1fr; } }
 
-/* CARDS ESCUROS */
 .card{background:var(--bg-card);color:var(--text);border:1px solid var(--border);box-shadow:0 4px 15px rgba(0,0,0,0.15);border-radius:var(--radius-lg);padding:1.25rem}
 .card-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-blue-chart);margin-bottom:12px;display:flex;align-items:center;gap:6px}
 
-/* INPUTS ESCUROS */
 input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px 12px;transition:border .15s,box-shadow .15s;width:100%}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(50,72,198,.25)}
 input::placeholder,textarea::placeholder{color:var(--text-hint)}
@@ -129,7 +118,6 @@ textarea{resize:vertical;line-height:1.65}
 .msg-wrap{position:relative}
 textarea.msg-ta{min-height:80px;padding:12px 14px}
 
-/* ====== ÍCONES (HINTS) ====== */
 .hint-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .hint-pill{
   font-size:13px;
@@ -152,7 +140,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   transform:translateY(-2px);
   box-shadow:0 4px 8px rgba(0,0,0,0.3);
 }
-/* ========================================= */
 
 .wh-multi-wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .wh-chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:20px;background:var(--bg-input);border:1px solid var(--cobli-green);font-size:12px;font-weight:600;color:var(--cobli-green2);cursor:default}
@@ -160,19 +147,22 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .wh-add-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:transparent;border:1px dashed var(--border);font-size:12px;color:var(--text-muted);cursor:pointer;transition:all .15s}
 .wh-add-btn:hover{border-color:var(--cobli-blue-chart);color:var(--text)}
 
-.wh-picker-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:260px;background:var(--bg-card);border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:200}
+.wh-picker-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:260px;background:#0d0d60;border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:200}
 .wh-picker-dropdown.open{display:block}
 .wh-picker-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;font-size:13px; color:var(--text)}
 .wh-picker-item:hover{background:var(--bg-hover)}.wh-picker-item.selected{background:rgba(0,174,151,.1)}.wh-picker-item.selected .wh-name{color:var(--cobli-green2)}
 .wh-check{margin-left:auto;color:var(--cobli-green);font-size:14px;display:none}.wh-picker-item.selected .wh-check{display:block}.wh-name{font-size:13px;font-weight:500}
 
-.autocomplete-dropdown{position:absolute;z-index:300;background:var(--bg-card);border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);min-width:260px;max-height:220px;overflow-y:auto;display:none;top:calc(100% + 4px);left:0}
+.autocomplete-dropdown{position:absolute;z-index:300;background:#0d0d60;border:1px solid var(--cobli-blue-light);border-radius:var(--radius-md);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);min-width:260px;max-height:220px;overflow-y:auto;display:none;top:calc(100% + 4px);left:0}
 .autocomplete-dropdown.open{display:block}
 .ac-header{font-size:10px;font-weight:700;color:var(--text-hint);padding:8px 12px 4px;letter-spacing:.06em;text-transform:uppercase}
 .ac-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .1s;font-size:13px; color:var(--text)}
 .ac-item:hover,.ac-item.focused{background:var(--bg-hover)}
 .ac-avatar{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700}
-.ac-avatar.person{background:rgba(50,72,198,.35);color:#7F8DDB}.ac-avatar.group{background:rgba(0,174,151,.25);color:var(--cobli-green)}.ac-avatar.channel{background:rgba(15,253,201,.15);color:var(--cobli-green2)}
+.ac-avatar.person{background:rgba(50,72,198,.35);color:#7F8DDB}
+.ac-avatar.group{background:rgba(0,174,151,.25);color:var(--cobli-green)}
+.ac-avatar.channel{background:rgba(15,253,201,.15);color:var(--cobli-green2)}
+.ac-avatar.macro{background:rgba(245,158,11,.2);color:#FCD34D} /* Cor Laranja/Amarela para Macros */
 .ac-name{font-weight:600}.ac-sub{font-size:11px;color:var(--text-hint)}
 
 .sugg-grid{display:grid;grid-template-columns:1fr;gap:10px}
@@ -212,7 +202,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .status-msg{font-size:13px;display:flex;align-items:center;gap:6px; font-weight:500}
 .status-msg.success{color:var(--cobli-green)}.status-msg.error{color:var(--error)}.status-msg.warn{color:var(--warn)}
 
-/* LISTAS INTERNAS (Páginas de Configuração) */
+/* LISTAS INTERNAS */
 .cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
 @media(max-width: 950px) { .cards-row { grid-template-columns: 1fr; } }
 .list-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -234,7 +224,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .add-form{border:1px dashed rgba(50,72,198,.4);border-radius:var(--radius-md);background:transparent;padding:16px;margin-top:12px;display:none;flex-direction:column;gap:12px}.add-form.open{display:flex}
 .form-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}.form-row>div{flex:1;min-width:140px}
 .slack-id-tip{font-size:11px;color:var(--cobli-blue-chart);background:rgba(50,72,198,.12);padding:10px 14px;border-radius:var(--radius-sm);border-left:3px solid var(--cobli-blue-light);line-height:1.6}
-.no-sugg{font-size:13px;color:var(--text-hint);text-align:center;padding:2rem}
+.no-sugg{font-size:13px;color:#64748B;text-align:center;padding:2rem}
 .loading{display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text-hint);font-size:13px;gap:8px}
 @keyframes spin{to{transform:rotate(360deg)}}.spin{animation:spin .8s linear infinite;display:inline-block}
 
@@ -296,9 +286,10 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
     <button class="nav-item active" data-panel="compose"><i class="ti ti-send"></i> Enviar mensagem</button>
     <button class="nav-item" data-panel="queue"><i class="ti ti-clock"></i> Agendamentos <span class="nav-badge" id="nb">0</span></button>
     <div class="nav-label" style="margin-top:8px">Configurações</div>
-    <button class="nav-item" data-panel="webhooks"><i class="ti ti-plug"></i> Webhooks / Canais</button>
+    <button class="nav-item" data-panel="webhooks"><i class="ti ti-plug"></i> Canais Destino (#)</button>
     <button class="nav-item" data-panel="people"><i class="ti ti-users"></i> Pessoas &amp; Grupos (@)</button>
-    <button class="nav-item" data-panel="channels"><i class="ti ti-hash"></i> Canais Slack (#)</button>
+    <button class="nav-item" data-panel="macros"><i class="ti ti-list"></i> Listas e Macros ( / )</button>
+    <button class="nav-item" data-panel="channels"><i class="ti ti-hash"></i> Autocomplete Canais</button>
   </nav>
   <div class="sb-user">
     <i class="ti ti-user-circle"></i>
@@ -325,7 +316,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
             <div class="card-title"><i class="ti ti-plug"></i> Canais de destino <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0">(selecione um ou mais)</span></div>
             <div style="position:relative">
               <div class="wh-multi-wrap" id="wh-chips">
-                <button class="wh-add-btn" id="wh-add-btn"><i class="ti ti-plus"></i> Adicionar canal</button>
+                <button class="wh-add-btn" id="wh-add-btn"><i class="ti ti-plus"></i> Selecionar canal</button>
               </div>
               <div class="wh-picker-dropdown" id="wh-picker">
                 <div id="wh-picker-list"></div>
@@ -345,7 +336,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 
           <div class="card">
             <div class="card-title"><i class="ti ti-pencil"></i> <span id="composer-label">Mensagem</span>
-              <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— use @ para pessoas/grupos · # para canais</span>
+              <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— use @, # ou /</span>
             </div>
             <div id="fields-container"></div>
             <div class="hint-pills" id="hint-pills"></div>
@@ -449,7 +440,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
     <div class="panel" id="panel-webhooks">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
-          <div class="card-title" style="margin-bottom:0"><i class="ti ti-plug"></i> Webhooks cadastrados</div>
+          <div class="card-title" style="margin-bottom:0"><i class="ti ti-plug"></i> Webhooks de Destino</div>
           <div class="list-controls">
             <input type="text" class="search-input" placeholder="Buscar canal..." oninput="setSearch('webhooks', this.value)" />
             <div class="pagination">
@@ -469,6 +460,41 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           <div class="form-row">
             <button class="btn btn-success btn-sm" id="btn-save-wh"><i class="ti ti-check"></i> Salvar</button>
             <button class="btn btn-ghost btn-sm" id="btn-cancel-wh">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MACROS (NOVO) -->
+    <div class="panel" id="panel-macros">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
+          <div class="card-title" style="margin-bottom:0"><i class="ti ti-list"></i> Listas de Pessoas e Macros ( / )</div>
+          <div class="list-controls">
+            <input type="text" class="search-input" placeholder="Buscar lista (/)..." oninput="setSearch('macros', this.value)" />
+            <div class="pagination">
+              <button class="page-btn" id="btn-prev-macros" onclick="prevPage('macros')"><i class="ti ti-chevron-left"></i></button>
+              <span id="page-info-macros">1 / 1</span>
+              <button class="page-btn" id="btn-next-macros" onclick="nextPage('macros')"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="macros-list" class="item-list-wrap"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        
+        <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-macro"><i class="ti ti-plus"></i> Nova lista</button>
+        <div class="add-form" id="macro-form">
+          <div class="slack-id-tip"><strong>💡 Como usar:</strong> Digite <code>/</code> na mensagem para expandir automaticamente os usuários abaixo em texto corrido.</div>
+          <div class="form-row">
+            <div><label class="form-label">Nome da Lista</label><input type="text" id="m-name" placeholder="Time do Supply" /></div>
+            <div><label class="form-label">Gatilho (sem /)</label><input type="text" id="m-handle" placeholder="supply" /></div>
+          </div>
+          <div style="margin-top:10px">
+            <label class="form-label">Pessoas inseridas (Texto que será colado)</label>
+            <textarea id="m-content" placeholder="@Luiz @Mikaella @João" rows="3"></textarea>
+          </div>
+          <div class="form-row" style="margin-top:10px">
+            <button class="btn btn-success btn-sm" id="btn-save-macro"><i class="ti ti-check"></i> Salvar</button>
+            <button class="btn btn-ghost btn-sm" id="btn-cancel-macro">Cancelar</button>
           </div>
         </div>
       </div>
@@ -515,7 +541,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
         <!-- CARD GRUPOS -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
-            <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> Grupos (@)</div>
+            <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> Grupos Originais (@)</div>
             <div class="list-controls">
               <input type="text" class="search-input" placeholder="Buscar grupo..." oninput="setSearch('groups', this.value)" style="min-width:120px;" />
               <div class="pagination">
@@ -530,13 +556,13 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           
           <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-group"><i class="ti ti-plus"></i> Novo grupo</button>
           <div class="add-form" id="group-form">
-            <div class="slack-id-tip"><strong>💡 Slack Group ID:</strong> Configurações → Grupos de usuários.</div>
+            <div class="slack-id-tip"><strong>💡 Grupos criados dentro do Slack.</strong></div>
             <div class="form-row">
               <div><label class="form-label">Nome do grupo</label><input type="text" id="g-name" placeholder="Time de TI" /></div>
               <div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="g-handle" placeholder="time-ti" /></div>
             </div>
             <div class="form-row">
-              <div><label class="form-label">Slack Group ID (opcional)</label><input type="text" id="g-slack-id" placeholder="S0614TZR7" /></div>
+              <div><label class="form-label">Slack Group ID</label><input type="text" id="g-slack-id" placeholder="S0614TZR7" /></div>
               <div><label class="form-label">Emoji</label><input type="text" id="g-emoji" placeholder="👥" style="max-width:100px" /></div>
             </div>
             <div class="form-row">
@@ -553,7 +579,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
     <div class="panel" id="panel-channels">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
-          <div class="card-title" style="margin-bottom:0"><i class="ti ti-hash"></i> Canais Slack (#)</div>
+          <div class="card-title" style="margin-bottom:0"><i class="ti ti-hash"></i> Autocomplete Canais Slack (#)</div>
           <div class="list-controls">
             <input type="text" class="search-input" placeholder="Buscar canal (#)..." oninput="setSearch('channels', this.value)" />
             <div class="pagination">
@@ -596,7 +622,7 @@ const SCENARIO_COLORS = { ferias:'#00AE97', novidades:'#0FFDC9', incidente:'#FF4
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let user = null, userDisplayName = '';
-let DB = { webhooks:[], people:[], groups:[], channels:[] };
+let DB = { webhooks:[], people:[], groups:[], channels:[], macros:[] };
 let ST = { scenario:'ferias', selWhIds:[], selSugg:null, contactOn:false, schedOn:false, whPickerOpen:false };
 let authMode = 'login';
 let _editTarget = null; // current edit modal state
@@ -609,7 +635,8 @@ let LST = {
   webhooks: { q: '', p: 1 },
   people:   { q: '', p: 1 },
   groups:   { q: '', p: 1 },
-  channels: { q: '', p: 1 }
+  channels: { q: '', p: 1 },
+  macros:   { q: '', p: 1 }
 };
 
 /* ══ DEBUG ══ */
@@ -655,25 +682,37 @@ function showAuth(){document.getElementById('auth-screen').style.display='flex';
 /* ══ LOAD ══ */
 async function loadAll(){
   try{
-    const [p,g,c,w]=await Promise.all([
-      sb.from('people').select('*').order('name'),
-      sb.from('groups').select('*').order('name'),
-      sb.from('channels').select('*').order('name'),
-      sb.from('webhooks').select('*').order('name'),
-    ]);
+    const pProm = sb.from('people').select('*').order('name');
+    const gProm = sb.from('groups').select('*').order('name');
+    const cProm = sb.from('channels').select('*').order('name');
+    const wProm = sb.from('webhooks').select('*').order('name');
+    const mProm = sb.from('macros').select('*').order('name'); // Tabela nova
+
+    const [p,g,c,w,m]=await Promise.all([pProm, gProm, cProm, wProm, mProm]);
+    
     if(p.error)throw new Error('people: '+p.error.message);
     if(g.error)throw new Error('groups: '+g.error.message);
     if(c.error)throw new Error('channels: '+c.error.message);
     if(w.error)throw new Error('webhooks: '+w.error.message);
+    
     DB.people=p.data||[];DB.groups=g.data||[];DB.channels=c.data||[];DB.webhooks=w.data||[];
-    dbg(`BD: ${DB.people.length}p ${DB.groups.length}g ${DB.channels.length}c ${DB.webhooks.length}w`,'success');
+    
+    // Trata a tabela macros graciosamente caso não exista ainda
+    if(m.error) {
+       console.warn("Tabela macros não encontrada. Rode o script SQL.");
+       DB.macros = [];
+    } else {
+       DB.macros = m.data || [];
+    }
+
+    dbg(`BD: ${DB.people.length}p ${DB.groups.length}g ${DB.channels.length}c ${DB.webhooks.length}w ${DB.macros.length}m`,'success');
     renderAll();
   }catch(e){dbg('ERRO BD: '+e.message,'error');alert('Erro ao carregar dados:\n'+e.message);console.error(e);}
 }
 
 /* ══ NAV ══ */
-const PMETA={compose:{t:'Compositor de Mensagens',s:'Digite, escolha uma variação e envie para o Slack'},queue:{t:'Agendamentos',s:'Mensagens programadas no Supabase — edite ou cancele'},webhooks:{t:'Webhooks / Canais',s:'Gerencie os canais de destino'},people:{t:'Pessoas & Grupos (@)',s:'Autocomplete de menções — edite ou remova'},channels:{t:'Canais Slack (#)',s:'Autocomplete de canais — edite ou remova'}};
-function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');document.querySelector(`.nav-item[data-panel="${id}"]`)?.classList.add('active');const m=PMETA[id]||{};document.getElementById('topbar-title').textContent=m.t||'';document.getElementById('topbar-sub').textContent=m.s||'';if(id==='webhooks')renderWhSettings();if(id==='people'){renderPeopleList();renderGroupsList();}if(id==='channels')renderChannelsList();if(id==='queue')loadQueue();if(id==='compose')renderWhPicker();}
+const PMETA={compose:{t:'Compositor de Mensagens',s:'Digite, escolha uma variação e envie para o Slack'},queue:{t:'Agendamentos',s:'Mensagens programadas no Supabase — edite ou cancele'},webhooks:{t:'Webhooks Destino',s:'Canais de comunicação para disparo'},people:{t:'Pessoas & Grupos (@)',s:'Autocomplete de menções — edite ou remova'},channels:{t:'Canais Slack (#)',s:'Autocomplete de canais — edite ou remova'},macros:{t:'Listas ( / )',s:'Macros para expandir múltiplas pessoas de uma vez'}};
+function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');document.querySelector(`.nav-item[data-panel="${id}"]`)?.classList.add('active');const m=PMETA[id]||{};document.getElementById('topbar-title').textContent=m.t||'';document.getElementById('topbar-sub').textContent=m.s||'';if(id==='webhooks')renderWhSettings();if(id==='people'){renderPeopleList();renderGroupsList();}if(id==='channels')renderChannelsList();if(id==='macros')renderMacrosList();if(id==='queue')loadQueue();if(id==='compose')renderWhPicker();}
 
 /* ══ MULTI-WEBHOOK ══ */
 function renderWhPicker(){const list=document.getElementById('wh-picker-list');if(!DB.webhooks.length){list.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--text-hint)">Nenhum canal cadastrado</div>';return;}list.innerHTML=DB.webhooks.map(w=>`<div class="wh-picker-item ${ST.selWhIds.includes(w.id)?'selected':''}" data-pick-wh="${w.id}"><span style="font-size:18px">${w.emoji||'📢'}</span><div class="wh-name">${esc(w.name)}</div><i class="ti ti-check wh-check"></i></div>`).join('');}
@@ -728,8 +767,8 @@ function renderScenarioFields(){
 let _fieldAcItems={},_fieldAcFocus={};
 function detectFieldAC(el,fieldId){
   const val=el.value||'',pos=el.selectionStart||val.length,before=val.substring(0,pos);
-  const atIdx=before.lastIndexOf('@'),hashIdx=before.lastIndexOf('#');
-  const lastIdx=Math.max(atIdx,hashIdx);
+  const atIdx=before.lastIndexOf('@'),hashIdx=before.lastIndexOf('#'),slashIdx=before.lastIndexOf('/');
+  const lastIdx=Math.max(atIdx,hashIdx,slashIdx);
   const ddId=fieldId==='retorno'?'ac-retorno':'ac-field-'+fieldId;
   const listId=fieldId==='retorno'?'ac-retorno-list':'ac-list-'+fieldId;
   const hdrId=fieldId==='retorno'?'ac-retorno-hdr':'ac-hdr-'+fieldId;
@@ -739,31 +778,64 @@ function detectFieldAC(el,fieldId){
   if((query.match(/ /g)||[]).length>=2){dd.classList.remove('open');return;}
   const RESERVED=new Set(['here','channel','everyone','aqui','canal','todos']);
   if(sym==='@'&&RESERVED.has(query.toLowerCase().trim())){dd.classList.remove('open');return;}
+  
   const q=query.toLowerCase().trim();let items=[];
-  if(sym==='@'){document.getElementById(hdrId).textContent='Pessoas & Grupos';items=[...DB.people.filter(p=>p.name.toLowerCase().includes(q)||(p.handle||'').toLowerCase().includes(q)).map(p=>({type:'person',label:p.name,insert:p.slack_id?`<@${p.slack_id}>`:`@${p.handle||p.name}`,display:`@${p.name}`,sub:p.slack_id?'ID:'+p.slack_id:'',avatar:initials(p.name)})),...DB.groups.filter(g=>g.name.toLowerCase().includes(q)||(g.handle||'').toLowerCase().includes(q)).map(g=>({type:'group',label:g.name,insert:g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`,display:`@${g.name}`,sub:'@'+g.handle,avatar:g.emoji||'👥'}))];}
-  else{document.getElementById(hdrId).textContent='Canais Slack';items=DB.channels.filter(c=>c.name.toLowerCase().includes(q)).map(c=>({type:'channel',label:'#'+c.name,insert:c.slack_id?`<#${c.slack_id}>`:'#'+c.name,display:'#'+c.name,sub:c.desc||'',avatar:'#'}));}
+  
+  if(sym==='@'){
+    document.getElementById(hdrId).textContent='Pessoas & Grupos';
+    items=[...DB.people.filter(p=>p.name.toLowerCase().includes(q)||(p.handle||'').toLowerCase().includes(q)).map(p=>({type:'person',label:p.name,insert:p.slack_id?`<@${p.slack_id}>`:`@${p.handle||p.name}`,display:`@${p.name}`,sub:p.slack_id?'ID:'+p.slack_id:'',avatar:initials(p.name)})),...DB.groups.filter(g=>g.name.toLowerCase().includes(q)||(g.handle||'').toLowerCase().includes(q)).map(g=>({type:'group',label:g.name,insert:g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`,display:`@${g.name}`,sub:'@'+g.handle,avatar:g.emoji||'👥'}))];
+  } else if (sym==='#') {
+    document.getElementById(hdrId).textContent='Canais Slack';
+    items=DB.channels.filter(c=>c.name.toLowerCase().includes(q)).map(c=>({type:'channel',label:'#'+c.name,insert:c.slack_id?`<#${c.slack_id}>`:'#'+c.name,display:'#'+c.name,sub:c.desc||'',avatar:'#'}));
+  } else if (sym==='/') {
+    document.getElementById(hdrId).textContent='Listas (Macros)';
+    items=DB.macros.filter(m=>m.name.toLowerCase().includes(q)||(m.handle||'').toLowerCase().includes(q)).map(m=>({
+       type:'macro', label:'/'+m.handle, insert: m.content + ' ', display: m.content + ' ', sub: m.name, avatar:'/'
+    }));
+  }
+  
   if(!items.length){dd.classList.remove('open');return;}
   _fieldAcItems[fieldId]=items;_fieldAcFocus[fieldId]=0;
   document.getElementById(listId).innerHTML=items.map((it,i)=>`<div class="ac-item ${i===0?'focused':''}" data-fac-field="${fieldId}" data-fac-idx="${i}"><div class="ac-avatar ${it.type}">${it.avatar}</div><div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div></div>`).join('');
   dd.classList.add('open');
 }
-function insertFieldAC(fieldId,idx){const items=_fieldAcItems[fieldId]||[];const it=items[idx];if(!it)return;const elId=fieldId==='retorno'?'retorno-text':fieldId;const el=document.getElementById(elId);if(!el)return;const val=el.value,pos=el.selectionStart||val.length,before=val.substring(0,pos);const lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'));el.value=val.substring(0,lastIdx)+it.display+' '+val.substring(pos);el.focus();const np=lastIdx+it.display.length+1;el.setSelectionRange(np,np);document.getElementById(fieldId==='retorno'?'ac-retorno':'ac-field-'+fieldId)?.classList.remove('open');buildAndRender();}
+function insertFieldAC(fieldId,idx){const items=_fieldAcItems[fieldId]||[];const it=items[idx];if(!it)return;const elId=fieldId==='retorno'?'retorno-text':fieldId;const el=document.getElementById(elId);if(!el)return;const val=el.value,pos=el.selectionStart||val.length,before=val.substring(0,pos);const lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'),before.lastIndexOf('/'));el.value=val.substring(0,lastIdx)+it.display+' '+val.substring(pos);el.focus();const np=lastIdx+it.display.length+1;el.setSelectionRange(np,np);document.getElementById(fieldId==='retorno'?'ac-retorno':'ac-field-'+fieldId)?.classList.remove('open');buildAndRender();}
 function onFieldKeydown(e,fieldId){const ddId=fieldId==='retorno'?'ac-retorno':'ac-field-'+fieldId;const dd=document.getElementById(ddId);if(!dd?.classList.contains('open'))return;const items=_fieldAcItems[fieldId]||[];if(e.key==='ArrowDown'){e.preventDefault();_fieldAcFocus[fieldId]=Math.min((_fieldAcFocus[fieldId]||0)+1,items.length-1);refreshFieldAcFocus(fieldId);}if(e.key==='ArrowUp'){e.preventDefault();_fieldAcFocus[fieldId]=Math.max((_fieldAcFocus[fieldId]||0)-1,0);refreshFieldAcFocus(fieldId);}if(e.key==='Enter'||e.key==='Tab'){e.preventDefault();insertFieldAC(fieldId,_fieldAcFocus[fieldId]||0);}if(e.key==='Escape')dd.classList.remove('open');}
 function refreshFieldAcFocus(fieldId){const listId=fieldId==='retorno'?'ac-retorno-list':'ac-list-'+fieldId;document.querySelectorAll(`#${listId} .ac-item`).forEach((el,i)=>el.classList.toggle('focused',i===(_fieldAcFocus[fieldId]||0)));}
 
 /* ══ CONTACT AUTOCOMPLETE ══ */
 let _contactAcItems=[],_contactAcFocus=0;
-function onContactInput(){const el=document.getElementById('contact-input');const val=el.value,pos=el.selectionStart||val.length,before=val.substring(0,pos);const atIdx=before.lastIndexOf('@'),hashIdx=before.lastIndexOf('#');const lastIdx=Math.max(atIdx,hashIdx);const dd=document.getElementById('ac-contact');if(lastIdx===-1){dd.classList.remove('open');refreshSuggs();return;}const sym=val[lastIdx],query=before.substring(lastIdx+1);if(/\s\s/.test(query)){dd.classList.remove('open');refreshSuggs();return;}const q=query.toLowerCase().trim();let items=[];if(sym==='@'){document.getElementById('ac-contact-hdr').textContent='Pessoas & Grupos';items=[...DB.people.filter(p=>p.name.toLowerCase().includes(q)||(p.handle||'').toLowerCase().includes(q)).map(p=>({type:'person',label:p.name,insert:p.slack_id?`<@${p.slack_id}>`:`@${p.handle||p.name}`,display:`@${p.name}`,sub:p.handle?'@'+p.handle:'',avatar:initials(p.name)})),...DB.groups.filter(g=>g.name.toLowerCase().includes(q)||(g.handle||'').toLowerCase().includes(q)).map(g=>({type:'group',label:g.name,insert:g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`,display:`@${g.name}`,sub:'@'+g.handle,avatar:g.emoji||'👥'}))];}else{document.getElementById('ac-contact-hdr').textContent='Canais Slack';items=DB.channels.filter(c=>c.name.toLowerCase().includes(q)).map(c=>({type:'channel',label:'#'+c.name,insert:c.slack_id?`<#${c.slack_id}>`:'#'+c.name,display:'#'+c.name,sub:c.desc||'',avatar:'#'}));}
+function onContactInput(){const el=document.getElementById('contact-input');const val=el.value,pos=el.selectionStart||val.length,before=val.substring(0,pos);const atIdx=before.lastIndexOf('@'),hashIdx=before.lastIndexOf('#'),slashIdx=before.lastIndexOf('/');const lastIdx=Math.max(atIdx,hashIdx,slashIdx);const dd=document.getElementById('ac-contact');if(lastIdx===-1){dd.classList.remove('open');refreshSuggs();return;}const sym=val[lastIdx],query=before.substring(lastIdx+1);if(/\s\s/.test(query)){dd.classList.remove('open');refreshSuggs();return;}const q=query.toLowerCase().trim();let items=[];if(sym==='@'){document.getElementById('ac-contact-hdr').textContent='Pessoas & Grupos';items=[...DB.people.filter(p=>p.name.toLowerCase().includes(q)||(p.handle||'').toLowerCase().includes(q)).map(p=>({type:'person',label:p.name,insert:p.slack_id?`<@${p.slack_id}>`:`@${p.handle||p.name}`,display:`@${p.name}`,sub:p.handle?'@'+p.handle:'',avatar:initials(p.name)})),...DB.groups.filter(g=>g.name.toLowerCase().includes(q)||(g.handle||'').toLowerCase().includes(q)).map(g=>({type:'group',label:g.name,insert:g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`,display:`@${g.name}`,sub:'@'+g.handle,avatar:g.emoji||'👥'}))];}else if(sym==='#'){document.getElementById('ac-contact-hdr').textContent='Canais Slack';items=DB.channels.filter(c=>c.name.toLowerCase().includes(q)).map(c=>({type:'channel',label:'#'+c.name,insert:c.slack_id?`<#${c.slack_id}>`:'#'+c.name,display:'#'+c.name,sub:c.desc||'',avatar:'#'}));}else if(sym==='/'){document.getElementById('ac-contact-hdr').textContent='Listas (Macros)';items=DB.macros.filter(m=>m.name.toLowerCase().includes(q)||(m.handle||'').toLowerCase().includes(q)).map(m=>({type:'macro',label:'/'+m.handle,insert:m.content+' ',display:m.content+' ',sub:m.name,avatar:'/'}));}
 _contactAcItems=items;_contactAcFocus=0;if(!items.length){dd.classList.remove('open');refreshSuggs();return;}
 document.getElementById('ac-contact-list').innerHTML=items.map((it,i)=>`<div class="ac-item ${i===0?'focused':''}" data-cac-idx="${i}"><div class="ac-avatar ${it.type}">${it.avatar}</div><div><div class="ac-name">${esc(it.label)}</div>${it.sub?`<div class="ac-sub">${esc(it.sub)}</div>`:''}</div></div>`).join('');dd.classList.add('open');refreshSuggs();}
-function insertContactAC(idx){const it=_contactAcItems[idx];if(!it)return;const el=document.getElementById('contact-input');const val=el.value,pos=el.selectionStart||val.length,before=val.substring(0,pos);const lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'));el.value=val.substring(0,lastIdx)+it.insert+' '+val.substring(pos);el.focus();document.getElementById('ac-contact').classList.remove('open');refreshSuggs();}
+function insertContactAC(idx){const it=_contactAcItems[idx];if(!it)return;const el=document.getElementById('contact-input');const val=el.value,pos=el.selectionStart||val.length,before=val.substring(0,pos);const lastIdx=Math.max(before.lastIndexOf('@'),before.lastIndexOf('#'),before.lastIndexOf('/'));el.value=val.substring(0,lastIdx)+it.insert+' '+val.substring(pos);el.focus();document.getElementById('ac-contact').classList.remove('open');refreshSuggs();}
 function onContactKeydown(e){const dd=document.getElementById('ac-contact');if(!dd.classList.contains('open'))return;if(e.key==='ArrowDown'){e.preventDefault();_contactAcFocus=Math.min(_contactAcFocus+1,_contactAcItems.length-1);document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===_contactAcFocus));}if(e.key==='ArrowUp'){e.preventDefault();_contactAcFocus=Math.max(_contactAcFocus-1,0);document.querySelectorAll('#ac-contact-list .ac-item').forEach((el,i)=>el.classList.toggle('focused',i===_contactAcFocus));}if(e.key==='Enter'||e.key==='Tab'){e.preventDefault();insertContactAC(_contactAcFocus);}if(e.key==='Escape')dd.classList.remove('open');}
 
 /* ══ SLACK TAGS ══ */
 function escapeRegex(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function applySpecialTags(txt){return txt.replace(/@here\b/gi,'<!here>').replace(/@channel\b/gi,'<!channel>').replace(/@everyone\b/gi,'<!everyone>').replace(/@aqui\b/gi,'<!here>').replace(/@canal\b/gi,'<!channel>').replace(/@todos\b/gi,'<!everyone>');}
 function resolveSlackTags(text){let txt=applySpecialTags(text);const peopleSorted=[...DB.people].sort((a,b)=>b.name.length-a.name.length);peopleSorted.forEach(p=>{if(!p.slack_id)return;const tagAlready=new RegExp(`<@${p.slack_id}>`,'g');if(tagAlready.test(txt))return;if(p.handle){txt=txt.replace(new RegExp('@'+escapeRegex(p.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);}txt=txt.replace(new RegExp('@'+escapeRegex(p.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);const fn=p.name.split(' ')[0];if(fn&&p.name.includes(' ')){txt=txt.replace(new RegExp('@'+escapeRegex(fn)+'(?=[\\s,;.!?\\n]|$)','gi'),(m,off)=>{const pre=txt.substring(Math.max(0,off-2),off);return pre.includes('<')?m:`<@${p.slack_id}>`});}});const groupsSorted=[...DB.groups].sort((a,b)=>b.name.length-a.name.length);groupsSorted.forEach(g=>{if(!g.handle)return;const tag=g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`;txt=txt.replace(new RegExp('@'+escapeRegex(g.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);txt=txt.replace(new RegExp('@'+escapeRegex(g.name)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);});const chSorted=[...DB.channels].sort((a,b)=>b.name.length-a.name.length);chSorted.forEach(c=>{if(!c.slack_id)return;txt=txt.replace(new RegExp('#'+escapeRegex(c.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<#${c.slack_id}>`);});return txt;}
-function slackTagsToHtml(txt){return txt.replace(/<@(U[A-Z0-9]+)>/g,(_,id)=>{const p=DB.people.find(x=>x.slack_id===id);return`<span style="background:rgba(50,72,198,.2);color:#a5b4fc;border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;}).replace(/<!subteam\^([^|>]+)\|?([^>]*)>/g,(_,id,label)=>{const g=DB.groups.find(x=>x.slack_id===id);return`<span style="background:rgba(0,174,151,.15);color:var(--cobli-green);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;}).replace(/<#(C[A-Z0-9]+)>/g,(_,id)=>{const c=DB.channels.find(x=>x.slack_id===id);return`<span style="background:rgba(15,253,201,.1);color:var(--cobli-green2);border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;}).replace(/<!here>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@here</span>').replace(/<!channel>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@channel</span>').replace(/<!everyone>/g,'<span style="background:rgba(245,158,11,.15);color:#fcd34d;border-radius:3px;padding:0 3px">@everyone</span>').replace(/\*([^*]+)\*/g,'<strong>$1</strong>').replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>').replace(/\n/g,'<br>');}
+function slackTagsToHtml(txt){
+  return txt
+    .replace(/<@([A-Z0-9]+)>/gi,(_,id)=>{
+      const p=DB.people.find(x=>x.slack_id===id);
+      return `<span style="background:rgba(50,72,198,.2);color:#a5b4fc;border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;
+    })
+    .replace(/<!subteam\^([^|>]+)\|?([^>]*)>/gi,(_,id,label)=>{
+      const g=DB.groups.find(x=>x.slack_id===id);
+      return `<span style="background:rgba(0,174,151,.15);color:var(--cobli-green);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;
+    })
+    .replace(/<#([A-Z0-9]+)>/gi,(_,id)=>{
+      const c=DB.channels.find(x=>x.slack_id===id);
+      return `<span style="background:rgba(15,253,201,.1);color:var(--cobli-green2);border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;
+    })
+    .replace(/<!here>/g,'<span style="background:rgba(245,158,11,.15);color:#D97706;border-radius:3px;padding:0 3px">@here</span>')
+    .replace(/<!channel>/g,'<span style="background:rgba(245,158,11,.15);color:#D97706;border-radius:3px;padding:0 3px">@channel</span>')
+    .replace(/<!everyone>/g,'<span style="background:rgba(245,158,11,.15);color:#D97706;border-radius:3px;padding:0 3px">@everyone</span>')
+    .replace(/\*([^*]+)\*/g,'<strong>$1</strong>')
+    .replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>')
+    .replace(/\n/g,'<br>');
+}
 
 /* ══ CONTACT FOOTER ══ */
 function cSlack(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'\n\n📞 _Entrar em contato com: '+raw+'_':'\n\n📞 _Entrar em contato com: acione o responsável da área._';}
@@ -946,6 +1018,7 @@ function setSearch(type, val) {
   if(type === 'people')   renderPeopleList();
   if(type === 'groups')   renderGroupsList();
   if(type === 'channels') renderChannelsList();
+  if(type === 'macros')   renderMacrosList();
 }
 function prevPage(type) {
   if (LST[type].p > 1) {
@@ -954,6 +1027,7 @@ function prevPage(type) {
     if(type === 'people')   renderPeopleList();
     if(type === 'groups')   renderGroupsList();
     if(type === 'channels') renderChannelsList();
+    if(type === 'macros')   renderMacrosList();
   }
 }
 function nextPage(type) {
@@ -962,6 +1036,7 @@ function nextPage(type) {
   if(type === 'people')   renderPeopleList();
   if(type === 'groups')   renderGroupsList();
   if(type === 'channels') renderChannelsList();
+  if(type === 'macros')   renderMacrosList();
 }
 
 function getPaginatedList(data, type, filterFn) {
@@ -1159,10 +1234,35 @@ function renderChannelsList(){
   el.innerHTML=paginated.map(c=>`<div class="list-item"><div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div><div style="flex:1;min-width:0"><div class="list-item-name">#${esc(c.name)}</div>${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}${c.slack_id?`<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>`:''}</div><div class="list-item-actions"><button class="btn-edit" data-edit-channel="${c.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
 }
 
+/* ══ SETTINGS — MACROS (NOVO) ══ */
+async function saveMacro(){const name=v('m-name'),handle=v('m-handle').replace('/',''),content=v('m-content');if(!name||!handle||!content){alert('Preencha nome, gatilho e conteúdo.');return;}try{const {data,error}=await sb.from('macros').insert({user_id:user.id,name,handle,content}).select().single();if(error)throw error;DB.macros.push(data);['m-name','m-handle','m-content'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('macro-form').classList.remove('open');renderMacrosList();showStatus('Lista /'+handle+' salva! ✓','success');}catch(e){alert('Erro: '+e.message);}}
+async function deleteMacro(id){if(!confirm('Remover esta lista?'))return;try{const {error}=await sb.from('macros').delete().eq('id',id);if(error)throw error;DB.macros=DB.macros.filter(m=>m.id!==id);renderMacrosList();}catch(e){alert('Erro: '+e.message);}}
+function editMacro(id){
+  const m=DB.macros.find(x=>x.id===id);if(!m)return;
+  openEditModal('Editar Lista / Macro',
+    `<div class="form-row"><div><label class="form-label">Nome da Lista</label><input type="text" id="em-name" value="${esc(m.name)}" /></div><div><label class="form-label">Gatilho (sem /)</label><input type="text" id="em-handle" value="${esc(m.handle||'')}" /></div></div>
+     <div style="margin-top:10px"><label class="form-label">Pessoas inseridas</label><textarea id="em-content" rows="3">${esc(m.content||'')}</textarea></div>`,
+    async()=>{
+      const name=document.getElementById('em-name').value.trim(),handle=document.getElementById('em-handle').value.trim().replace('/',''),content=document.getElementById('em-content').value.trim();
+      if(!name||!handle||!content){alert('Preencha todos os campos.');return;}
+      try{const {error}=await sb.from('macros').update({name,handle,content}).eq('id',id);if(error)throw error;const idx=DB.macros.findIndex(x=>x.id===id);if(idx>=0)DB.macros[idx]={...DB.macros[idx],name,handle,content};closeEditModal();renderMacrosList();showStatus('Lista atualizada ✓','success');}
+      catch(e){alert('Erro: '+e.message);}
+    }
+  );
+}
+function renderMacrosList(){
+  const el=document.getElementById('macros-list');
+  const paginated = getPaginatedList(DB.macros, 'macros', m => m.name.toLowerCase().includes(LST.macros.q) || (m.handle||'').toLowerCase().includes(LST.macros.q));
+  
+  if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhuma lista encontrada</div>';return;}
+  el.innerHTML=paginated.map(m=>`<div class="list-item"><div class="list-item-avatar ac-avatar macro" style="font-size:16px">/</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(m.name)}</div><div class="list-item-sub" style="color:var(--text)">Gatilho: /${esc(m.handle)}</div><div class="list-item-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(m.content)}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-macro="${m.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-macro="${m.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');
+}
+
+
 /* ══ UTILS ══ */
 function showStatus(msg,type){const el=document.getElementById('send-status');el.className='status-msg '+(type||'');const icon=type==='success'?'ti-circle-check':type==='error'?'ti-alert-circle':'ti-info-circle';el.innerHTML=`<i class="ti ${icon}"></i> ${msg}`;if(type!=='warn')setTimeout(()=>{el.textContent='';el.className='status-msg';},4000);}
 function clearCompose(){document.getElementById('sugg-grid').innerHTML='<div class="no-sugg" style="grid-column:1/-1">Preencha os campos ao lado para ver as sugestões ✨</div>';document.getElementById('sugg-label').textContent='Variações de mensagem';ST.selSugg=null;updatePreview(null);updateSendBtn();const st=document.getElementById('send-status');st.textContent='';st.className='status-msg';renderScenarioFields();}
-function renderAll(){renderWhSettings();renderWhChips();renderPeopleList();renderGroupsList();renderChannelsList();}
+function renderAll(){renderWhSettings();renderWhChips();renderPeopleList();renderGroupsList();renderChannelsList();renderMacrosList();}
 function v(id){return document.getElementById(id)?.value.trim()||'';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function initials(n){return(n||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
@@ -1201,19 +1301,28 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('btn-sched-retorno').addEventListener('click',scheduleRetorno);
   document.getElementById('btn-send').addEventListener('click',sendMessage);
   document.getElementById('btn-clear').addEventListener('click',clearCompose);
+  
   // Settings forms
   document.getElementById('btn-add-wh').addEventListener('click',()=>document.getElementById('wh-form').classList.toggle('open'));
   document.getElementById('btn-save-wh').addEventListener('click',saveWebhook);
   document.getElementById('btn-cancel-wh').addEventListener('click',()=>document.getElementById('wh-form').classList.remove('open'));
+  
   document.getElementById('btn-add-person').addEventListener('click',()=>document.getElementById('person-form').classList.toggle('open'));
   document.getElementById('btn-save-person').addEventListener('click',savePerson);
   document.getElementById('btn-cancel-person').addEventListener('click',()=>document.getElementById('person-form').classList.remove('open'));
+  
   document.getElementById('btn-add-group').addEventListener('click',()=>document.getElementById('group-form').classList.toggle('open'));
   document.getElementById('btn-save-group').addEventListener('click',saveGroup);
   document.getElementById('btn-cancel-group').addEventListener('click',()=>document.getElementById('group-form').classList.remove('open'));
+  
   document.getElementById('btn-add-channel').addEventListener('click',()=>document.getElementById('channel-form').classList.toggle('open'));
   document.getElementById('btn-save-channel').addEventListener('click',saveChannel);
   document.getElementById('btn-cancel-channel').addEventListener('click',()=>document.getElementById('channel-form').classList.remove('open'));
+  
+  document.getElementById('btn-add-macro').addEventListener('click',()=>document.getElementById('macro-form').classList.toggle('open'));
+  document.getElementById('btn-save-macro').addEventListener('click',saveMacro);
+  document.getElementById('btn-cancel-macro').addEventListener('click',()=>document.getElementById('macro-form').classList.remove('open'));
+  
   // Close modal on overlay click
   document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))closeEditModal();});
   
@@ -1224,12 +1333,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     const ep=e.target.closest('[data-edit-person]');if(ep){editPerson(ep.dataset.editPerson);return;}
     const eg=e.target.closest('[data-edit-group]');if(eg){editGroup(eg.dataset.editGroup);return;}
     const ec=e.target.closest('[data-edit-channel]');if(ec){editChannel(ec.dataset.editChannel);return;}
+    const em=e.target.closest('[data-edit-macro]');if(em){editMacro(em.dataset.editMacro);return;}
     const es=e.target.closest('[data-edit-sched]');if(es){editScheduled(es.dataset.editSched,es.dataset.editText||'');return;}
+    
     // DELETE buttons
     const dw=e.target.closest('[data-del-wh]');if(dw){deleteWebhook(dw.dataset.delWh);return;}
     const dp=e.target.closest('[data-del-person]');if(dp){deletePerson(dp.dataset.delPerson);return;}
     const dg=e.target.closest('[data-del-group]');if(dg){deleteGroup(dg.dataset.delGroup);return;}
     const dc=e.target.closest('[data-del-channel]');if(dc){deleteChannel(dc.dataset.delChannel);return;}
+    const dm=e.target.closest('[data-del-macro]');if(dm){deleteMacro(dm.dataset.delMacro);return;}
     const canc=e.target.closest('[data-cancel-sched]');if(canc){cancelScheduled(canc.dataset.cancelSched);return;}
     
     // Hint pills (inserindo no cursor da caixa ativa)
