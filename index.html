@@ -478,7 +478,13 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           </div>
           <div style="margin-top:10px">
             <label class="form-label">Pessoas inseridas (Texto que será colado)</label>
-            <textarea id="m-content" placeholder="@Luiz @Mikaella @João" rows="3"></textarea>
+            <div class="msg-wrap">
+              <textarea id="m-content" class="msg-ta" placeholder="@Luiz @Mikaella @João" rows="3"></textarea>
+              <div class="autocomplete-dropdown" id="ac-field-m-content">
+                <div class="ac-header" id="ac-hdr-m-content">Pessoas &amp; Grupos</div>
+                <div id="ac-list-m-content"></div>
+              </div>
+            </div>
           </div>
           <div class="form-row" style="margin-top:10px">
             <button class="btn btn-success btn-sm" id="btn-save-macro"><i class="ti ti-check"></i> Salvar</button>
@@ -725,9 +731,9 @@ async function handleMacroAssignment(prefix, record, type) {
 
   let tag = '';
   if (type === 'person') {
-    tag = record.slack_id ? `<@${record.slack_id}>` : `@${record.handle || record.name}`;
+    tag = `@${record.name}`; // Nome limpo!
   } else {
-    tag = record.slack_id ? `<!subteam^${record.slack_id}|@${record.handle}>` : `@${record.handle || record.name}`;
+    tag = `@${record.handle || record.name}`; // Nome/Handle limpo!
   }
 
   if (selectVal === 'new') {
@@ -921,7 +927,7 @@ function buildSuggs(){
     const color=cfg.color;
     return[
       {tag:'ferias',label:'Comunicado formal',slack:slackMsg('🏖️','Aviso de Férias 🌴',[`${nS} estará de férias 📅`,inicio?`📆 Início: *${inicio}*`:'',ret?`🔙 Retorno: *${ret}*`:'',oS?`\n_${oS}_`:'']),html:htmlMsg(color,'🏖️','Aviso de Férias 🌴',[`${nH} estará de férias 📅`,inicio?`📆 Início: <b>${inicio}</b>`:'',ret?`🔙 Retorno: <b>${ret}</b>`:'',oH?`<em style="color:var(--text-muted)">${oH}</em>`:''])},
-      {tag:'ferias',label:'Tom informal 🌴',slack:slackMsg('🌴','Alerta de Praia!',[`${nS} está de férias! 🏝️`,(inicio&&ret)?`📅 *${inicio}* até *${ret}*`:'','_Qualquer dúvida, acionar o time abaixo!_',oS?`_${oS}_`:'']),html:htmlMsg(color,'🌴','Alerta de Praia!',[`${nH} está de férias! 🏝️`,(inicio&&ret)?`📅 <b>${inicio}</b> até <b>${ret}</b>`:'',`<em style="color:var(--text-muted)">Qualquer dúvida, acionar o time abaixo!</em>`,oH?`<em style="color:var(--text-muted)">${oH}</em>`:''])},
+      {tag:'ferias',label:'Tom informal 🌴',slack:slackMsg('🌴','Alerta de Praia!',[`${nS} está de férias! 🏝️`,(inicio&&ret)?`📅 *${inicio}* até *${ret}*`:'','_Qualquer dúvida, falar com o time!_',oS?`_${oS}_`:'']),html:htmlMsg(color,'🌴','Alerta de Praia!',[`${nH} está de férias! 🏝️`,(inicio&&ret)?`📅 <b>${inicio}</b> até <b>${ret}</b>`:'',`<em style="color:var(--text-muted)">Qualquer dúvida, falar com o time!</em>`,oH?`<em style="color:var(--text-muted)">${oH}</em>`:''])},
       {tag:'ferias',label:'Comunicado de RH 📢',slack:slackMsg('📢','Comunicado — Período de Férias',[`Informamos que ${nS} estará de férias${inicio&&ret?` no período de *${inicio}* a *${ret}*`:''}.`,oS?`\n_${oS}_`:'']),html:htmlMsg('#7F8DDB','📢','Comunicado — Período de Férias',[`Informamos que ${nH} estará de férias${inicio&&ret?` no período de <b>${inicio}</b> a <b>${ret}</b>`:''}`,oH?`<em style="color:var(--text-muted)">${oH}</em>`:'']),},
     ];}
 
@@ -1337,20 +1343,38 @@ function renderChannelsList(){
 }
 
 /* ══ SETTINGS — MACROS (NOVO) ══ */
-async function saveMacro(){const name=v('m-name'),handle=v('m-handle').replace('/',''),content=v('m-content');if(!name||!handle||!content){alert('Preencha nome, gatilho e conteúdo.');return;}try{const {data,error}=await sb.from('macros').insert({user_id:user.id,name,handle,content}).select().single();if(error)throw error;DB.macros.push(data);['m-name','m-handle','m-content'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('macro-form').classList.remove('open');renderMacrosList();window.renderMacroSelects();showStatus('Lista /'+handle+' salva! ✓','success');}catch(e){alert('Erro: '+e.message);}}
-async function deleteMacro(id){if(!confirm('Remover esta lista?'))return;try{const {error}=await sb.from('macros').delete().eq('id',id);if(error)throw error;DB.macros=DB.macros.filter(m=>m.id!==id);renderMacrosList();window.renderMacroSelects();}catch(e){alert('Erro: '+e.message);}}
+async function saveMacro(){const name=v('m-name'),handle=v('m-handle').replace('/',''),content=v('m-content');if(!name||!handle||!content){alert('Preencha nome, gatilho e conteúdo.');return;}try{const {data,error}=await sb.from('macros').insert({user_id:user.id,name,handle,content}).select().single();if(error)throw error;DB.macros.push(data);['m-name','m-handle','m-content'].forEach(i=>{const el=document.getElementById(i); if(el)el.value='';});document.getElementById('macro-form').classList.remove('open');renderMacrosList();window.renderMacroSelects();showStatus('Lista /'+handle+' salva! ✓','success');}catch(e){alert('Erro: '+e.message);}}
+async function deleteMacro(id){if(!confirm('Remover esta lista?'))return;try{const {error}=await sb.from('macros').delete().eq('id',id);if(error)throw error;DB.macros=DB.macros.filter(m=>m.id != id);renderMacrosList();window.renderMacroSelects();}catch(e){alert('Erro: '+e.message);}}
 function editMacro(id){
-  const m=DB.macros.find(x=>x.id===id);if(!m)return;
+  const m=DB.macros.find(x=>x.id == id);if(!m)return;
   openEditModal('Editar Lista / Macro',
     `<div class="form-row"><div><label class="form-label">Nome da Lista</label><input type="text" id="em-name" value="${esc(m.name)}" /></div><div><label class="form-label">Gatilho (sem /)</label><input type="text" id="em-handle" value="${esc(m.handle||'')}" /></div></div>
-     <div style="margin-top:10px"><label class="form-label">Pessoas inseridas</label><textarea id="em-content" rows="3">${esc(m.content||'')}</textarea></div>`,
+     <div style="margin-top:10px">
+       <label class="form-label">Pessoas inseridas</label>
+       <div class="msg-wrap">
+         <textarea id="em-content" class="msg-ta" rows="3">${esc(m.content||'')}</textarea>
+         <div class="autocomplete-dropdown" id="ac-field-em-content">
+           <div class="ac-header" id="ac-hdr-em-content">Pessoas &amp; Grupos</div>
+           <div id="ac-list-em-content"></div>
+         </div>
+       </div>
+     </div>`,
     async()=>{
       const name=document.getElementById('em-name').value.trim(),handle=document.getElementById('em-handle').value.trim().replace('/',''),content=document.getElementById('em-content').value.trim();
       if(!name||!handle||!content){alert('Preencha todos os campos.');return;}
-      try{const {error}=await sb.from('macros').update({name,handle,content}).eq('id',id);if(error)throw error;const idx=DB.macros.findIndex(x=>x.id===id);if(idx>=0)DB.macros[idx]={...DB.macros[idx],name,handle,content};closeEditModal();renderMacrosList();window.renderMacroSelects();showStatus('Lista atualizada ✓','success');}
+      try{const {error}=await sb.from('macros').update({name,handle,content}).eq('id',id);if(error)throw error;const idx=DB.macros.findIndex(x=>x.id == id);if(idx>=0)DB.macros[idx]={...DB.macros[idx],name,handle,content};closeEditModal();renderMacrosList();window.renderMacroSelects();showStatus('Lista atualizada ✓','success');}
       catch(e){alert('Erro: '+e.message);}
     }
   );
+  
+  // Ativar Autocomplete na caixa de edição da Macro
+  setTimeout(()=>{
+    const emContent = document.getElementById('em-content');
+    if(emContent){
+      emContent.addEventListener('input', () => detectFieldAC(emContent, 'em-content'));
+      emContent.addEventListener('keydown', e => onFieldKeydown(e, 'em-content'));
+    }
+  }, 50);
 }
 function renderMacrosList(){
   const el=document.getElementById('macros-list');
@@ -1379,6 +1403,13 @@ document.addEventListener('DOMContentLoaded',()=>{
       _lastFocusedField = e.target;
     }
   });
+  
+  // Setup autocomplete para a criação de nova Macro (m-content)
+  const mContent = document.getElementById('m-content');
+  if(mContent){
+    mContent.addEventListener('input', () => detectFieldAC(mContent, 'm-content'));
+    mContent.addEventListener('keydown', e => onFieldKeydown(e, 'm-content'));
+  }
 
   document.getElementById('tab-login').addEventListener('click',()=>switchAuthMode('login'));
   document.getElementById('tab-signup').addEventListener('click',()=>switchAuthMode('signup'));
@@ -1387,6 +1418,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('btn-logout').addEventListener('click',async()=>{try{await sb.auth.signOut();window.location.reload();}catch(e){alert('Erro: '+e.message);}});
   document.querySelectorAll('.nav-item[data-panel]').forEach(btn=>{btn.addEventListener('click',()=>showPanel(btn.dataset.panel));});
   document.querySelectorAll('.tab-btn[data-sc]').forEach(btn=>{btn.addEventListener('click',()=>{ST.scenario=btn.dataset.sc;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderScenarioFields();});});
+  
   // Webhook picker
   document.addEventListener('click',e=>{
     if(e.target.closest('#wh-add-btn')){toggleWhPicker();return;}
