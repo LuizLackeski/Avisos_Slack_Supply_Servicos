@@ -149,7 +149,10 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .queue-time{font-size:11px;font-weight:700;color:var(--cobli-green2);white-space:nowrap;min-width:90px;padding-top:2px}
 .queue-text{font-size:12px;color:var(--text-muted);flex:1;line-height:1.5}
 
-/* ====== LISTAS PAGINADAS EM GRID ====== */
+/* ====== LAYOUT DE CARDS EM COLUNAS E CONTROLES ====== */
+.cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+@media(max-width: 950px) { .cards-row { grid-template-columns: 1fr; } }
+
 .list-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .search-input{padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg-input);color:var(--text);font-size:12px;outline:none;transition:border 0.2s;min-width:180px;flex:1;}
 .search-input:focus{border-color:var(--cobli-blue-light);}
@@ -157,10 +160,10 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .page-btn{background:var(--bg-input);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:3px 6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
 .page-btn:hover:not(:disabled){background:rgba(50,72,198,0.2);border-color:var(--cobli-blue-light);color:var(--cobli-blue-chart);}
 .page-btn:disabled{opacity:0.3;cursor:not-allowed;}
-.grid-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
-@media(max-width:700px){.grid-list{grid-template-columns:1fr;}}
-.grid-list .list-item{margin-bottom:0;height:100%;align-items:flex-start;}
-/* ========================================= */
+
+.item-list-wrap { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.item-list-wrap .list-item { margin-bottom: 0; }
+/* ==================================================== */
 
 .list-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);margin-bottom:6px}
 .list-item-avatar{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
@@ -188,7 +191,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 <body>
 <div class="debug-banner" id="debug-banner">⏳ Iniciando…</div>
 
-<!-- AUTH -->
 <div id="auth-screen" style="display:flex">
   <div class="auth-card">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
@@ -206,7 +208,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
-<!-- EDIT MODAL -->
 <div class="modal-overlay hidden" id="edit-modal">
   <div class="modal-box">
     <div class="modal-title" id="edit-modal-title"><i class="ti ti-pencil"></i> Editar</div>
@@ -218,7 +219,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
 </div>
 
-<!-- APP -->
 <div class="layout" id="app" style="display:none">
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -248,7 +248,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   </div>
   <div class="content">
 
-    <!-- COMPOSE -->
     <div class="panel active" id="panel-compose">
       <div class="card">
         <div class="card-title"><i class="ti ti-plug"></i> Canais de destino <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0">(selecione um ou mais)</span></div>
@@ -355,7 +354,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-    <!-- QUEUE -->
     <div class="panel" id="panel-queue">
       <div class="card">
         <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
@@ -367,7 +365,6 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-    <!-- WEBHOOKS -->
     <div class="panel" id="panel-webhooks">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
@@ -381,7 +378,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
             </div>
           </div>
         </div>
-        <div id="wh-settings-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        <div id="wh-settings-list" class="item-list-wrap"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
         
         <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-wh"><i class="ti ti-plus"></i> Adicionar canal</button>
         <div class="add-form" id="wh-form">
@@ -396,74 +393,78 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-    <!-- PEOPLE -->
     <div class="panel" id="panel-people">
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
-          <div class="card-title" style="margin-bottom:0"><i class="ti ti-user"></i> Pessoas cadastradas</div>
-          <div class="list-controls">
-            <input type="text" class="search-input" placeholder="Buscar pessoa (@)..." oninput="setSearch('people', this.value)" />
-            <div class="pagination">
-              <button class="page-btn" id="btn-prev-people" onclick="prevPage('people')"><i class="ti ti-chevron-left"></i></button>
-              <span id="page-info-people">1 / 1</span>
-              <button class="page-btn" id="btn-next-people" onclick="nextPage('people')"><i class="ti ti-chevron-right"></i></button>
+      <div class="cards-row">
+        
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
+            <div class="card-title" style="margin-bottom:0"><i class="ti ti-user"></i> Pessoas</div>
+            <div class="list-controls">
+              <input type="text" class="search-input" placeholder="Buscar (@)..." oninput="setSearch('people', this.value)" style="min-width:120px;" />
+              <div class="pagination">
+                <button class="page-btn" id="btn-prev-people" onclick="prevPage('people')"><i class="ti ti-chevron-left"></i></button>
+                <span id="page-info-people">1 / 1</span>
+                <button class="page-btn" id="btn-next-people" onclick="nextPage('people')"><i class="ti ti-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+          
+          <div id="people-list" class="item-list-wrap"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+          
+          <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-person"><i class="ti ti-plus"></i> Nova pessoa</button>
+          <div class="add-form" id="person-form">
+            <div class="slack-id-tip"><strong>💡 Slack User ID:</strong> Clique no perfil → <em>Ver perfil</em> → <strong>⋯</strong> → <em>Copiar ID do membro</em>.</div>
+            <div class="form-row">
+              <div><label class="form-label">Nome de exibição</label><input type="text" id="p-name" placeholder="Leonardo Silva" /></div>
+              <div><label class="form-label">Slack User ID</label><input type="text" id="p-slack-id" placeholder="U07EADY4SGN" /></div>
+            </div>
+            <div class="form-row">
+              <div><label class="form-label">Handle (@) — opcional</label><input type="text" id="p-handle" placeholder="leonardo.silva" /></div>
+              <div><label class="form-label">Cargo / área</label><input type="text" id="p-role" placeholder="Tech Lead · Engenharia" /></div>
+            </div>
+            <div class="form-row">
+              <button class="btn btn-success btn-sm" id="btn-save-person"><i class="ti ti-check"></i> Salvar</button>
+              <button class="btn btn-ghost btn-sm" id="btn-cancel-person">Cancelar</button>
             </div>
           </div>
         </div>
-        <div id="people-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
         
-        <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-person"><i class="ti ti-plus"></i> Adicionar pessoa</button>
-        <div class="add-form" id="person-form">
-          <div class="slack-id-tip"><strong>💡 Slack User ID:</strong> Clique no perfil → <em>Ver perfil</em> → <strong>⋯</strong> → <em>Copiar ID do membro</em>. Formato: <code>U07EADY4SGN</code></div>
-          <div class="form-row">
-            <div><label class="form-label">Nome de exibição</label><input type="text" id="p-name" placeholder="Leonardo Silva" /></div>
-            <div><label class="form-label">Slack User ID</label><input type="text" id="p-slack-id" placeholder="U07EADY4SGN" /></div>
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
+            <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> Grupos (@)</div>
+            <div class="list-controls">
+              <input type="text" class="search-input" placeholder="Buscar grupo..." oninput="setSearch('groups', this.value)" style="min-width:120px;" />
+              <div class="pagination">
+                <button class="page-btn" id="btn-prev-groups" onclick="prevPage('groups')"><i class="ti ti-chevron-left"></i></button>
+                <span id="page-info-groups">1 / 1</span>
+                <button class="page-btn" id="btn-next-groups" onclick="nextPage('groups')"><i class="ti ti-chevron-right"></i></button>
+              </div>
+            </div>
           </div>
-          <div class="form-row">
-            <div><label class="form-label">Handle (@) — opcional</label><input type="text" id="p-handle" placeholder="leonardo.silva" /></div>
-            <div><label class="form-label">Cargo / área</label><input type="text" id="p-role" placeholder="Tech Lead · Engenharia" /></div>
-          </div>
-          <div class="form-row">
-            <button class="btn btn-success btn-sm" id="btn-save-person"><i class="ti ti-check"></i> Salvar</button>
-            <button class="btn btn-ghost btn-sm" id="btn-cancel-person">Cancelar</button>
-          </div>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
-          <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> Grupos de pessoas (@)</div>
-          <div class="list-controls">
-            <input type="text" class="search-input" placeholder="Buscar grupo..." oninput="setSearch('groups', this.value)" />
-            <div class="pagination">
-              <button class="page-btn" id="btn-prev-groups" onclick="prevPage('groups')"><i class="ti ti-chevron-left"></i></button>
-              <span id="page-info-groups">1 / 1</span>
-              <button class="page-btn" id="btn-next-groups" onclick="nextPage('groups')"><i class="ti ti-chevron-right"></i></button>
+          
+          <div id="groups-list" class="item-list-wrap"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+          
+          <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-group"><i class="ti ti-plus"></i> Novo grupo</button>
+          <div class="add-form" id="group-form">
+            <div class="slack-id-tip"><strong>💡 Slack Group ID:</strong> Configurações → Grupos de usuários.</div>
+            <div class="form-row">
+              <div><label class="form-label">Nome do grupo</label><input type="text" id="g-name" placeholder="Time de TI" /></div>
+              <div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="g-handle" placeholder="time-ti" /></div>
+            </div>
+            <div class="form-row">
+              <div><label class="form-label">Slack Group ID (opcional)</label><input type="text" id="g-slack-id" placeholder="S0614TZR7" /></div>
+              <div><label class="form-label">Emoji</label><input type="text" id="g-emoji" placeholder="👥" style="max-width:100px" /></div>
+            </div>
+            <div class="form-row">
+              <button class="btn btn-success btn-sm" id="btn-save-group"><i class="ti ti-check"></i> Salvar</button>
+              <button class="btn btn-ghost btn-sm" id="btn-cancel-group">Cancelar</button>
             </div>
           </div>
         </div>
-        <div id="groups-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
         
-        <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-group"><i class="ti ti-plus"></i> Adicionar grupo</button>
-        <div class="add-form" id="group-form">
-          <div class="slack-id-tip"><strong>💡 Slack Group ID:</strong> Configurações → Grupos de usuários. Formato: <code>S0614TZR7</code></div>
-          <div class="form-row">
-            <div><label class="form-label">Nome do grupo</label><input type="text" id="g-name" placeholder="Time de TI" /></div>
-            <div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="g-handle" placeholder="time-ti" /></div>
-          </div>
-          <div class="form-row">
-            <div><label class="form-label">Slack Group ID (opcional)</label><input type="text" id="g-slack-id" placeholder="S0614TZR7" /></div>
-            <div><label class="form-label">Emoji</label><input type="text" id="g-emoji" placeholder="👥" style="max-width:100px" /></div>
-          </div>
-          <div class="form-row">
-            <button class="btn btn-success btn-sm" id="btn-save-group"><i class="ti ti-check"></i> Salvar</button>
-            <button class="btn btn-ghost btn-sm" id="btn-cancel-group">Cancelar</button>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- CHANNELS -->
     <div class="panel" id="panel-channels">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
@@ -477,7 +478,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
             </div>
           </div>
         </div>
-        <div id="channels-list" class="grid-list"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
+        <div id="channels-list" class="item-list-wrap"><div class="loading"><i class="ti ti-loader-2 spin"></i></div></div>
         
         <button class="btn btn-ghost btn-sm" style="margin-top:12px" id="btn-add-channel"><i class="ti ti-plus"></i> Adicionar canal</button>
         <div class="add-form" id="channel-form">
@@ -494,11 +495,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
       </div>
     </div>
 
-  </div><!-- .content -->
-</div><!-- .main -->
-</div><!-- .layout -->
-
-<script>
+  </div></div></div><script>
 /* ══════════════════════════════════════════════════
    CONFIG
 ══════════════════════════════════════════════════ */
