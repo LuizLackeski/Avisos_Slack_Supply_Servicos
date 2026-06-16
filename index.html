@@ -7,44 +7,52 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════
-   TEMA APEX — CLARO / PROFISSIONAL
-   Inspirado na imagem de referência
+   TEMA APEX — DARK / COBLI PREMIUM
+   Sincronizado com a Torre de Controle
 ═══════════════════════════════════════════ */
 :root {
-  /* Identidade Cobli */
+  /* Identidade Cobli Dark Mode */
   --cobli-navy:        #07074E;
-  --cobli-blue:        #001BB8;
-  --cobli-blue-mid:    #1A3CC8;
-  --cobli-blue-light:  #3248C6;
-  --cobli-blue-pale:   #E8ECFA;
-  --cobli-teal:        #00AE97;
-  --cobli-teal-pale:   #E0F7F4;
-  --cobli-green2:      #0FFDC9;
-  --cobli-red:         #FF4633;
-  --cobli-red-pale:    #FFF0EE;
-  --cobli-amber:       #F59E0B;
-  --cobli-amber-pale:  #FFFBEB;
-
-  /* Superfícies */
-  --bg-app:     #F4F5FA;
-  --bg-card:    #FFFFFF;
-  --bg-input:   #F8F9FC;
-  --bg-elevated:#FFFFFF;
-  --bg-hover:   #F0F2FC;
+  --cobli-mid:         #1F1F5F;
+  --bg-app:            #0F0F2A;
+  --bg-card:           #181830;
+  --card2:             #13132A;
+  --bg-input:          #0F0F2A;
+  --bg-elevated:       #1E1E3A;
+  --bg-hover:          rgba(255,255,255,0.05);
 
   /* Bordas */
-  --border:       rgba(7,7,78,0.10);
-  --border-focus: #3248C6;
+  --border:            rgba(255,255,255,0.07);
+  --border-strong:     rgba(255,255,255,0.12);
+  --border-focus:      #0FFDC9;
 
   /* Texto */
-  --text:         #0D1033;
-  --text-muted:   rgba(13,16,51,0.55);
-  --text-hint:    rgba(13,16,51,0.35);
+  --text:              #F0F0F8;
+  --text-muted:        #7A7FA8;
+  --text-hint:         #3A3A60;
 
-  /* Semânticas */
-  --success: #00AE97;
-  --error:   #FF4633;
-  --warn:    #F59E0B;
+  /* Semânticas & Sotaques */
+  --success:           #1FEF51;
+  --error:             #F04040;
+  --warn:              #F5C519;
+
+  --cobli-blue:        #7F8DDB;
+  --cobli-blue-mid:    #6776C5;
+  --cobli-blue-light:  #0FFDC9;
+  --cobli-blue-pale:   rgba(127, 141, 219, 0.15);
+  
+  --cobli-teal:        #0FFDC9;
+  --cobli-teal-pale:   rgba(15, 253, 201, 0.1);
+  
+  --cobli-green2:      #1FEF51;
+  
+  --cobli-red:         #F04040;
+  --cobli-red-pale:    rgba(240, 64, 64, 0.15);
+  
+  --cobli-amber:       #F5C519;
+  --cobli-amber-pale:  rgba(245, 197, 25, 0.15);
+
+  --accent-purple:     #C084FC;
 
   /* Formas */
   --radius-sm: 6px;
@@ -52,83 +60,82 @@
   --radius-lg: 14px;
 
   /* Sidebar */
-  --sb-width: 220px;
+  --sb-width: 230px;
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg-app);color:var(--text);min-height:100vh;line-height:1.5}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg-app);color:var(--text);min-height:100vh;line-height:1.5;color-scheme:dark;}
 .layout{display:flex;min-height:100vh}
 
 /* ─── SIDEBAR ─── */
 .sidebar{
   width:var(--sb-width);flex-shrink:0;
-  background:var(--cobli-navy);
+  background:var(--card2);
   display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;z-index:100;
-  box-shadow:2px 0 12px rgba(7,7,78,0.18);
+  border-right: 1px solid var(--border);
 }
 .sidebar-logo{
   padding:20px 18px 16px;
-  border-bottom:1px solid rgba(255,255,255,0.08);
+  border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:10px;
 }
 .logo-mark{
   width:34px;height:34px;
-  background:linear-gradient(135deg,#001BB8,#00AE97);
+  background:linear-gradient(135deg,#7F8DDB,#0FFDC9);
   border-radius:8px;display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:15px;color:#fff;
+  font-weight:900;font-size:15px;color:var(--bg-app);
   flex-shrink:0;
 }
-.logo-text{font-size:15px;font-weight:700;color:#FFF;line-height:1.1}
-.logo-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px}
+.logo-text{font-size:15px;font-weight:700;color:var(--text);line-height:1.1;letter-spacing:1px;text-transform:uppercase;}
+.logo-sub{font-size:10px;color:var(--text-muted);margin-top:1px}
 
 .sidebar-nav{flex:1;padding:12px 10px;overflow-y:auto}
 .nav-label{
-  font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);
+  font-size:10px;font-weight:700;color:var(--text-muted);
   letter-spacing:.08em;text-transform:uppercase;padding:10px 8px 4px;
 }
 .nav-item{
   display:flex;align-items:center;gap:9px;
   padding:9px 10px;border-radius:var(--radius-md);
-  font-size:13px;color:rgba(255,255,255,0.65);
+  font-size:13px;color:var(--text-muted);
   cursor:pointer;transition:all .15s;margin-bottom:2px;
   border:none;background:transparent;width:100%;text-align:left;
 }
-.nav-item:hover{background:rgba(255,255,255,0.06);color:#FFF}
+.nav-item:hover{background:var(--bg-hover);color:var(--text)}
 .nav-item.active{
-  background:linear-gradient(90deg,rgba(0,174,151,0.18),rgba(0,174,151,0.08));
-  color:#0FFDC9;border-left:3px solid #00AE97;padding-left:7px;
+  background:var(--cobli-teal-pale);
+  color:var(--cobli-teal);border-left:3px solid var(--cobli-teal);padding-left:7px;
 }
 .nav-item i{font-size:16px;flex-shrink:0}
 .nav-badge{
   margin-left:auto;font-size:10px;font-weight:700;
-  background:var(--cobli-blue-light);color:#fff;
+  background:var(--cobli-blue);color:#fff;
   padding:2px 7px;border-radius:10px;display:none;
 }
 
 .sb-user{
-  padding:12px 14px;border-top:1px solid rgba(255,255,255,0.07);
+  padding:12px 14px;border-top:1px solid var(--border);
   display:flex;align-items:center;gap:8px;
-  font-size:11px;color:rgba(255,255,255,0.5);
+  font-size:11px;color:var(--text-muted);
 }
-.sb-user i{font-size:16px;flex-shrink:0;color:rgba(255,255,255,0.3)}
+.sb-user i{font-size:16px;flex-shrink:0;color:var(--text-hint)}
 .btn-logout{
   margin-left:auto;font-size:11px;
-  background:rgba(255,70,51,.15);color:#FF8A7F;
+  background:var(--cobli-red-pale);color:var(--cobli-red);
   border:none;padding:3px 9px;border-radius:4px;cursor:pointer;
   transition:background .15s;
 }
-.btn-logout:hover{background:rgba(255,70,51,.28)}
+.btn-logout:hover{background:rgba(240,64,64,.25)}
 
 /* ─── MAIN ─── */
 .main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;min-height:100vh}
 
 .topbar{
-  background:#FFFFFF;
+  background:var(--card2);
   border-bottom:1px solid var(--border);
   padding:14px 28px;display:flex;align-items:center;gap:12px;
   position:sticky;top:0;z-index:50;
-  box-shadow:0 1px 4px rgba(7,7,78,0.06);
 }
 .topbar-title{font-size:16px;font-weight:700;color:var(--text)}
 .topbar-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
@@ -136,12 +143,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .status-pill{
   font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;
   background:var(--cobli-teal-pale);color:var(--cobli-teal);
-  border:1px solid rgba(0,174,151,.25);
+  border:1px solid rgba(15,253,201,.25);
   display:flex;align-items:center;gap:5px;
 }
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--cobli-teal)}
 
-.content-wrapper{padding:24px 28px;display:flex;justify-content:center}
+.content-wrapper{padding:28px;display:flex;justify-content:center}
 .content{display:flex;flex-direction:column;gap:18px;width:100%;max-width:1200px}
 
 /* ─── AUTH ─── */
@@ -149,7 +156,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .auth-card{
   background:var(--bg-card);color:var(--text);
   border:1px solid var(--border);
-  box-shadow:0 8px 32px rgba(7,7,78,0.10);
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
   border-radius:var(--radius-lg);padding:36px;
   width:100%;max-width:380px;
   display:flex;flex-direction:column;gap:18px;
@@ -161,7 +168,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 }
 .auth-tab.active{background:var(--cobli-blue);color:#fff}
 .auth-err{font-size:12px;color:var(--cobli-red);background:var(--cobli-red-pale);padding:8px 12px;border-radius:var(--radius-sm);display:none}
-.form-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:4px;display:block;letter-spacing:.04em;text-transform:uppercase}
+.form-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px;display:block;letter-spacing:.04em;text-transform:uppercase}
 
 /* ─── PANELS ─── */
 .panel{display:none}.panel.active{display:flex;flex-direction:column;gap:18px}
@@ -173,12 +180,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .card{
   background:var(--bg-card);color:var(--text);
   border:1px solid var(--border);
-  box-shadow:0 2px 8px rgba(7,7,78,0.05);
   border-radius:var(--radius-lg);padding:1.25rem;
 }
 .card-title{
   font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--cobli-blue-light);margin-bottom:12px;
+  color:var(--cobli-blue);margin-bottom:12px;
   display:flex;align-items:center;gap:6px;
 }
 
@@ -187,12 +193,11 @@ input[type=text],input[type=email],input[type=password],input[type=date],input[t
   font-family:inherit;font-size:13px;color:var(--text);
   background:var(--bg-input);
   border:1px solid var(--border);
-  border-radius:var(--radius-md);padding:8px 12px;
+  border-radius:var(--radius-md);padding:10px 12px;
   transition:border .15s,box-shadow .15s;width:100%;
 }
 input:focus,textarea:focus,select:focus{
   outline:none;border-color:var(--border-focus);
-  box-shadow:0 0 0 3px rgba(50,72,198,.12);
 }
 input::placeholder,textarea::placeholder{color:var(--text-hint)}
 textarea{resize:vertical;line-height:1.65}
@@ -200,14 +205,14 @@ textarea{resize:vertical;line-height:1.65}
 /* ─── TOGGLES ─── */
 .toggle{
   width:40px;height:22px;border-radius:11px;
-  background:#D1D5E8;border:none;cursor:pointer;
+  background:#3A3A60;border:none;cursor:pointer;
   position:relative;transition:background .2s;flex-shrink:0;padding:0;
 }
 .toggle.on{background:var(--cobli-teal)}
 .toggle::after{
-  content:'';width:16px;height:16px;border-radius:50%;background:#fff;
+  content:'';width:16px;height:16px;border-radius:50%;background:#FFF;
   position:absolute;top:3px;left:3px;transition:left .2s;
-  box-shadow:0 1px 4px rgba(0,0,0,.15);
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
 }
 .toggle.on::after{left:21px}
 .toggle-row{display:flex;align-items:center;gap:10px}
@@ -221,27 +226,25 @@ textarea{resize:vertical;line-height:1.65}
   transition:all .15s;white-space:nowrap;
 }
 .btn-primary{
-  background:var(--cobli-blue);color:#fff;
-  box-shadow:0 2px 8px rgba(0,27,184,0.25);
+  background:#4A154B;color:#fff;
 }
-.btn-primary:hover{background:var(--cobli-blue-mid);transform:translateY(-1px)}
+.btn-primary:hover{opacity:0.85;transform:translateY(-1px)}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
 .btn-success{
-  background:var(--cobli-teal);color:#fff;
-  box-shadow:0 2px 8px rgba(0,174,151,0.25);
+  background:var(--cobli-teal);color:#0F0F2A;
 }
 .btn-success:hover{filter:brightness(1.08);transform:translateY(-1px)}
 
 .btn-ghost{
-  background:transparent;color:var(--text-muted);
-  border:1px solid var(--border);
+  background:rgba(255,255,255,0.04);color:var(--text);
+  border:1px solid var(--border-strong);
 }
 .btn-ghost:hover{background:var(--bg-hover);color:var(--text)}
 
 .btn-danger-ghost{
   background:transparent;color:var(--error);
-  border:1px solid rgba(255,70,51,.25);
+  border:1px solid rgba(240,64,64,.25);
 }
 .btn-danger-ghost:hover{background:var(--cobli-red-pale)}
 
@@ -249,24 +252,24 @@ textarea{resize:vertical;line-height:1.65}
   background:var(--cobli-amber-pale);color:var(--cobli-amber);
   border:1px solid rgba(245,158,11,.3);
 }
-.btn-warn:hover{background:#FEF3C7}
+.btn-warn:hover{background:rgba(245,197,25,0.25)}
 
 .btn-edit{
-  background:var(--cobli-blue-pale);color:var(--cobli-blue-light);
-  border:1px solid rgba(50,72,198,.2);
+  background:var(--cobli-blue-pale);color:var(--cobli-blue);
+  border:1px solid rgba(127,141,219,.2);
   padding:4px 10px;border-radius:5px;font-size:11px;
   cursor:pointer;transition:all .15s;font-weight:600;
 }
-.btn-edit:hover{background:#D4DAFC;border-color:var(--cobli-blue-light)}
-.btn-sm{padding:5px 12px;font-size:12px}
+.btn-edit:hover{background:rgba(127,141,219,.25);border-color:var(--cobli-blue)}
+.btn-sm{padding:6px 12px;font-size:12px}
 
 /* ─── TAGS ─── */
 .tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
-.tag-ferias{background:#E0F7F4;color:#00756A;border:1px solid rgba(0,174,151,.3)}
-.tag-novidades{background:#E8F5E9;color:#2E7D32;border:1px solid rgba(46,125,50,.2)}
-.tag-incidente{background:var(--cobli-red-pale);color:#C0392B;border:1px solid rgba(255,70,51,.2)}
-.tag-aviso-geral{background:var(--cobli-amber-pale);color:#B45309;border:1px solid rgba(245,158,11,.25)}
-.tag-retorno{background:var(--cobli-blue-pale);color:var(--cobli-blue-light);border:1px solid rgba(50,72,198,.2)}
+.tag-ferias{background:var(--cobli-teal-pale);color:var(--cobli-teal);border:1px solid rgba(15,253,201,.3)}
+.tag-novidades{background:rgba(31,239,81,0.1);color:var(--cobli-green2);border:1px solid rgba(31,239,81,.2)}
+.tag-incidente{background:var(--cobli-red-pale);color:var(--cobli-red);border:1px solid rgba(240,64,64,.2)}
+.tag-aviso-geral{background:var(--cobli-amber-pale);color:var(--cobli-amber);border:1px solid rgba(245,197,25,.25)}
+.tag-retorno{background:var(--cobli-blue-pale);color:var(--cobli-blue);border:1px solid rgba(127,141,219,.2)}
 
 /* ─── TABS ─── */
 .tabs{display:flex;gap:6px;flex-wrap:wrap}
@@ -276,13 +279,11 @@ textarea{resize:vertical;line-height:1.65}
   border:1px solid var(--border);cursor:pointer;
   display:flex;align-items:center;gap:6px;
   transition:all .15s;font-weight:500;
-  box-shadow:0 1px 3px rgba(7,7,78,0.05);
 }
-.tab-btn:hover{color:var(--text);border-color:rgba(50,72,198,.3)}
+.tab-btn:hover{color:var(--text);border-color:var(--border-strong)}
 .tab-btn.active{
   background:var(--cobli-blue);color:#fff;
   border-color:var(--cobli-blue);
-  box-shadow:0 2px 8px rgba(0,27,184,0.2);
 }
 
 .msg-wrap{position:relative}
@@ -299,9 +300,8 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   display:inline-flex;align-items:center;gap:4px;
 }
 .hint-pill:hover{
-  background:var(--cobli-blue-pale);color:var(--cobli-blue-light);
-  border-color:rgba(50,72,198,.3);transform:translateY(-1px);
-  box-shadow:0 2px 6px rgba(7,7,78,0.08);
+  background:var(--cobli-blue-pale);color:var(--cobli-blue);
+  border-color:rgba(127,141,219,.3);transform:translateY(-1px);
 }
 
 /* ─── WEBHOOK CHIPS ─── */
@@ -309,27 +309,27 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .wh-chip{
   display:flex;align-items:center;gap:6px;
   padding:5px 10px 5px 12px;border-radius:20px;
-  background:var(--cobli-teal-pale);border:1px solid rgba(0,174,151,.3);
-  font-size:12px;font-weight:600;color:#00756A;cursor:default;
+  background:var(--cobli-teal-pale);border:1px solid rgba(15,253,201,.3);
+  font-size:12px;font-weight:600;color:var(--cobli-teal);cursor:default;
 }
 .wh-chip-remove{
-  background:none;border:none;color:var(--cobli-red);
+  background:none;border:none;color:var(--cobli-teal);
   cursor:pointer;font-size:14px;line-height:1;padding:0 2px;opacity:.6;
 }
-.wh-chip-remove:hover{opacity:1}
+.wh-chip-remove:hover{opacity:1;color:var(--cobli-red)}
 .wh-add-btn{
   display:flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:20px;
-  background:transparent;border:1px dashed rgba(50,72,198,.3);
-  font-size:12px;color:var(--cobli-blue-light);cursor:pointer;transition:all .15s;
+  padding:6px 12px;border-radius:20px;
+  background:transparent;border:1px dashed rgba(127,141,219,.3);
+  font-size:12px;color:var(--cobli-blue);cursor:pointer;transition:all .15s;
 }
-.wh-add-btn:hover{border-color:var(--cobli-blue-light);background:var(--cobli-blue-pale)}
+.wh-add-btn:hover{border-color:var(--cobli-blue);background:var(--cobli-blue-pale)}
 
 .wh-picker-dropdown{
   display:none;position:absolute;top:calc(100% + 6px);left:0;
   min-width:260px;background:var(--bg-card);
-  border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;
-  box-shadow:0 8px 24px rgba(7,7,78,0.12);z-index:200;
+  border:1px solid var(--border-strong);border-radius:var(--radius-md);overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);z-index:200;
 }
 .wh-picker-dropdown.open{display:block}
 .wh-picker-item{
@@ -347,64 +347,63 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 /* ─── AUTOCOMPLETE ─── */
 .autocomplete-dropdown{
   position:absolute;z-index:300;background:var(--bg-card);
-  border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;
-  box-shadow:0 8px 24px rgba(7,7,78,0.12);
+  border:1px solid var(--border-strong);border-radius:var(--radius-md);overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
   min-width:260px;max-height:220px;overflow-y:auto;
   display:none;top:calc(100% + 4px);left:0;
 }
 .autocomplete-dropdown.open{display:block}
-.ac-header{font-size:10px;font-weight:700;color:var(--text-hint);padding:8px 12px 4px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.ac-header{font-size:10px;font-weight:700;color:var(--text-muted);padding:8px 12px 4px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)}
 .ac-item{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;transition:background .1s;font-size:13px;color:var(--text)}
 .ac-item:hover,.ac-item.focused{background:var(--bg-hover)}
 .ac-avatar{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-weight:700}
-.ac-avatar.person{background:var(--cobli-blue-pale);color:var(--cobli-blue-light)}
+.ac-avatar.person{background:var(--cobli-blue-pale);color:var(--cobli-blue)}
 .ac-avatar.group{background:var(--cobli-teal-pale);color:var(--cobli-teal)}
-.ac-avatar.channel{background:#E8F5E9;color:#2E7D32}
-.ac-avatar.macro{background:var(--cobli-amber-pale);color:#B45309}
+.ac-avatar.channel{background:rgba(31,239,81,0.1);color:var(--cobli-green2)}
+.ac-avatar.macro{background:var(--cobli-amber-pale);color:var(--cobli-amber)}
 .ac-name{font-weight:600;color:var(--text)}
-.ac-sub{font-size:11px;color:var(--text-hint)}
+.ac-sub{font-size:11px;color:var(--text-muted)}
 
 /* ─── SUGGESTION CARDS ─── */
 .sugg-grid{display:grid;grid-template-columns:1fr;gap:10px}
 .sugg-card{
   border:1px solid var(--border);border-radius:var(--radius-lg);
   padding:14px;cursor:pointer;transition:all .15s;
-  background:var(--bg-card);display:flex;flex-direction:column;gap:10px;
+  background:var(--card2);display:flex;flex-direction:column;gap:10px;
 }
-.sugg-card:hover{border-color:rgba(50,72,198,.35);background:var(--bg-hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(7,7,78,0.07)}
+.sugg-card:hover{border-color:rgba(15,253,201,.35);background:var(--bg-hover);transform:translateY(-1px);}
 .sugg-card.selected{border:2px solid var(--cobli-teal);background:var(--cobli-teal-pale)}
 .sugg-card-hdr{display:flex;align-items:center;gap:8px}
 .sugg-name{font-size:12px;font-weight:600;color:var(--text);flex:1}
 .sel-dot{
   width:16px;height:16px;border-radius:50%;
-  border:2px solid var(--border);flex-shrink:0;
+  border:2px solid var(--border-strong);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
   transition:all .15s;background:transparent;
 }
 .sel-dot.on{background:var(--cobli-teal);border-color:var(--cobli-teal)}
-.sel-dot.on::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
+.sel-dot.on::after{content:'';width:6px;height:6px;border-radius:50%;background:#0F0F2A}
 .sugg-preview{font-size:12px;line-height:1.7;color:var(--text-muted)}
 
 /* ─── RETORNO BLOCK ─── */
 .retorno-block{
-  border:1px solid rgba(0,174,151,.25);border-radius:var(--radius-md);
+  border:1px solid rgba(15,253,201,.25);border-radius:var(--radius-md);
   padding:14px;background:var(--cobli-teal-pale);
   display:flex;flex-direction:column;gap:10px;margin-top:4px;
 }
 .retorno-block-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cobli-teal);display:flex;align-items:center;gap:6px}
 .retorno-edit{
   font-size:13px;line-height:1.7;color:var(--text);
-  background:#fff;border:1px solid var(--border);
+  background:var(--bg-input);border:1px solid var(--border);
   border-radius:var(--radius-md);padding:10px 12px;min-height:60px;resize:vertical;
 }
-.retorno-edit:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(50,72,198,.12)}
+.retorno-edit:focus{outline:none;border-color:var(--border-focus);}
 
 /* ─── OPTIONS CARD ─── */
 .options-card{
   background:var(--bg-card);border:1px solid var(--border);
   border-radius:var(--radius-lg);padding:1.25rem;
   display:flex;flex-direction:column;gap:14px;
-  box-shadow:0 2px 8px rgba(7,7,78,0.05);
 }
 .sub-row{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-left:50px}
 .divider-h{height:1px;background:var(--border)}
@@ -413,15 +412,14 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .sched-badge{
   font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;
   background:var(--cobli-teal-pale);color:var(--cobli-teal);
-  border:1px solid rgba(0,174,151,.3);display:none;
+  border:1px solid rgba(15,253,201,.3);display:none;
 }
 .sched-badge.visible{display:inline-block}
 
 /* ─── PREVIEW SLACK ─── */
 .preview-card{
-  background:#FAFAFA;border:1px solid var(--border);
+  background:var(--card2);border:1px solid var(--border);
   border-radius:var(--radius-lg);padding:1.25rem;
-  box-shadow:0 2px 8px rgba(7,7,78,0.04);
 }
 .preview-hdr{
   font-size:11px;font-weight:600;color:var(--text-muted);
@@ -473,7 +471,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   border-radius:6px;padding:4px 8px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;transition:all .15s;
 }
-.page-btn:hover:not(:disabled){background:var(--cobli-blue-pale);border-color:rgba(50,72,198,.3);color:var(--cobli-blue-light)}
+.page-btn:hover:not(:disabled){background:var(--cobli-blue-pale);border-color:var(--cobli-blue);color:var(--cobli-blue)}
 .page-btn:disabled{opacity:.4;cursor:not-allowed}
 .item-list-wrap{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 
@@ -490,16 +488,16 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   display:flex;align-items:center;gap:12px;
   padding:11px 14px;border:1px solid var(--border);
   border-radius:var(--radius-md);background:var(--bg-card);
-  transition:box-shadow .15s;
+  transition:border .15s;
 }
-.list-item:hover{box-shadow:0 2px 8px rgba(7,7,78,0.07)}
+.list-item:hover{border-color:rgba(255,255,255,0.15)}
 .list-item-avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;font-weight:700}
 .list-item-name{font-size:13px;font-weight:700;color:var(--text)}
 .list-item-sub{font-size:11px;color:var(--text-muted);margin-top:2px;font-family:monospace}
 .list-item-actions{margin-left:auto;display:flex;gap:6px}
 
 .add-form{
-  border:1px dashed rgba(50,72,198,.25);border-radius:var(--radius-md);
+  border:1px dashed rgba(127,141,219,.25);border-radius:var(--radius-md);
   background:var(--cobli-blue-pale);padding:16px;margin-top:12px;
   display:none;flex-direction:column;gap:12px;
 }
@@ -507,10 +505,10 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .form-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
 .form-row>div{flex:1;min-width:140px}
 .slack-id-tip{
-  font-size:11px;color:var(--cobli-blue-light);
-  background:var(--cobli-blue-pale);
+  font-size:11px;color:var(--cobli-blue);
+  background:var(--bg-app);
   padding:10px 14px;border-radius:var(--radius-sm);
-  border-left:3px solid var(--cobli-blue-light);line-height:1.6;
+  border-left:3px solid var(--cobli-blue);line-height:1.6;
 }
 .no-sugg{font-size:13px;color:var(--text-hint);text-align:center;padding:2rem}
 .loading{display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text-hint);font-size:13px;gap:8px}
@@ -519,7 +517,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 /* ─── MODAL ─── */
 .modal-overlay{
   position:fixed;inset:0;
-  background:rgba(7,7,78,0.45);
+  background:rgba(0,0,0,0.7);
   backdrop-filter:blur(4px);z-index:500;
   display:flex;align-items:flex-start;justify-content:center;
   padding:5vh 20px;overflow-y:auto;
@@ -527,11 +525,11 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 .modal-overlay.hidden{display:none}
 .modal-box{
   background:var(--bg-card);
-  border:1px solid var(--border);color:var(--text);
+  border:1px solid var(--border-strong);color:var(--text);
   border-radius:var(--radius-lg);padding:28px;
   width:100%;max-width:540px;
   display:flex;flex-direction:column;gap:20px;margin:auto;
-  box-shadow:0 16px 48px rgba(7,7,78,0.18);
+  box-shadow:0 16px 48px rgba(0,0,0,0.5);
 }
 .modal-title{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;color:var(--text)}
 .modal-footer{
@@ -542,8 +540,8 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 /* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(7,7,78,0.12);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:rgba(7,7,78,0.22)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.22)}
 
 /* ─── DEBUG BANNER ─── */
 .debug-banner{
@@ -551,10 +549,10 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   background:var(--bg-card);border:1px solid var(--border);
   padding:8px 16px;border-radius:var(--radius-md);
   font-size:11px;font-family:monospace;color:var(--text-muted);
-  z-index:9999;box-shadow:0 4px 12px rgba(7,7,78,0.1);
+  z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.5);
 }
-.debug-banner.error{background:#FFF5F5;border-color:#FCA5A5;color:#B91C1C}
-.debug-banner.success{background:#F0FDF4;border-color:#6EE7B7;color:#065F46}
+.debug-banner.error{background:#3A1A1A;border-color:#FCA5A5;color:#FF8A7F}
+.debug-banner.success{background:#1A3A25;border-color:#6EE7B7;color:#0FFDC9}
 </style>
 </head>
 
@@ -566,7 +564,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   <div class="auth-card">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
       <div class="logo-mark" style="width:42px;height:42px;font-size:18px">Co</div>
-      <div><div class="logo-text" style="font-size:20px;color:var(--cobli-navy)">Cobli Slack</div><div class="logo-sub" style="color:var(--text-hint)">Notificações inteligentes</div></div>
+      <div><div class="logo-text" style="font-size:20px;color:var(--text)">Cobli Slack</div><div class="logo-sub" style="color:var(--text-hint)">Notificações inteligentes</div></div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login">Entrar</button>
@@ -753,7 +751,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
         <div class="card-title"><i class="ti ti-clock"></i> Mensagens agendadas (<span id="queue-count-display">0</span>)</div>
         <div id="queue-list-full"><div class="loading"><i class="ti ti-loader-2 spin"></i> Carregando...</div></div>
       </div>
-      <div class="card" style="border-color:rgba(0,174,151,.25);background:var(--cobli-teal-pale)">
+      <div class="card" style="border-color:rgba(15,253,201,.25);background:var(--cobli-teal-pale)">
         <div class="card-title" style="color:var(--cobli-teal)"><i class="ti ti-info-circle"></i> Como funciona</div>
         <p style="font-size:13px;color:var(--text-muted);line-height:1.7">Mensagens agendadas ficam salvas no <strong style="color:var(--text)">Supabase</strong> e são disparadas pela <strong style="color:var(--cobli-teal)">Edge Function</strong>. Você pode editar o texto ou cancelar qualquer mensagem pendente.</p>
       </div>
@@ -854,7 +852,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
               <div><label class="form-label">Handle (@) — opcional</label><input type="text" id="p-handle" placeholder="leonardo.silva" /></div>
               <div><label class="form-label">Cargo / área</label><input type="text" id="p-role" placeholder="Tech Lead · Engenharia" /></div>
             </div>
-            <div style="margin-top:12px;padding:14px;background:rgba(0,174,151,.06);border-radius:8px;border:1px solid rgba(0,174,151,.2)">
+            <div style="margin-top:12px;padding:14px;background:var(--cobli-teal-pale);border-radius:8px;border:1px solid rgba(15,253,201,.2)">
               <label class="form-label" style="color:var(--cobli-teal)"><i class="ti ti-list"></i> Incluir em uma Lista (Macro) — opcional</label>
               <select id="p-macro-select" onchange="document.getElementById('p-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'"></select>
               <div id="p-macro-new" class="form-row" style="display:none;margin-top:10px">
@@ -893,7 +891,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
               <div><label class="form-label">Slack Group ID</label><input type="text" id="g-slack-id" placeholder="S0614TZR7" /></div>
               <div><label class="form-label">Emoji</label><input type="text" id="g-emoji" placeholder="👥" style="max-width:100px" /></div>
             </div>
-            <div style="margin-top:12px;padding:14px;background:rgba(0,174,151,.06);border-radius:8px;border:1px solid rgba(0,174,151,.2)">
+            <div style="margin-top:12px;padding:14px;background:var(--cobli-teal-pale);border-radius:8px;border:1px solid rgba(15,253,201,.2)">
               <label class="form-label" style="color:var(--cobli-teal)"><i class="ti ti-list"></i> Incluir em uma Lista (Macro) — opcional</label>
               <select id="g-macro-select" onchange="document.getElementById('g-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'"></select>
               <div id="g-macro-new" class="form-row" style="display:none;margin-top:10px">
@@ -952,7 +950,9 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';
 const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled';
-const SCENARIO_COLORS = { ferias:'#00AE97', novidades:'#0FFDC9', incidente:'#FF4633', 'aviso-geral':'#F59E0B' };
+
+/* CORES ATUALIZADAS PARA O DARK MODE */
+const SCENARIO_COLORS = { ferias:'#1FEF51', novidades:'#0FFDC9', incidente:'#F04040', 'aviso-geral':'#F5C519' };
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let user = null, userDisplayName = '';
@@ -1033,10 +1033,10 @@ function toggleWhPicker(forceClose){ST.whPickerOpen=forceClose?false:!ST.whPicke
 function pickWh(id){if(ST.selWhIds.includes(id))ST.selWhIds=ST.selWhIds.filter(x=>x!==id);else ST.selWhIds.push(id);renderWhChips();renderWhPicker();updateSendBtn();}
 
 const SCENARIO_CFG={
-  ferias:{label:'Detalhes das férias',fields:[{id:'f-nome',label:'Pessoa (@)',ph:'@Nome Sobrenome',hint:'Use @ para buscar cadastros'},{id:'f-inicio',label:'Data de início',ph:'25/06',hint:'Ex: 25/06'},{id:'f-retorno',label:'Data de retorno',ph:'15/07',hint:'Ex: 15/07'},{id:'f-obs',label:'Observação (opcional)',ph:'Qualquer dúvida falar com…',hint:'',ta:true}],hints:['🌴','🏖️','✈️','😎','🍹','🎒','☀️','👋','📅','🔙','@here','@channel','@nome'],color:'#00AE97'},
-  novidades:{label:'Novidade / Melhoria implantada',fields:[{id:'f-titulo',label:'Título da novidade',ph:'Ex: Nova funcionalidade de relatórios',hint:''},{id:'f-sistema',label:'Sistema / módulo afetado',ph:'Ex: App Cobli, Portal de Gestão…',hint:''},{id:'f-descricao',label:'O que foi implantado',ph:'Descreva a melhoria ou novidade…',hint:'Use @ para marcar pessoas/equipes',ta:true},{id:'f-beneficio',label:'Benefício / impacto esperado',ph:'Ex: Reduz tempo de consulta em 30%…',hint:'',ta:true},{id:'f-obs',label:'Observações (opcional)',ph:'Disponível a partir de… link de documentação…',hint:'',ta:true}],hints:['✅','🚀','✨','🆕','💡','🎉','🔥','🛠️','💻','📈','@here','@channel','já disponível','em produção'],color:'#0FFDC9'},
-  incidente:{label:'Incidente / Instabilidade',fields:[{id:'f-sistema',label:'Sistema/serviço afetado',ph:'Ex: App Cobli, API Rastreamento…',hint:''},{id:'f-problema',label:'O que está acontecendo',ph:'Descreva o problema…',hint:'',ta:true},{id:'f-impacto',label:'Quem/o que é afetado',ph:'Ex: Todos os usuários, módulo X…',hint:''},{id:'f-status',label:'Status atual',ph:'Em investigação / Equipe atuando…',hint:''}],hints:['🚨','🔧','✅','⚠️','🐛','🔥','🔴','🟢','⏳','🔍','@here','@channel','em investigação','equipe atuando','resolvido'],color:'#FF4633'},
-  'aviso-geral':{label:'Aviso / Comunicado',fields:[{id:'f-titulo',label:'Título do aviso',ph:'Ex: Manutenção programada',hint:''},{id:'f-msg',label:'Mensagem principal',ph:'Detalhe o comunicado…',hint:'Use @ para marcar pessoas/grupos',ta:true}],hints:['📢','📋','✅','🗣️','📌','👀','🔔','📝','🤝','❕','@here','@channel','@nome'],color:'#F59E0B'},
+  ferias:{label:'Detalhes das férias',fields:[{id:'f-nome',label:'Pessoa (@)',ph:'@Nome Sobrenome',hint:'Use @ para buscar cadastros'},{id:'f-inicio',label:'Data de início',ph:'25/06',hint:'Ex: 25/06'},{id:'f-retorno',label:'Data de retorno',ph:'15/07',hint:'Ex: 15/07'},{id:'f-obs',label:'Observação (opcional)',ph:'Qualquer dúvida falar com…',hint:'',ta:true}],hints:['🌴','🏖️','✈️','😎','🍹','🎒','☀️','👋','📅','🔙','@here','@channel','@nome'],color:'var(--cobli-teal)'},
+  novidades:{label:'Novidade / Melhoria implantada',fields:[{id:'f-titulo',label:'Título da novidade',ph:'Ex: Nova funcionalidade de relatórios',hint:''},{id:'f-sistema',label:'Sistema / módulo afetado',ph:'Ex: App Cobli, Portal de Gestão…',hint:''},{id:'f-descricao',label:'O que foi implantado',ph:'Descreva a melhoria ou novidade…',hint:'Use @ para marcar pessoas/equipes',ta:true},{id:'f-beneficio',label:'Benefício / impacto esperado',ph:'Ex: Reduz tempo de consulta em 30%…',hint:'',ta:true},{id:'f-obs',label:'Observações (opcional)',ph:'Disponível a partir de… link de documentação…',hint:'',ta:true}],hints:['✅','🚀','✨','🆕','💡','🎉','🔥','🛠️','💻','📈','@here','@channel','já disponível','em produção'],color:'var(--cobli-green2)'},
+  incidente:{label:'Incidente / Instabilidade',fields:[{id:'f-sistema',label:'Sistema/serviço afetado',ph:'Ex: App Cobli, API Rastreamento…',hint:''},{id:'f-problema',label:'O que está acontecendo',ph:'Descreva o problema…',hint:'',ta:true},{id:'f-impacto',label:'Quem/o que é afetado',ph:'Ex: Todos os usuários, módulo X…',hint:''},{id:'f-status',label:'Status atual',ph:'Em investigação / Equipe atuando…',hint:''}],hints:['🚨','🔧','✅','⚠️','🐛','🔥','🔴','🟢','⏳','🔍','@here','@channel','em investigação','equipe atuando','resolvido'],color:'var(--cobli-red)'},
+  'aviso-geral':{label:'Aviso / Comunicado',fields:[{id:'f-titulo',label:'Título do aviso',ph:'Ex: Manutenção programada',hint:''},{id:'f-msg',label:'Mensagem principal',ph:'Detalhe o comunicado…',hint:'Use @ para marcar pessoas/grupos',ta:true}],hints:['📢','📋','✅','🗣️','📌','👀','🔔','📝','🤝','❕','@here','@channel','@nome'],color:'var(--cobli-amber)'},
 };
 
 function renderScenarioFields(){
@@ -1067,7 +1067,7 @@ function onContactKeydown(e){const dd=document.getElementById('ac-contact');if(!
 function escapeRegex(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function applySpecialTags(txt){return txt.replace(/@here\b/gi,'<!here>').replace(/@channel\b/gi,'<!channel>').replace(/@everyone\b/gi,'<!everyone>').replace(/@aqui\b/gi,'<!here>').replace(/@canal\b/gi,'<!channel>').replace(/@todos\b/gi,'<!everyone>');}
 function resolveSlackTags(text){let txt=applySpecialTags(text);const peopleSorted=[...DB.people].sort((a,b)=>b.name.length-a.name.length);peopleSorted.forEach(p=>{if(!p.slack_id)return;const tagAlready=new RegExp(`<@${p.slack_id}>`,'g');if(tagAlready.test(txt))return;if(p.handle){txt=txt.replace(new RegExp('@'+escapeRegex(p.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);}txt=txt.replace(new RegExp('@'+escapeRegex(p.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);const fn=p.name.split(' ')[0];if(fn&&p.name.includes(' ')){txt=txt.replace(new RegExp('@'+escapeRegex(fn)+'(?=[\\s,;.!?\\n]|$)','gi'),(m,off)=>{const pre=txt.substring(Math.max(0,off-2),off);return pre.includes('<')?m:`<@${p.slack_id}>`});}});const groupsSorted=[...DB.groups].sort((a,b)=>b.name.length-a.name.length);groupsSorted.forEach(g=>{if(!g.handle)return;const tag=g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`;txt=txt.replace(new RegExp('@'+escapeRegex(g.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);txt=txt.replace(new RegExp('@'+escapeRegex(g.name)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);});const chSorted=[...DB.channels].sort((a,b)=>b.name.length-a.name.length);chSorted.forEach(c=>{if(!c.slack_id)return;txt=txt.replace(new RegExp('#'+escapeRegex(c.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<#${c.slack_id}>`);});return txt;}
-function slackTagsToHtml(txt){return txt.replace(/<@([A-Z0-9]+)>/gi,(_,id)=>{const p=DB.people.find(x=>x.slack_id===id);return`<span style="background:var(--cobli-blue-pale);color:var(--cobli-blue-light);border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;}).replace(/<!subteam\^([^|>]+)\|?([^>]*)>/gi,(_,id,label)=>{const g=DB.groups.find(x=>x.slack_id===id);return`<span style="background:var(--cobli-teal-pale);color:var(--cobli-teal);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;}).replace(/<#([A-Z0-9]+)>/gi,(_,id)=>{const c=DB.channels.find(x=>x.slack_id===id);return`<span style="background:#E8F5E9;color:#2E7D32;border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;}).replace(/<!here>/g,'<span style="background:var(--cobli-amber-pale);color:#B45309;border-radius:3px;padding:0 3px">@here</span>').replace(/<!channel>/g,'<span style="background:var(--cobli-amber-pale);color:#B45309;border-radius:3px;padding:0 3px">@channel</span>').replace(/<!everyone>/g,'<span style="background:var(--cobli-amber-pale);color:#B45309;border-radius:3px;padding:0 3px">@everyone</span>').replace(/\*([^*]+)\*/g,'<strong>$1</strong>').replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>').replace(/\n/g,'<br>');}
+function slackTagsToHtml(txt){return txt.replace(/<@([A-Z0-9]+)>/gi,(_,id)=>{const p=DB.people.find(x=>x.slack_id===id);return`<span style="background:var(--cobli-blue-pale);color:var(--cobli-blue);border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;}).replace(/<!subteam\^([^|>]+)\|?([^>]*)>/gi,(_,id,label)=>{const g=DB.groups.find(x=>x.slack_id===id);return`<span style="background:var(--cobli-teal-pale);color:var(--cobli-teal);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;}).replace(/<#([A-Z0-9]+)>/gi,(_,id)=>{const c=DB.channels.find(x=>x.slack_id===id);return`<span style="background:rgba(31,239,81,0.1);color:var(--cobli-green2);border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;}).replace(/<!here>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@here</span>').replace(/<!channel>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@channel</span>').replace(/<!everyone>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@everyone</span>').replace(/\*([^*]+)\*/g,'<strong>$1</strong>').replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>').replace(/\n/g,'<br>');}
 
 function cSlack(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'\n\n📞 _Entrar em contato com: '+raw+'_':'\n\n📞 _Entrar em contato com: acione o responsável da área._';}
 function cHtml(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'<br><small style="color:var(--cobli-teal)">📞 Entrar em contato com: '+slackTagsToHtml(raw)+'</small>':'<br><small style="color:var(--text-hint)">📞 Entrar em contato com: acione o responsável da área.</small>';}
@@ -1096,9 +1096,9 @@ function buildSuggs(){
 
   if(sc==='novidades'){const titulo=getFieldVal('f-titulo'),sistema=getFieldVal('f-sistema'),desc=getFieldVal('f-descricao'),benef=getFieldVal('f-beneficio'),obs=getFieldVal('f-obs');if(!titulo&&!desc)return[];const titS=titulo?resolveSlackTags(titulo):'Nova melhoria',titH=titulo?slackTagsToHtml(resolveSlackTags(titulo)):'Nova melhoria';const sisS=sistema?resolveSlackTags(sistema):'',sisH=sistema?slackTagsToHtml(resolveSlackTags(sistema)):'';const descS=desc?resolveSlackTags(desc):'',descH=desc?slackTagsToHtml(resolveSlackTags(desc)):'';const bS=benef?resolveSlackTags(benef):'',bH=benef?slackTagsToHtml(resolveSlackTags(benef)):'';const oS=obs?resolveSlackTags(obs):'',oH=obs?slackTagsToHtml(resolveSlackTags(obs)):'';const color=cfg.color;return[{tag:'novidades',label:'🚀 Lançamento completo',slack:slackMsg('🚀',`Nova ${titS} — já disponível!`,[sisS?`🖥️ Sistema: *${sisS}*`:'',descS?`📋 O que mudou:\n${descS}`:'',bS?`✨ Benefício: ${bS}`:'',oS?`\n_${oS}_`:'']),html:htmlMsg(color,'🚀',`Nova ${titH} — já disponível!`,[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',descH?`📋 O que mudou:<br>${descH}`:'',bH?`✨ Benefício: ${bH}`:'',oH?`<em style="color:var(--text-muted)">${oH}</em>`:''])},{tag:'novidades',label:'✅ Aviso curto e direto',slack:`✅ *${titS}* está em produção! 🎉\n\n${descS}${bS?'\n\n💡 _'+bS+'_':''}${oS?'\n\n_'+oS+'_':''}${cs}`,html:`<div class="slack-block"><div class="slack-bar" style="background:${color}"></div><div class="slack-body">✅ <b style="color:var(--text)">${titH}</b> está em produção! 🎉<br><br>${descH}${bH?'<br><br>💡 <em style="color:var(--text-muted)">'+bH+'</em>':''}${oH?'<br><em style="color:var(--text-muted)">'+oH+'</em>':''}${ch}</div></div>`},{tag:'novidades',label:'📣 Comunicado formal',slack:slackMsg('📣',`Comunicado: ${titS}`,[sisS?`📦 Módulo: *${sisS}*`:'',descS?descS:'',bS?`\n🎯 *Impacto esperado:* ${bS}`:'',oS?`\n_${oS}_`:'']),html:htmlMsg('#7F8DDB','📣',`Comunicado: ${titH}`,[sisH?`📦 Módulo: <b>${sisH}</b>`:'',descH,bH?`<br>🎯 <b>Impacto esperado:</b> ${bH}`:'',oH?`<em style="color:var(--text-muted)">${oH}</em>`:''])}];}
 
-  if(sc==='incidente'){const sistema=getFieldVal('f-sistema'),problema=getFieldVal('f-problema'),impacto=getFieldVal('f-impacto'),status=getFieldVal('f-status');if(!sistema&&!problema)return[];const sisS=sistema?resolveSlackTags(sistema):'',sisH=sistema?slackTagsToHtml(resolveSlackTags(sistema)):'';const probS=problema?resolveSlackTags(problema):'',probH=problema?slackTagsToHtml(resolveSlackTags(problema)):'';const impS=impacto?resolveSlackTags(impacto):'',impH=impacto?slackTagsToHtml(resolveSlackTags(impacto)):'';const stS=status?resolveSlackTags(status):'Em investigação',stH=status?slackTagsToHtml(resolveSlackTags(status)):'Em investigação';const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});return[{tag:'incidente',label:'🚨 Alerta de incidente',slack:slackMsg('🚨','[INCIDENTE]',[sisS?`🖥️ Sistema: *${sisS}*`:'',probS?`📋 Problema: ${probS}`:'',impS?`👥 Impacto: ${impS}`:'',`📊 Status: *${stS}*`,`⏰ Detectado às: ${now}`,'\n_Atualizações serão postadas aqui._']),html:htmlMsg('#FF4633','🚨','[INCIDENTE]',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',probH?`📋 Problema: ${probH}`:'',impH?`👥 Impacto: ${impH}`:'',`📊 Status: <b>${stH}</b>`,`⏰ Detectado às: ${now}`,`<em style="color:var(--text-muted)">Atualizações serão postadas aqui.</em>`])},{tag:'incidente',label:'🔧 Manutenção programada',slack:slackMsg('🔧','Manutenção Programada',[sisS?`🖥️ Sistema: *${sisS}*`:'',probS,'',impS?`👥 Impacto esperado: ${impS}`:'',stS?`📊 Status: ${stS}`:'','_Agradecemos a compreensão!_ 🙏']),html:htmlMsg('#F59E0B','🔧','Manutenção Programada',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',probH,'',impH?`👥 Impacto esperado: ${impH}`:'',stH?`📊 Status: ${stH}`:'',`<em style="color:var(--text-muted)">Agradecemos a compreensão! 🙏</em>`])},{tag:'incidente',label:'✅ Incidente resolvido',slack:slackMsg('✅','Incidente Resolvido 🟢',[sisS?`🖥️ Sistema: *${sisS}*`:'','O sistema voltou a operar normalmente.',`📅 Resolvido às: ${now}`,probS?`📋 O que foi: ${probS}`:'','_Pedimos desculpas pelo transtorno._']),html:htmlMsg('#00AE97','✅','Incidente Resolvido 🟢',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'','O sistema voltou a operar normalmente.',`📅 Resolvido às: <b>${now}</b>`,probH?`📋 O que foi: ${probH}`:'',`<em style="color:var(--text-muted)">Pedimos desculpas pelo transtorno.</em>`])}];}
+  if(sc==='incidente'){const sistema=getFieldVal('f-sistema'),problema=getFieldVal('f-problema'),impacto=getFieldVal('f-impacto'),status=getFieldVal('f-status');if(!sistema&&!problema)return[];const sisS=sistema?resolveSlackTags(sistema):'',sisH=sistema?slackTagsToHtml(resolveSlackTags(sistema)):'';const probS=problema?resolveSlackTags(problema):'',probH=problema?slackTagsToHtml(resolveSlackTags(problema)):'';const impS=impacto?resolveSlackTags(impacto):'',impH=impacto?slackTagsToHtml(resolveSlackTags(impacto)):'';const stS=status?resolveSlackTags(status):'Em investigação',stH=status?slackTagsToHtml(resolveSlackTags(status)):'Em investigação';const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});return[{tag:'incidente',label:'🚨 Alerta de incidente',slack:slackMsg('🚨','[INCIDENTE]',[sisS?`🖥️ Sistema: *${sisS}*`:'',probS?`📋 Problema: ${probS}`:'',impS?`👥 Impacto: ${impS}`:'',`📊 Status: *${stS}*`,`⏰ Detectado às: ${now}`,'\n_Atualizações serão postadas aqui._']),html:htmlMsg('#F04040','🚨','[INCIDENTE]',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',probH?`📋 Problema: ${probH}`:'',impH?`👥 Impacto: ${impH}`:'',`📊 Status: <b>${stH}</b>`,`⏰ Detectado às: ${now}`,`<em style="color:var(--text-muted)">Atualizações serão postadas aqui.</em>`])},{tag:'incidente',label:'🔧 Manutenção programada',slack:slackMsg('🔧','Manutenção Programada',[sisS?`🖥️ Sistema: *${sisS}*`:'',probS,'',impS?`👥 Impacto esperado: ${impS}`:'',stS?`📊 Status: ${stS}`:'','_Agradecemos a compreensão!_ 🙏']),html:htmlMsg('#F5C519','🔧','Manutenção Programada',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',probH,'',impH?`👥 Impacto esperado: ${impH}`:'',stH?`📊 Status: ${stH}`:'',`<em style="color:var(--text-muted)">Agradecemos a compreensão! 🙏</em>`])},{tag:'incidente',label:'✅ Incidente resolvido',slack:slackMsg('✅','Incidente Resolvido 🟢',[sisS?`🖥️ Sistema: *${sisS}*`:'','O sistema voltou a operar normalmente.',`📅 Resolvido às: ${now}`,probS?`📋 O que foi: ${probS}`:'','_Pedimos desculpas pelo transtorno._']),html:htmlMsg('#1FEF51','✅','Incidente Resolvido 🟢',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'','O sistema voltou a operar normalmente.',`📅 Resolvido às: <b>${now}</b>`,probH?`📋 O que foi: ${probH}`:'',`<em style="color:var(--text-muted)">Pedimos desculpas pelo transtorno.</em>`])}];}
 
-  if(sc==='aviso-geral'){const titulo=getFieldVal('f-titulo'),msg=getFieldVal('f-msg');if(!titulo&&!msg)return[];const titS=titulo?resolveSlackTags(titulo):'Comunicado',titH=titulo?slackTagsToHtml(resolveSlackTags(titulo)):'Comunicado';const msgS=msg?resolveSlackTags(msg):'',msgH=msg?slackTagsToHtml(resolveSlackTags(msg)):'';return[{tag:'aviso-geral',label:'📢 Comunicado padrão',slack:slackMsg('📢',titS,[msgS,'_— Equipe Cobli_']),html:htmlMsg('#F59E0B','📢',titH,[msgH,`<em style="color:var(--text-muted)">— Equipe Cobli</em>`])},{tag:'aviso-geral',label:'📋 Informativo simples',slack:`📋 *${titS}*\n\n${msgS}${cs}`,html:`<div class="slack-block"><div class="slack-bar" style="background:#7F8DDB"></div><div class="slack-body">📋 <b style="color:var(--text)">${titH}</b><br><br>${msgH}${ch}</div></div>`}];}
+  if(sc==='aviso-geral'){const titulo=getFieldVal('f-titulo'),msg=getFieldVal('f-msg');if(!titulo&&!msg)return[];const titS=titulo?resolveSlackTags(titulo):'Comunicado',titH=titulo?slackTagsToHtml(resolveSlackTags(titulo)):'Comunicado';const msgS=msg?resolveSlackTags(msg):'',msgH=msg?slackTagsToHtml(resolveSlackTags(msg)):'';return[{tag:'aviso-geral',label:'📢 Comunicado padrão',slack:slackMsg('📢',titS,[msgS,'_— Equipe Cobli_']),html:htmlMsg('#F5C519','📢',titH,[msgH,`<em style="color:var(--text-muted)">— Equipe Cobli</em>`])},{tag:'aviso-geral',label:'📋 Informativo simples',slack:`📋 *${titS}*\n\n${msgS}${cs}`,html:`<div class="slack-block"><div class="slack-bar" style="background:#7F8DDB"></div><div class="slack-body">📋 <b style="color:var(--text)">${titH}</b><br><br>${msgH}${ch}</div></div>`}];}
   return[];
 }
 
@@ -1122,7 +1122,7 @@ async function sendMessage(){
   if(!ST.selSugg||!ST.selWhIds.length)return;
   if(ST.schedOn){await scheduleMsg();return;}
   const btn=document.getElementById('btn-send');btn.disabled=true;document.getElementById('btn-send-label').textContent='Enviando…';
-  const color=SCENARIO_COLORS[ST.scenario]||'#001BB8';
+  const color=SCENARIO_COLORS[ST.scenario]||'#7F8DDB';
   const textWithSender=ST.selSugg.slack;const footerText=senderSlack(false);
   try{
     const {data:{session}}=await sb.auth.getSession();
@@ -1138,7 +1138,7 @@ async function scheduleMsg(){
   const d=document.getElementById('sched-date').value,t=document.getElementById('sched-time').value;
   if(!d||!t){alert('Selecione data e hora.');return;}const dt=new Date(d+'T'+t);if(dt<=new Date()){alert('Selecione um horário futuro.');return;}
   const btn=document.getElementById('btn-send');btn.disabled=true;document.getElementById('btn-send-label').textContent='Agendando…';
-  const color=SCENARIO_COLORS[ST.scenario]||'#001BB8';const textWithSender=ST.selSugg.slack;
+  const color=SCENARIO_COLORS[ST.scenario]||'#7F8DDB';const textWithSender=ST.selSugg.slack;
   try{
     const webhooks=DB.webhooks.filter(w=>ST.selWhIds.includes(w.id));
     const inserts=webhooks.map(w=>({user_id:user.id,webhook_id:w.id,webhook_name:w.name,slack_text:textWithSender,color,preview_text:ST.selSugg.slack.split('\n')[0].replace(/\*/g,''),scheduled_at:dt.toISOString(),scheduled_by:userDisplayName}));
@@ -1185,7 +1185,7 @@ async function loadQueue(){
     const nb=document.getElementById('nb');nb.textContent=msgs.length;nb.style.display=msgs.length?'inline-block':'none';
     const el=document.getElementById('queue-list-full');
     if(!msgs.length){el.innerHTML='<div class="no-sugg" style="padding:1.5rem">Nenhuma mensagem agendada</div>';return;}
-    el.innerHTML=msgs.map(m=>`<div class="queue-item"><div style="width:4px;border-radius:2px;background:${m.color||'#001BB8'};flex-shrink:0;align-self:stretch"></div><div style="flex:1"><div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${esc(m.webhook_name||'—')}</div><div class="queue-text">${esc(m.preview_text||'')}</div>${m.scheduled_by?`<div style="font-size:10px;color:var(--text-hint);margin-top:3px;font-style:italic">Notificação agendada por ${esc(m.scheduled_by)}</div>`:''}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn-edit" data-edit-sched="${m.id}" data-edit-text="${esc(m.slack_text||'')}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-cancel-sched="${m.id}"><i class="ti ti-x"></i></button></div></div>`).join('');
+    el.innerHTML=msgs.map(m=>`<div class="queue-item"><div style="width:4px;border-radius:2px;background:${m.color||'#7F8DDB'};flex-shrink:0;align-self:stretch"></div><div style="flex:1"><div class="queue-time"><i class="ti ti-clock"></i> ${new Date(m.scheduled_at).toLocaleString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} → ${esc(m.webhook_name||'—')}</div><div class="queue-text">${esc(m.preview_text||'')}</div>${m.scheduled_by?`<div style="font-size:10px;color:var(--text-hint);margin-top:3px;font-style:italic">Notificação agendada por ${esc(m.scheduled_by)}</div>`:''}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn-edit" data-edit-sched="${m.id}" data-edit-text="${esc(m.slack_text||'')}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-cancel-sched="${m.id}"><i class="ti ti-x"></i></button></div></div>`).join('');
   }catch(e){document.getElementById('queue-list-full').innerHTML=`<div class="no-sugg" style="color:var(--error);padding:1.5rem">Erro: ${esc(e.message)}</div>`;}
 }
 
@@ -1195,16 +1195,16 @@ async function cancelScheduled(id){if(!confirm('Cancelar este agendamento?'))ret
 async function saveWebhook(){const name=v('wh-add-name'),url=v('wh-add-url'),emoji=v('wh-add-emoji')||'📢';if(!name||!url){alert('Preencha nome e URL.');return;}if(!url.startsWith('https://hooks.slack.com/')){alert('URL inválida.');return;}try{const {data,error}=await sb.from('webhooks').insert({user_id:user.id,name,url,emoji,channel:''}).select().single();if(error)throw error;DB.webhooks.push(data);['wh-add-name','wh-add-url','wh-add-emoji'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('wh-form').classList.remove('open');renderWhSettings();renderWhPicker();renderWhChips();showStatus('Canal salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}}
 async function deleteWebhook(id){if(!confirm('Remover?'))return;try{const {error}=await sb.from('webhooks').delete().eq('id',id);if(error)throw error;DB.webhooks=DB.webhooks.filter(w=>w.id!==id);ST.selWhIds=ST.selWhIds.filter(x=>x!==id);renderWhSettings();renderWhPicker();renderWhChips();updateSendBtn();}catch(e){alert('Erro: '+e.message);}}
 function editWebhook(id){const w=DB.webhooks.find(x=>x.id===id);if(!w)return;openEditModal('Editar Webhook',`<div><label class="form-label">Nome do canal</label><input type="text" id="ew-name" value="${esc(w.name)}" /></div><div style="margin-top:10px"><label class="form-label">Webhook URL</label><input type="text" id="ew-url" value="${esc(w.url)}" /></div><div style="margin-top:10px"><label class="form-label">Emoji</label><input type="text" id="ew-emoji" value="${esc(w.emoji||'📢')}" style="max-width:80px" /></div>`,async()=>{const name=document.getElementById('ew-name').value.trim(),url=document.getElementById('ew-url').value.trim(),emoji=document.getElementById('ew-emoji').value.trim()||'📢';if(!name||!url){alert('Preencha nome e URL.');return;}try{const {error}=await sb.from('webhooks').update({name,url,emoji}).eq('id',id);if(error)throw error;const idx=DB.webhooks.findIndex(x=>x.id===id);if(idx>=0)DB.webhooks[idx]={...DB.webhooks[idx],name,url,emoji};closeEditModal();renderWhSettings();renderWhPicker();renderWhChips();showStatus('Webhook atualizado ✓','success');}catch(e){alert('Erro: '+e.message);}});}
-function renderWhSettings(){const el=document.getElementById('wh-settings-list');const paginated=getPaginatedList(DB.webhooks,'webhooks',w=>w.name.toLowerCase().includes(LST.webhooks.q));if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum resultado</div>';return;}el.innerHTML=paginated.map(w=>`<div class="list-item"><div class="list-item-avatar" style="background:var(--cobli-blue-pale);color:var(--cobli-blue-light);font-size:18px">${w.emoji||'📢'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,52))}…</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-wh="${w.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
+function renderWhSettings(){const el=document.getElementById('wh-settings-list');const paginated=getPaginatedList(DB.webhooks,'webhooks',w=>w.name.toLowerCase().includes(LST.webhooks.q));if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum resultado</div>';return;}el.innerHTML=paginated.map(w=>`<div class="list-item"><div class="list-item-avatar" style="background:var(--cobli-blue-pale);color:var(--cobli-blue);font-size:18px">${w.emoji||'📢'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(w.name)}</div><div class="list-item-sub">${esc(w.url.substring(0,52))}…</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-wh="${w.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-wh="${w.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
 
 async function savePerson(){const name=v('p-name'),slack_id=v('p-slack-id').replace(/[<@>]/g,''),handle=v('p-handle').replace('@',''),role=v('p-role');if(!name){alert('Preencha o nome.');return;}try{const {data,error}=await sb.from('people').insert({user_id:user.id,name,slack_id,handle,role}).select().single();if(error)throw error;DB.people.push(data);await handleMacroAssignment('p',data,'person');['p-name','p-slack-id','p-handle','p-role','p-macro-name','p-macro-handle'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});document.getElementById('p-macro-select').value='';document.getElementById('p-macro-new').style.display='none';document.getElementById('person-form').classList.remove('open');renderPeopleList();showStatus(name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}}
 async function deletePerson(id){if(!confirm('Remover?'))return;try{const {error}=await sb.from('people').delete().eq('id',id);if(error)throw error;DB.people=DB.people.filter(p=>p.id!==id);renderPeopleList();}catch(e){alert('Erro: '+e.message);}}
-function editPerson(id){const p=DB.people.find(x=>x.id===id);if(!p)return;const macroOptions=DB.macros.map(m=>`<option value="${m.id}">/${m.handle} (${m.name})</option>`).join('');openEditModal('Editar Pessoa',`<div class="form-row"><div><label class="form-label">Nome de exibição</label><input type="text" id="ep-name" value="${esc(p.name)}" /></div><div><label class="form-label">Slack User ID</label><input type="text" id="ep-sid" value="${esc(p.slack_id||'')}" /></div></div><div class="form-row" style="margin-top:10px"><div><label class="form-label">Handle (@)</label><input type="text" id="ep-handle" value="${esc(p.handle||'')}" /></div><div><label class="form-label">Cargo / área</label><input type="text" id="ep-role" value="${esc(p.role||'')}" /></div></div><div style="margin-top:16px;padding:14px;background:rgba(0,174,151,.06);border-radius:8px;border:1px solid rgba(0,174,151,.2)"><label class="form-label" style="color:var(--cobli-teal)"><i class="ti ti-list"></i> Adicionar a uma Lista (Macro)</label><select id="ep-macro-select" onchange="document.getElementById('ep-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'"><option value="">Não adicionar</option><option value="new">+ Criar nova lista...</option>${macroOptions}</select><div id="ep-macro-new" class="form-row" style="display:none;margin-top:10px"><div><label class="form-label">Nome da lista</label><input type="text" id="ep-macro-name" placeholder="Ex: Time TI" /></div><div><label class="form-label">Gatilho (sem /)</label><input type="text" id="ep-macro-handle" placeholder="ti" /></div></div></div>`,async()=>{const name=document.getElementById('ep-name').value.trim(),slack_id=document.getElementById('ep-sid').value.trim().replace(/[<@>]/g,''),handle=document.getElementById('ep-handle').value.trim().replace('@',''),role=document.getElementById('ep-role').value.trim();if(!name){alert('Nome obrigatório.');return;}try{const {error}=await sb.from('people').update({name,slack_id,handle,role}).eq('id',id);if(error)throw error;const idx=DB.people.findIndex(x=>x.id===id);if(idx>=0){DB.people[idx]={...DB.people[idx],name,slack_id,handle,role};await handleMacroAssignment('ep',DB.people[idx],'person');}closeEditModal();renderPeopleList();showStatus('Pessoa atualizada ✓','success');}catch(e){alert('Erro: '+e.message);}});}
+function editPerson(id){const p=DB.people.find(x=>x.id===id);if(!p)return;const macroOptions=DB.macros.map(m=>`<option value="${m.id}">/${m.handle} (${m.name})</option>`).join('');openEditModal('Editar Pessoa',`<div class="form-row"><div><label class="form-label">Nome de exibição</label><input type="text" id="ep-name" value="${esc(p.name)}" /></div><div><label class="form-label">Slack User ID</label><input type="text" id="ep-sid" value="${esc(p.slack_id||'')}" /></div></div><div class="form-row" style="margin-top:10px"><div><label class="form-label">Handle (@)</label><input type="text" id="ep-handle" value="${esc(p.handle||'')}" /></div><div><label class="form-label">Cargo / área</label><input type="text" id="ep-role" value="${esc(p.role||'')}" /></div></div><div style="margin-top:16px;padding:14px;background:var(--cobli-teal-pale);border-radius:8px;border:1px solid rgba(15,253,201,.2)"><label class="form-label" style="color:var(--cobli-teal)"><i class="ti ti-list"></i> Adicionar a uma Lista (Macro)</label><select id="ep-macro-select" onchange="document.getElementById('ep-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'"><option value="">Não adicionar</option><option value="new">+ Criar nova lista...</option>${macroOptions}</select><div id="ep-macro-new" class="form-row" style="display:none;margin-top:10px"><div><label class="form-label">Nome da lista</label><input type="text" id="ep-macro-name" placeholder="Ex: Time TI" /></div><div><label class="form-label">Gatilho (sem /)</label><input type="text" id="ep-macro-handle" placeholder="ti" /></div></div></div>`,async()=>{const name=document.getElementById('ep-name').value.trim(),slack_id=document.getElementById('ep-sid').value.trim().replace(/[<@>]/g,''),handle=document.getElementById('ep-handle').value.trim().replace('@',''),role=document.getElementById('ep-role').value.trim();if(!name){alert('Nome obrigatório.');return;}try{const {error}=await sb.from('people').update({name,slack_id,handle,role}).eq('id',id);if(error)throw error;const idx=DB.people.findIndex(x=>x.id===id);if(idx>=0){DB.people[idx]={...DB.people[idx],name,slack_id,handle,role};await handleMacroAssignment('ep',DB.people[idx],'person');}closeEditModal();renderPeopleList();showStatus('Pessoa atualizada ✓','success');}catch(e){alert('Erro: '+e.message);}});}
 function renderPeopleList(){const el=document.getElementById('people-list');const paginated=getPaginatedList(DB.people,'people',p=>p.name.toLowerCase().includes(LST.people.q)||(p.handle||'').toLowerCase().includes(LST.people.q));if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhuma pessoa encontrada</div>';return;}el.innerHTML=paginated.map(p=>`<div class="list-item"><div class="list-item-avatar ac-avatar person">${initials(p.name)}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(p.name)}</div><div class="list-item-sub">${p.slack_id?'ID: '+esc(p.slack_id):''}${p.handle?' · @'+esc(p.handle):''}${p.role?' · '+esc(p.role):''}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-person="${p.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-person="${p.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
 
 async function saveGroup(){const name=v('g-name'),handle=v('g-handle').replace('@',''),slack_id=v('g-slack-id'),emoji=v('g-emoji')||'👥';if(!name||!handle){alert('Preencha nome e handle.');return;}try{const {data,error}=await sb.from('groups').insert({user_id:user.id,name,handle,slack_id,emoji}).select().single();if(error)throw error;DB.groups.push(data);await handleMacroAssignment('g',data,'group');['g-name','g-handle','g-slack-id','g-emoji','g-macro-name','g-macro-handle'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});document.getElementById('g-macro-select').value='';document.getElementById('g-macro-new').style.display='none';document.getElementById('group-form').classList.remove('open');renderGroupsList();showStatus('Grupo '+name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}}
 async function deleteGroup(id){if(!confirm('Remover?'))return;try{const {error}=await sb.from('groups').delete().eq('id',id);if(error)throw error;DB.groups=DB.groups.filter(g=>g.id!==id);renderGroupsList();}catch(e){alert('Erro: '+e.message);}}
-function editGroup(id){const g=DB.groups.find(x=>x.id===id);if(!g)return;const macroOptions=DB.macros.map(m=>`<option value="${m.id}">/${m.handle} (${m.name})</option>`).join('');openEditModal('Editar Grupo',`<div class="form-row"><div><label class="form-label">Nome do grupo</label><input type="text" id="eg-name" value="${esc(g.name)}" /></div><div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="eg-handle" value="${esc(g.handle||'')}" /></div></div><div class="form-row" style="margin-top:10px"><div><label class="form-label">Slack Group ID</label><input type="text" id="eg-sid" value="${esc(g.slack_id||'')}" /></div><div><label class="form-label">Emoji</label><input type="text" id="eg-emoji" value="${esc(g.emoji||'👥')}" style="max-width:80px" /></div></div><div style="margin-top:16px;padding:14px;background:rgba(0,174,151,.06);border-radius:8px;border:1px solid rgba(0,174,151,.2)"><label class="form-label" style="color:var(--cobli-teal)"><i class="ti ti-list"></i> Adicionar a uma Lista (Macro)</label><select id="eg-macro-select" onchange="document.getElementById('eg-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'"><option value="">Não adicionar</option><option value="new">+ Criar nova lista...</option>${macroOptions}</select><div id="eg-macro-new" class="form-row" style="display:none;margin-top:10px"><div><label class="form-label">Nome da lista</label><input type="text" id="eg-macro-name" placeholder="Ex: Alertas" /></div><div><label class="form-label">Gatilho (sem /)</label><input type="text" id="eg-macro-handle" placeholder="alertas" /></div></div></div>`,async()=>{const name=document.getElementById('eg-name').value.trim(),handle=document.getElementById('eg-handle').value.trim().replace('@',''),slack_id=document.getElementById('eg-sid').value.trim(),emoji=document.getElementById('eg-emoji').value.trim()||'👥';if(!name||!handle){alert('Nome e handle obrigatórios.');return;}try{const {error}=await sb.from('groups').update({name,handle,slack_id,emoji}).eq('id',id);if(error)throw error;const idx=DB.groups.findIndex(x=>x.id===id);if(idx>=0){DB.groups[idx]={...DB.groups[idx],name,handle,slack_id,emoji};await handleMacroAssignment('eg',DB.groups[idx],'group');}closeEditModal();renderGroupsList();showStatus('Grupo atualizado ✓','success');}catch(e){alert('Erro: '+e.message);}});}
+function editGroup(id){const g=DB.groups.find(x=>x.id===id);if(!g)return;const macroOptions=DB.macros.map(m=>`<option value="${m.id}">/${m.handle} (${m.name})</option>`).join('');openEditModal('Editar Grupo',`<div class="form-row"><div><label class="form-label">Nome do grupo</label><input type="text" id="eg-name" value="${esc(g.name)}" /></div><div><label class="form-label">Handle Slack (sem @)</label><input type="text" id="eg-handle" value="${esc(g.handle||'')}" /></div></div><div class="form-row" style="margin-top:10px"><div><label class="form-label">Slack Group ID</label><input type="text" id="eg-sid" value="${esc(g.slack_id||'')}" /></div><div><label class="form-label">Emoji</label><input type="text" id="eg-emoji" value="${esc(g.emoji||'👥')}" style="max-width:80px" /></div></div><div style="margin-top:16px;padding:14px;background:var(--cobli-teal-pale);border-radius:8px;border:1px solid rgba(15,253,201,.2)"><label class="form-label" style="color:var(--cobli-teal)"><i class="ti ti-list"></i> Adicionar a uma Lista (Macro)</label><select id="eg-macro-select" onchange="document.getElementById('eg-macro-new').style.display = this.value === 'new' ? 'flex' : 'none'"><option value="">Não adicionar</option><option value="new">+ Criar nova lista...</option>${macroOptions}</select><div id="eg-macro-new" class="form-row" style="display:none;margin-top:10px"><div><label class="form-label">Nome da lista</label><input type="text" id="eg-macro-name" placeholder="Ex: Alertas" /></div><div><label class="form-label">Gatilho (sem /)</label><input type="text" id="eg-macro-handle" placeholder="alertas" /></div></div></div>`,async()=>{const name=document.getElementById('eg-name').value.trim(),handle=document.getElementById('eg-handle').value.trim().replace('@',''),slack_id=document.getElementById('eg-sid').value.trim(),emoji=document.getElementById('eg-emoji').value.trim()||'👥';if(!name||!handle){alert('Nome e handle obrigatórios.');return;}try{const {error}=await sb.from('groups').update({name,handle,slack_id,emoji}).eq('id',id);if(error)throw error;const idx=DB.groups.findIndex(x=>x.id===id);if(idx>=0){DB.groups[idx]={...DB.groups[idx],name,handle,slack_id,emoji};await handleMacroAssignment('eg',DB.groups[idx],'group');}closeEditModal();renderGroupsList();showStatus('Grupo atualizado ✓','success');}catch(e){alert('Erro: '+e.message);}});}
 function renderGroupsList(){const el=document.getElementById('groups-list');const paginated=getPaginatedList(DB.groups,'groups',g=>g.name.toLowerCase().includes(LST.groups.q)||(g.handle||'').toLowerCase().includes(LST.groups.q));if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum grupo encontrado</div>';return;}el.innerHTML=paginated.map(g=>`<div class="list-item"><div class="list-item-avatar ac-avatar group" style="font-size:18px">${g.emoji||'👥'}</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(g.name)}</div><div class="list-item-sub">@${esc(g.handle)}${g.slack_id?' · ID: '+esc(g.slack_id):''}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-group="${g.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-group="${g.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
 
 async function saveChannel(){const name=v('ch-name').replace('#',''),desc=v('ch-desc'),slack_id=v('ch-slack-id');if(!name){alert('Preencha o nome.');return;}try{const {data,error}=await sb.from('channels').insert({user_id:user.id,name,desc,slack_id}).select().single();if(error)throw error;DB.channels.push(data);['ch-name','ch-desc','ch-slack-id'].forEach(i=>{document.getElementById(i).value='';});document.getElementById('channel-form').classList.remove('open');renderChannelsList();showStatus('#'+name+' salvo! ✓','success');}catch(e){alert('Erro: '+e.message);}}
