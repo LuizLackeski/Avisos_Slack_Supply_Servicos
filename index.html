@@ -27,10 +27,10 @@
 
   /* Superfícies */
   --bg-app:     #F4F5FA;
-  --bg-card:    #0018a5;
+  --bg-card:    #EEF3FF;
   --bg-input:   #FFFFFF;
   --bg-elevated:#FFFFFF;
-  --bg-hover:   #EEF2FA;
+  --bg-hover:   #E5ECFF;
 
   /* Bordas */
   --border:       rgba(7,7,78,0.10);
@@ -368,27 +368,16 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 
 /* ─── SUGGESTION CARDS ─── */
 .sugg-grid{display:grid;grid-template-columns:1fr;gap:10px}
-.sugg-card{
-  border:1px solid #DDE3F0;
-  border-radius:var(--radius-lg);
-  padding:14px;
-  cursor:pointer;
-  transition:all .15s;
-  background:#ccd1f0;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+.sugg-card {
+  background: #F3F6FF;
+  border: 1px solid #D4DDF8;
+}}
+.sugg-card:hover {
+  background: #EAF0FF;
 }
-.sugg-card:hover{
-  border-color:#7f8ddb;
-  background:#F1F4FB;
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(7,7,78,0.05);
-}
-sugg-card.selected{
-  border:2px solid var(--cobli-teal);
-  background:#E8F8F5;
-  box-shadow:0 0 0 4px rgba(0,174,151,0.08);
+.sugg-card.selected {
+  background: #DCEBFF;
+  border: 2px solid #3248C6;
 }
 .sugg-card-hdr{display:flex;align-items:center;gap:8px}
 .sugg-name{font-size:12px;font-weight:600;color:var(--text);flex:1}
