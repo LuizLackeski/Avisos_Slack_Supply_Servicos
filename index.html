@@ -181,10 +181,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
   background:var(--bg-card);color:var(--text);
   border:1px solid var(--border);
   border-radius:var(--radius-lg);padding:1.25rem;
-  transition:border-color 0.2s, box-shadow 0.2s; /* Efeito hover animado */
+  transition:border-color 0.2s, box-shadow 0.2s;
 }
 .card:hover {
-  border-color: rgba(127,141,219,0.35); /* Bordinha sutil ao passar o mouse */
+  border-color: rgba(127,141,219,0.35);
   box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 .card-title{
@@ -377,7 +377,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
   background:var(--card2);display:flex;flex-direction:column;gap:10px;
 }
 .sugg-card:hover{
-  border-color:var(--cobli-teal); /* Borda ciano ao passar o mouse */
+  border-color:var(--cobli-teal); 
   background:var(--bg-hover);
   transform:translateY(-1px);
   box-shadow:0 4px 12px rgba(15,253,201,0.1);
@@ -670,7 +670,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
 
           <div class="card">
             <div class="card-title"><i class="ti ti-pencil"></i> <span id="composer-label">Mensagem</span>
-              <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— use @, # ou /</span>
+              <span style="font-size:10px;color:var(--text-hint);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— use @, # ou / ou &lt;url|texto&gt;</span>
             </div>
             <div id="fields-container"></div>
             <div class="hint-pills" id="hint-pills"></div>
@@ -679,7 +679,7 @@ textarea.msg-ta{min-height:80px;padding:12px 14px}
           <div class="options-card">
             <div class="toggle-row">
               <button class="toggle" id="tgl-contact"></button>
-              <span class="toggle-label">📞 Entrar em contato com:</span>
+              <span class="toggle-label">📞 Em caso de urgência contatar:</span>
             </div>
             <div class="sub-row" id="contact-row" style="display:none">
               <div style="position:relative;flex:1;max-width:400px" class="msg-wrap">
@@ -965,7 +965,6 @@ const SUPABASE_URL  = 'https://tmjmjrhgmyqamuphgdvi.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtam1qcmhnbXlxYW11cGhnZHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjY4NzMsImV4cCI6MjA5MjcwMjg3M30.gjClWn46TOgfa-y4PAUMBg4ZxS4xhFjep1mk_DcU2QY';
 const EDGE_SEND_URL = 'https://tmjmjrhgmyqamuphgdvi.supabase.co/functions/v1/send-scheduled';
 
-/* CORES ATUALIZADAS PARA O DARK MODE */
 const SCENARIO_COLORS = { ferias:'#1FEF51', novidades:'#0FFDC9', incidente:'#F04040', 'aviso-geral':'#F5C519' };
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -1047,10 +1046,10 @@ function toggleWhPicker(forceClose){ST.whPickerOpen=forceClose?false:!ST.whPicke
 function pickWh(id){if(ST.selWhIds.includes(id))ST.selWhIds=ST.selWhIds.filter(x=>x!==id);else ST.selWhIds.push(id);renderWhChips();renderWhPicker();updateSendBtn();}
 
 const SCENARIO_CFG={
-  ferias:{label:'Detalhes das férias',fields:[{id:'f-nome',label:'Pessoa (@)',ph:'@Nome Sobrenome',hint:'Use @ para buscar cadastros'},{id:'f-inicio',label:'Data de início',ph:'25/06',hint:'Ex: 25/06'},{id:'f-retorno',label:'Data de retorno',ph:'15/07',hint:'Ex: 15/07'},{id:'f-obs',label:'Observação (opcional)',ph:'Qualquer dúvida falar com…',hint:'',ta:true}],hints:['🌴','🏖️','✈️','😎','🍹','🎒','☀️','👋','📅','🔙','@here','@channel','@nome'],color:'var(--cobli-teal)'},
-  novidades:{label:'Novidade / Melhoria implantada',fields:[{id:'f-titulo',label:'Título da novidade',ph:'Ex: Nova funcionalidade de relatórios',hint:''},{id:'f-sistema',label:'Sistema / módulo afetado',ph:'Ex: App Cobli, Portal de Gestão…',hint:''},{id:'f-descricao',label:'O que foi implantado',ph:'Descreva a melhoria ou novidade…',hint:'Use @ para marcar pessoas/equipes',ta:true},{id:'f-beneficio',label:'Benefício / impacto esperado',ph:'Ex: Reduz tempo de consulta em 30%…',hint:'',ta:true},{id:'f-obs',label:'Observações (opcional)',ph:'Disponível a partir de… link de documentação…',hint:'',ta:true}],hints:['✅','🚀','✨','🆕','💡','🎉','🔥','🛠️','💻','📈','@here','@channel','já disponível','em produção'],color:'var(--cobli-green2)'},
-  incidente:{label:'Incidente / Instabilidade',fields:[{id:'f-sistema',label:'Sistema/serviço afetado',ph:'Ex: App Cobli, API Rastreamento…',hint:''},{id:'f-problema',label:'O que está acontecendo',ph:'Descreva o problema…',hint:'',ta:true},{id:'f-impacto',label:'Quem/o que é afetado',ph:'Ex: Todos os usuários, módulo X…',hint:''},{id:'f-status',label:'Status atual',ph:'Em investigação / Equipe atuando…',hint:''}],hints:['🚨','🔧','✅','⚠️','🐛','🔥','🔴','🟢','⏳','🔍','@here','@channel','em investigação','equipe atuando','resolvido'],color:'var(--cobli-red)'},
-  'aviso-geral':{label:'Aviso / Comunicado',fields:[{id:'f-titulo',label:'Título do aviso',ph:'Ex: Manutenção programada',hint:''},{id:'f-msg',label:'Mensagem principal',ph:'Detalhe o comunicado…',hint:'Use @ para marcar pessoas/grupos',ta:true}],hints:['📢','📋','✅','🗣️','📌','👀','🔔','📝','🤝','❕','@here','@channel','@nome'],color:'var(--cobli-amber)'},
+  ferias:{label:'Detalhes das férias',fields:[{id:'f-nome',label:'Pessoa (@)',ph:'@Nome Sobrenome',hint:'Use @ para buscar cadastros'},{id:'f-inicio',label:'Data de início',ph:'25/06',hint:'Ex: 25/06'},{id:'f-retorno',label:'Data de retorno',ph:'15/07',hint:'Ex: 15/07'},{id:'f-obs',label:'Observação (opcional)',ph:'Qualquer dúvida falar com…',hint:'',ta:true}],hints:['🌴','🏖️','✈️','😎','🍹','🎒','☀️','👋','📅','🔙','<url|texto>','@here','@channel','@nome'],color:'var(--cobli-teal)'},
+  novidades:{label:'Novidade / Melhoria implantada',fields:[{id:'f-titulo',label:'Título da novidade',ph:'Ex: Nova funcionalidade de relatórios',hint:''},{id:'f-sistema',label:'Sistema / módulo afetado',ph:'Ex: App Cobli, Portal de Gestão…',hint:''},{id:'f-descricao',label:'O que foi implantado',ph:'Descreva a melhoria ou novidade…',hint:'Use @ para marcar pessoas/equipes',ta:true},{id:'f-beneficio',label:'Benefício / impacto esperado',ph:'Ex: Reduz tempo de consulta em 30%…',hint:'',ta:true},{id:'f-obs',label:'Observações (opcional)',ph:'Disponível a partir de… link de documentação…',hint:'',ta:true}],hints:['✅','🚀','✨','🆕','💡','🎉','🔥','🛠️','💻','📈','<url|texto>','@here','@channel','já disponível','em produção'],color:'var(--cobli-green2)'},
+  incidente:{label:'Incidente / Instabilidade',fields:[{id:'f-sistema',label:'Sistema/serviço afetado',ph:'Ex: App Cobli, API Rastreamento…',hint:''},{id:'f-problema',label:'O que está acontecendo',ph:'Descreva o problema…',hint:'',ta:true},{id:'f-impacto',label:'Quem/o que é afetado',ph:'Ex: Todos os usuários, módulo X…',hint:''},{id:'f-status',label:'Status atual',ph:'Em investigação / Equipe atuando…',hint:''}],hints:['🚨','🔧','✅','⚠️','🐛','🔥','🔴','🟢','⏳','🔍','<url|texto>','@here','@channel','em investigação','equipe atuando','resolvido'],color:'var(--cobli-red)'},
+  'aviso-geral':{label:'Aviso / Comunicado',fields:[{id:'f-titulo',label:'Título do aviso',ph:'Ex: Manutenção programada',hint:''},{id:'f-msg',label:'Mensagem principal',ph:'Detalhe o comunicado…',hint:'Use @ para marcar pessoas/grupos',ta:true}],hints:['📢','📋','✅','🗣️','📌','👀','🔔','📝','🤝','❕','<url|texto>','@here','@channel','@nome'],color:'var(--cobli-amber)'},
 };
 
 function renderScenarioFields(){
@@ -1081,10 +1080,31 @@ function onContactKeydown(e){const dd=document.getElementById('ac-contact');if(!
 function escapeRegex(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function applySpecialTags(txt){return txt.replace(/@here\b/gi,'<!here>').replace(/@channel\b/gi,'<!channel>').replace(/@everyone\b/gi,'<!everyone>').replace(/@aqui\b/gi,'<!here>').replace(/@canal\b/gi,'<!channel>').replace(/@todos\b/gi,'<!everyone>');}
 function resolveSlackTags(text){let txt=applySpecialTags(text);const peopleSorted=[...DB.people].sort((a,b)=>b.name.length-a.name.length);peopleSorted.forEach(p=>{if(!p.slack_id)return;const tagAlready=new RegExp(`<@${p.slack_id}>`,'g');if(tagAlready.test(txt))return;if(p.handle){txt=txt.replace(new RegExp('@'+escapeRegex(p.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);}txt=txt.replace(new RegExp('@'+escapeRegex(p.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<@${p.slack_id}>`);const fn=p.name.split(' ')[0];if(fn&&p.name.includes(' ')){txt=txt.replace(new RegExp('@'+escapeRegex(fn)+'(?=[\\s,;.!?\\n]|$)','gi'),(m,off)=>{const pre=txt.substring(Math.max(0,off-2),off);return pre.includes('<')?m:`<@${p.slack_id}>`});}});const groupsSorted=[...DB.groups].sort((a,b)=>b.name.length-a.name.length);groupsSorted.forEach(g=>{if(!g.handle)return;const tag=g.slack_id?`<!subteam^${g.slack_id}|@${g.handle}>`:`@${g.handle}`;txt=txt.replace(new RegExp('@'+escapeRegex(g.handle)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);txt=txt.replace(new RegExp('@'+escapeRegex(g.name)+'(?=[\\s,;.!?\\n]|$)','gi'),tag);});const chSorted=[...DB.channels].sort((a,b)=>b.name.length-a.name.length);chSorted.forEach(c=>{if(!c.slack_id)return;txt=txt.replace(new RegExp('#'+escapeRegex(c.name)+'(?=[\\s,;.!?\\n]|$)','gi'),`<#${c.slack_id}>`);});return txt;}
-function slackTagsToHtml(txt){return txt.replace(/<@([A-Z0-9]+)>/gi,(_,id)=>{const p=DB.people.find(x=>x.slack_id===id);return`<span style="background:var(--cobli-blue-pale);color:var(--cobli-blue);border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;}).replace(/<!subteam\^([^|>]+)\|?([^>]*)>/gi,(_,id,label)=>{const g=DB.groups.find(x=>x.slack_id===id);return`<span style="background:var(--cobli-teal-pale);color:var(--cobli-teal);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;}).replace(/<#([A-Z0-9]+)>/gi,(_,id)=>{const c=DB.channels.find(x=>x.slack_id===id);return`<span style="background:rgba(31,239,81,0.1);color:var(--cobli-green2);border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;}).replace(/<!here>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@here</span>').replace(/<!channel>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@channel</span>').replace(/<!everyone>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@everyone</span>').replace(/\*([^*]+)\*/g,'<strong>$1</strong>').replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>').replace(/\n/g,'<br>');}
+function slackTagsToHtml(txt){
+  return txt
+    .replace(/<@([A-Z0-9]+)>/gi,(_,id)=>{
+      const p=DB.people.find(x=>x.slack_id===id);
+      return `<span style="background:var(--cobli-blue-pale);color:var(--cobli-blue);border-radius:3px;padding:0 3px">@${esc(p?p.name:id)}</span>`;
+    })
+    .replace(/<!subteam\^([^|>]+)\|?([^>]*)>/gi,(_,id,label)=>{
+      const g=DB.groups.find(x=>x.slack_id===id);
+      return `<span style="background:var(--cobli-teal-pale);color:var(--cobli-teal);border-radius:3px;padding:0 3px">@${esc(g?g.name:(label||id))}</span>`;
+    })
+    .replace(/<#([A-Z0-9]+)>/gi,(_,id)=>{
+      const c=DB.channels.find(x=>x.slack_id===id);
+      return `<span style="background:rgba(31,239,81,0.1);color:var(--cobli-green2);border-radius:3px;padding:0 3px">#${esc(c?c.name:id)}</span>`;
+    })
+    .replace(/<(https?:\/\/[^|>]+)\|([^>]+)>/gi, '<a href="$1" target="_blank" style="color:var(--cobli-teal);text-decoration:underline;font-weight:600;">$2</a>')
+    .replace(/<!here>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@here</span>')
+    .replace(/<!channel>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@channel</span>')
+    .replace(/<!everyone>/g,'<span style="background:var(--cobli-amber-pale);color:var(--cobli-amber);border-radius:3px;padding:0 3px">@everyone</span>')
+    .replace(/\*([^*]+)\*/g,'<strong>$1</strong>')
+    .replace(/_([^_]+)_/g,'<em style="color:var(--text-muted)">$1</em>')
+    .replace(/\n/g,'<br>');
+}
 
-function cSlack(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'\n\n📞 _Entrar em contato com: '+raw+'_':'\n\n📞 _Entrar em contato com: acione o responsável da área._';}
-function cHtml(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'<br><small style="color:var(--cobli-teal)">📞 Entrar em contato com: '+slackTagsToHtml(raw)+'</small>':'<br><small style="color:var(--text-hint)">📞 Entrar em contato com: acione o responsável da área.</small>';}
+function cSlack(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'\n\n📞 _Em caso de urgência contatar: '+raw+'_':'\n\n📞 _Em caso de urgência contatar: acione o responsável da área._';}
+function cHtml(){if(!ST.contactOn)return'';const raw=(document.getElementById('contact-input').value||'').trim();return raw?'<br><small style="color:var(--cobli-teal)">📞 Em caso de urgência contatar: '+slackTagsToHtml(raw)+'</small>':'<br><small style="color:var(--text-hint)">📞 Em caso de urgência contatar: acione o responsável da área.</small>';}
 function senderSlack(isScheduled){return isScheduled?`Notificação agendada por ${userDisplayName}`:`Enviado por ${userDisplayName}`;}
 function senderHtml(isScheduled){return isScheduled?`<br><small style="color:var(--text-hint);font-style:italic">Notificação agendada por ${esc(userDisplayName)}</small>`:`<br><small style="color:var(--text-hint);font-style:italic">Enviado por ${esc(userDisplayName)}</small>`;}
 
@@ -1112,7 +1132,7 @@ function buildSuggs(){
 
   if(sc==='incidente'){const sistema=getFieldVal('f-sistema'),problema=getFieldVal('f-problema'),impacto=getFieldVal('f-impacto'),status=getFieldVal('f-status');if(!sistema&&!problema)return[];const sisS=sistema?resolveSlackTags(sistema):'',sisH=sistema?slackTagsToHtml(resolveSlackTags(sistema)):'';const probS=problema?resolveSlackTags(problema):'',probH=problema?slackTagsToHtml(resolveSlackTags(problema)):'';const impS=impacto?resolveSlackTags(impacto):'',impH=impacto?slackTagsToHtml(resolveSlackTags(impacto)):'';const stS=status?resolveSlackTags(status):'Em investigação',stH=status?slackTagsToHtml(resolveSlackTags(status)):'Em investigação';const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});return[{tag:'incidente',label:'🚨 Alerta de incidente',slack:slackMsg('🚨','[INCIDENTE]',[sisS?`🖥️ Sistema: *${sisS}*`:'',probS?`📋 Problema: ${probS}`:'',impS?`👥 Impacto: ${impS}`:'',`📊 Status: *${stS}*`,`⏰ Detectado às: ${now}`,'\n_Atualizações serão postadas aqui._']),html:htmlMsg('#F04040','🚨','[INCIDENTE]',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',probH?`📋 Problema: ${probH}`:'',impH?`👥 Impacto: ${impH}`:'',`📊 Status: <b>${stH}</b>`,`⏰ Detectado às: ${now}`,`<em style="color:var(--text-muted)">Atualizações serão postadas aqui.</em>`])},{tag:'incidente',label:'🔧 Manutenção programada',slack:slackMsg('🔧','Manutenção Programada',[sisS?`🖥️ Sistema: *${sisS}*`:'',probS,'',impS?`👥 Impacto esperado: ${impS}`:'',stS?`📊 Status: ${stS}`:'','_Agradecemos a compreensão!_ 🙏']),html:htmlMsg('#F5C519','🔧','Manutenção Programada',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'',probH,'',impH?`👥 Impacto esperado: ${impH}`:'',stH?`📊 Status: ${stH}`:'',`<em style="color:var(--text-muted)">Agradecemos a compreensão! 🙏</em>`])},{tag:'incidente',label:'✅ Incidente resolvido',slack:slackMsg('✅','Incidente Resolvido 🟢',[sisS?`🖥️ Sistema: *${sisS}*`:'','O sistema voltou a operar normalmente.',`📅 Resolvido às: ${now}`,probS?`📋 O que foi: ${probS}`:'','_Pedimos desculpas pelo transtorno._']),html:htmlMsg('#1FEF51','✅','Incidente Resolvido 🟢',[sisH?`🖥️ Sistema: <b>${sisH}</b>`:'','O sistema voltou a operar normalmente.',`📅 Resolvido às: <b>${now}</b>`,probH?`📋 O que foi: ${probH}`:'',`<em style="color:var(--text-muted)">Pedimos desculpas pelo transtorno.</em>`])}];}
 
-  if(sc==='aviso-geral'){const titulo=getFieldVal('f-titulo'),msg=getFieldVal('f-msg');if(!titulo&&!msg)return[];const titS=titulo?resolveSlackTags(titulo):'Comunicado',titH=titulo?slackTagsToHtml(resolveSlackTags(titulo)):'Comunicado';const msgS=msg?resolveSlackTags(msg):'',msgH=msg?slackTagsToHtml(resolveSlackTags(msg)):'';return[{tag:'aviso-geral',label:'📢 Comunicado padrão',slack:slackMsg('📢',titS,[msgS,'_— Equipe Cobli_']),html:htmlMsg('#F5C519','📢',titH,[msgH,`<em style="color:var(--text-muted)">— Equipe Cobli</em>`])},{tag:'aviso-geral',label:'📋 Informativo simples',slack:`📋 *${titS}*\n\n${msgS}${cs}`,html:`<div class="slack-block"><div class="slack-bar" style="background:#7F8DDB"></div><div class="slack-body">📋 <b style="color:var(--text)">${titH}</b><br><br>${msgH}${ch}</div></div>`}];}
+  if(sc==='aviso-geral'){const titulo=getFieldVal('f-titulo'),msg=getFieldVal('f-msg');if(!titulo&&!msg)return[];const titS=titulo?resolveSlackTags(titulo):'Comunicado',titH=titulo?slackTagsToHtml(resolveSlackTags(titulo)):'Comunicado';const msgS=msg?resolveSlackTags(msg):'',msgH=msg?slackTagsToHtml(resolveSlackTags(msg)):'';return[{tag:'aviso-geral',label:'📢 Comunicado padrão',slack:slackMsg('📢',titS,[msgS,'_— Supply Serviços | Cobli_']),html:htmlMsg('#F5C519','📢',titH,[msgH,`<em style="color:var(--text-muted)">— Supply Serviços | Cobli</em>`])},{tag:'aviso-geral',label:'📋 Informativo simples',slack:`📋 *${titS}*\n\n${msgS}${cs}`,html:`<div class="slack-block"><div class="slack-bar" style="background:#7F8DDB"></div><div class="slack-body">📋 <b style="color:var(--text)">${titH}</b><br><br>${msgH}${ch}</div></div>`}];}
   return[];
 }
 
@@ -1136,8 +1156,7 @@ async function sendMessage(){
   if(!ST.selSugg||!ST.selWhIds.length)return;
   if(ST.schedOn){await scheduleMsg();return;}
   const btn=document.getElementById('btn-send');btn.disabled=true;document.getElementById('btn-send-label').textContent='Enviando…';
-  const color=SCENARIO_COLORS[ST.scenario]||'#7F8DDB';
-  const textWithSender=ST.selSugg.slack;const footerText=senderSlack(false);
+  const color=SCENARIO_COLORS[ST.scenario]||'#7F8DDB';const textWithSender=ST.selSugg.slack;const footerText=senderSlack(false);
   try{
     const {data:{session}}=await sb.auth.getSession();
     const webhooks=DB.webhooks.filter(w=>ST.selWhIds.includes(w.id));
@@ -1226,7 +1245,7 @@ async function deleteChannel(id){if(!confirm('Remover?'))return;try{const {error
 function editChannel(id){const c=DB.channels.find(x=>x.id===id);if(!c)return;openEditModal('Editar Canal Slack',`<div class="form-row"><div><label class="form-label">Nome (sem #)</label><input type="text" id="ec-name" value="${esc(c.name)}" /></div><div><label class="form-label">Channel ID</label><input type="text" id="ec-sid" value="${esc(c.slack_id||'')}" /></div></div><div style="margin-top:10px"><label class="form-label">Descrição</label><input type="text" id="ec-desc" value="${esc(c.desc||'')}" /></div>`,async()=>{const name=document.getElementById('ec-name').value.trim().replace('#',''),slack_id=document.getElementById('ec-sid').value.trim(),desc=document.getElementById('ec-desc').value.trim();if(!name){alert('Nome obrigatório.');return;}try{const {error}=await sb.from('channels').update({name,slack_id,desc}).eq('id',id);if(error)throw error;const idx=DB.channels.findIndex(x=>x.id===id);if(idx>=0)DB.channels[idx]={...DB.channels[idx],name,slack_id,desc};closeEditModal();renderChannelsList();showStatus('#'+name+' atualizado ✓','success');}catch(e){alert('Erro: '+e.message);}});}
 function renderChannelsList(){const el=document.getElementById('channels-list');const paginated=getPaginatedList(DB.channels,'channels',c=>c.name.toLowerCase().includes(LST.channels.q));if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhum canal encontrado</div>';return;}el.innerHTML=paginated.map(c=>`<div class="list-item"><div class="list-item-avatar ac-avatar channel" style="font-size:16px">#</div><div style="flex:1;min-width:0"><div class="list-item-name">#${esc(c.name)}</div>${c.desc?`<div class="list-item-sub">${esc(c.desc)}</div>`:''}${c.slack_id?`<div class="list-item-sub">ID: ${esc(c.slack_id)}</div>`:''}</div><div class="list-item-actions"><button class="btn-edit" data-edit-channel="${c.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-channel="${c.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
 
-async function saveMacro(){const name=v('m-name'),handle=v('m-handle').replace('/',''),content=v('m-content');if(!name||!handle||!content){alert('Preencha nome, gatilho e conteúdo.');return;}try{const {data,error}=await sb.from('macros').insert({user_id:user.id,name,handle,content}).select().single();if(error)throw error;DB.macros.push(data);['m-name','m-handle','m-content'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});document.getElementById('macro-form').classList.remove('open');renderMacrosList();window.renderMacroSelects();showStatus('Lista /'+handle+' salva! ✓','success');}catch(e){alert('Erro: '+e.message);}}
+async function saveMacro(){const name=v('m-name'),handle=v('m-handle').replace('/',''),content=v('m-content');if(!name||!handle||!content){alert('Preencha nome, gatilho e conteúdo.');return;}try{const {data,error}=await sb.from('macros').insert({user_id:user.id,name,handle,content}).select().single();if(error)throw error;DB.macros.push(data);['m-name','m-handle','m-content'].forEach(i=>{const el=document.getElementById(i); if(el)el.value='';});document.getElementById('macro-form').classList.remove('open');renderMacrosList();window.renderMacroSelects();showStatus('Lista /'+handle+' salva! ✓','success');}catch(e){alert('Erro: '+e.message);}}
 async function deleteMacro(id){if(!confirm('Remover esta lista?'))return;try{const {error}=await sb.from('macros').delete().eq('id',id);if(error)throw error;DB.macros=DB.macros.filter(m=>m.id!=id);renderMacrosList();window.renderMacroSelects();}catch(e){alert('Erro: '+e.message);}}
 function editMacro(id){const m=DB.macros.find(x=>x.id==id);if(!m)return;openEditModal('Editar Lista / Macro',`<div class="form-row"><div><label class="form-label">Nome da Lista</label><input type="text" id="em-name" value="${esc(m.name)}" /></div><div><label class="form-label">Gatilho (sem /)</label><input type="text" id="em-handle" value="${esc(m.handle||'')}" /></div></div><div style="margin-top:10px"><label class="form-label">Pessoas inseridas</label><div class="msg-wrap"><textarea id="em-content" class="msg-ta" rows="3">${esc(m.content||'')}</textarea><div class="autocomplete-dropdown" id="ac-field-em-content"><div class="ac-header" id="ac-hdr-em-content">Pessoas &amp; Grupos</div><div id="ac-list-em-content"></div></div></div></div>`,async()=>{const name=document.getElementById('em-name').value.trim(),handle=document.getElementById('em-handle').value.trim().replace('/',''),content=document.getElementById('em-content').value.trim();if(!name||!handle||!content){alert('Preencha todos os campos.');return;}try{const {error}=await sb.from('macros').update({name,handle,content}).eq('id',id);if(error)throw error;const idx=DB.macros.findIndex(x=>x.id==id);if(idx>=0)DB.macros[idx]={...DB.macros[idx],name,handle,content};closeEditModal();renderMacrosList();window.renderMacroSelects();showStatus('Lista atualizada ✓','success');}catch(e){alert('Erro: '+e.message);}});setTimeout(()=>{const emContent=document.getElementById('em-content');if(emContent){emContent.addEventListener('input',()=>detectFieldAC(emContent,'em-content'));emContent.addEventListener('keydown',e=>onFieldKeydown(e,'em-content'));}},50);}
 function renderMacrosList(){const el=document.getElementById('macros-list');const paginated=getPaginatedList(DB.macros,'macros',m=>m.name.toLowerCase().includes(LST.macros.q)||(m.handle||'').toLowerCase().includes(LST.macros.q));if(!paginated.length){el.innerHTML='<div class="no-sugg" style="grid-column:1/-1;padding:1rem">Nenhuma lista encontrada</div>';return;}el.innerHTML=paginated.map(m=>`<div class="list-item"><div class="list-item-avatar ac-avatar macro" style="font-size:16px">/</div><div style="flex:1;min-width:0"><div class="list-item-name">${esc(m.name)}</div><div class="list-item-sub" style="color:var(--text)">Gatilho: /${esc(m.handle)}</div><div class="list-item-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(m.content)}</div></div><div class="list-item-actions"><button class="btn-edit" data-edit-macro="${m.id}"><i class="ti ti-pencil" style="font-size:11px"></i> Editar</button><button class="btn btn-danger-ghost btn-sm" data-del-macro="${m.id}"><i class="ti ti-trash"></i></button></div></div>`).join('');}
